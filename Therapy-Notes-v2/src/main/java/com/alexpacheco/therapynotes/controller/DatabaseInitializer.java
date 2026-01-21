@@ -18,9 +18,9 @@ import com.alexpacheco.therapynotes.util.PreferencesUtil;
 
 public class DatabaseInitializer
 {
-	private static final String SCHEMA_SCRIPT_FILE = "/main/resources/schema-config.sql";
-	private static final String TRIGGER_SCRIPT_FILE = "/main/resources/trigger-config.sql";
-	private static final String OPTIONS_SCRIPT_FILE = "/main/resources/populate-option-tables.sql";
+	private static final String SCHEMA_SCRIPT_FILE = "/schema-config.sql";
+	private static final String TRIGGER_SCRIPT_FILE = "/trigger-config.sql";
+	private static final String OPTIONS_SCRIPT_FILE = "/populate-option-tables.sql";
 	
 	public static void initDb() throws TherapyAppException
 	{

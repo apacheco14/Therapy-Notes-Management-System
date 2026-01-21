@@ -368,7 +368,7 @@ public class AppController
 	{
 		if( icd10Codes == null || icd10Codes.isEmpty() )
 		{
-			InputStream codesStream = AppController.class.getResourceAsStream( "/main/resources/f_codes.txt" );
+			InputStream codesStream = AppController.class.getResourceAsStream( "/f_codes.txt" );
 			BufferedReader reader = new BufferedReader( new InputStreamReader( codesStream ) );
 			icd10Codes = reader.lines().filter( line -> !line.isBlank() ).collect( Collectors.toList() );
 			AppController.logToDatabase( LogLevel.INFO, "AppController", "ICD 10 codes loaded" );
