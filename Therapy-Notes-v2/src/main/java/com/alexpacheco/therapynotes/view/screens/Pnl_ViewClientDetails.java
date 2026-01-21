@@ -1,16 +1,16 @@
-package main.java.com.alexpacheco.therapynotes.view.screens;
+package com.alexpacheco.therapynotes.view.screens;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.enums.Screens;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.entities.Client;
-import main.java.com.alexpacheco.therapynotes.model.entities.Contact;
-import main.java.com.alexpacheco.therapynotes.util.DateFormatUtil;
-import main.java.com.alexpacheco.therapynotes.util.JavaUtils;
-import main.java.com.alexpacheco.therapynotes.view.tablemodels.ContactsTableModel;
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.enums.Screens;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.entities.Client;
+import com.alexpacheco.therapynotes.model.entities.Contact;
+import com.alexpacheco.therapynotes.util.DateFormatUtil;
+import com.alexpacheco.therapynotes.util.JavaUtils;
+import com.alexpacheco.therapynotes.view.tablemodels.ContactsTableModel;
 
 import java.awt.*;
 import java.util.List;

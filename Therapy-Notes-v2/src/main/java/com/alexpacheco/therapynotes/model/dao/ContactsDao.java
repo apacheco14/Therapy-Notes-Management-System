@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.model.dao;
+package com.alexpacheco.therapynotes.model.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,9 +8,9 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.com.alexpacheco.therapynotes.model.entities.Contact;
-import main.java.com.alexpacheco.therapynotes.util.DbUtil;
-import main.java.com.alexpacheco.therapynotes.util.JavaUtils;
+import com.alexpacheco.therapynotes.model.entities.Contact;
+import com.alexpacheco.therapynotes.util.DbUtil;
+import com.alexpacheco.therapynotes.util.JavaUtils;
 
 public class ContactsDao
 {

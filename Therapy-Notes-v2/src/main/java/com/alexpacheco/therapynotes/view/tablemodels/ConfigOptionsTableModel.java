@@ -1,8 +1,9 @@
-package main.java.com.alexpacheco.therapynotes.view.tablemodels;
+package com.alexpacheco.therapynotes.view.tablemodels;
 
 import java.util.ArrayList;
 import java.util.List;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
+
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
 
 public class ConfigOptionsTableModel extends ViewOnlyTableModel
 {

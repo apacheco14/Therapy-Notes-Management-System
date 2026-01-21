@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.controller.errorhandling;
+package com.alexpacheco.therapynotes.controller.errorhandling;
 
 import java.time.LocalDateTime;
 

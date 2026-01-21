@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.view.screens;
+package com.alexpacheco.therapynotes.view.screens;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;

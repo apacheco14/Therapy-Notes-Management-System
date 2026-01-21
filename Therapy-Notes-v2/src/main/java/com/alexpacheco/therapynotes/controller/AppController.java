@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.controller;
+package com.alexpacheco.therapynotes.controller;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -18,32 +18,32 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import main.java.com.alexpacheco.therapynotes.controller.enums.ConfigKey;
-import main.java.com.alexpacheco.therapynotes.controller.enums.LogLevel;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.install.SetupConfiguration;
-import main.java.com.alexpacheco.therapynotes.install.SetupConfigurationManager;
-import main.java.com.alexpacheco.therapynotes.model.api.AppLogApi;
-import main.java.com.alexpacheco.therapynotes.model.api.AssessmentOptionApi;
-import main.java.com.alexpacheco.therapynotes.model.api.ClientApi;
-import main.java.com.alexpacheco.therapynotes.model.api.CollateralContactApi;
-import main.java.com.alexpacheco.therapynotes.model.api.ContactApi;
-import main.java.com.alexpacheco.therapynotes.model.api.NoteApi;
-import main.java.com.alexpacheco.therapynotes.model.api.PreferenceApi;
-import main.java.com.alexpacheco.therapynotes.model.api.ReferralApi;
-import main.java.com.alexpacheco.therapynotes.model.api.SymptomApi;
-import main.java.com.alexpacheco.therapynotes.model.entities.AppLog;
-import main.java.com.alexpacheco.therapynotes.model.entities.Client;
-import main.java.com.alexpacheco.therapynotes.model.entities.Contact;
-import main.java.com.alexpacheco.therapynotes.model.entities.Note;
-import main.java.com.alexpacheco.therapynotes.model.entities.Preference;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionFactory;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionType;
-import main.java.com.alexpacheco.therapynotes.util.DbUtil;
-import main.java.com.alexpacheco.therapynotes.util.JavaUtils;
-import main.java.com.alexpacheco.therapynotes.view.MainWindow;
-import main.java.com.alexpacheco.therapynotes.view.dialogs.Dlg_PinEntry;
+import com.alexpacheco.therapynotes.controller.enums.ConfigKey;
+import com.alexpacheco.therapynotes.controller.enums.LogLevel;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.install.SetupConfiguration;
+import com.alexpacheco.therapynotes.install.SetupConfigurationManager;
+import com.alexpacheco.therapynotes.model.api.AppLogApi;
+import com.alexpacheco.therapynotes.model.api.AssessmentOptionApi;
+import com.alexpacheco.therapynotes.model.api.ClientApi;
+import com.alexpacheco.therapynotes.model.api.CollateralContactApi;
+import com.alexpacheco.therapynotes.model.api.ContactApi;
+import com.alexpacheco.therapynotes.model.api.NoteApi;
+import com.alexpacheco.therapynotes.model.api.PreferenceApi;
+import com.alexpacheco.therapynotes.model.api.ReferralApi;
+import com.alexpacheco.therapynotes.model.api.SymptomApi;
+import com.alexpacheco.therapynotes.model.entities.AppLog;
+import com.alexpacheco.therapynotes.model.entities.Client;
+import com.alexpacheco.therapynotes.model.entities.Contact;
+import com.alexpacheco.therapynotes.model.entities.Note;
+import com.alexpacheco.therapynotes.model.entities.Preference;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionFactory;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionType;
+import com.alexpacheco.therapynotes.util.DbUtil;
+import com.alexpacheco.therapynotes.util.JavaUtils;
+import com.alexpacheco.therapynotes.view.MainWindow;
+import com.alexpacheco.therapynotes.view.dialogs.Dlg_PinEntry;
 
 public class AppController
 {

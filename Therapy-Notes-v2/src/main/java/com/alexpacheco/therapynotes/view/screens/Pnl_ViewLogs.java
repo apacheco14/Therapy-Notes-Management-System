@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.view.screens;
+package com.alexpacheco.therapynotes.view.screens;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -24,13 +24,13 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
-import com.toedter.calendar.JDateChooser;
 
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.enums.LogLevel;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.entities.AppLog;
-import main.java.com.alexpacheco.therapynotes.view.tablemodels.LogTableModel;
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.enums.LogLevel;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.entities.AppLog;
+import com.alexpacheco.therapynotes.view.tablemodels.LogTableModel;
+import com.toedter.calendar.JDateChooser;
 
 /**
  * Panel for viewing application logs from the app_logs table. Supports filtering by date range and

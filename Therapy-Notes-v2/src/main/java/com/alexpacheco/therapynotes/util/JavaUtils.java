@@ -1,10 +1,10 @@
-package main.java.com.alexpacheco.therapynotes.util;
+package com.alexpacheco.therapynotes.util;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
 
 public class JavaUtils
 {

@@ -1,11 +1,11 @@
-package main.java.com.alexpacheco.therapynotes.model.dao;
+package com.alexpacheco.therapynotes.model.dao;
 
 import java.util.List;
 
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionFactory;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionType;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
-import main.java.com.alexpacheco.therapynotes.util.DbUtil;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionFactory;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionType;
+import com.alexpacheco.therapynotes.util.DbUtil;
 
 import java.sql.*;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.util;
+package com.alexpacheco.therapynotes.util;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -6,9 +6,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
 
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.enums.ErrorCode;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
 
 public class DateFormatUtil
 {

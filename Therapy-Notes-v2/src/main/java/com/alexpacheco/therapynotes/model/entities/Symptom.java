@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.model.entities;
+package com.alexpacheco.therapynotes.model.entities;
 
 import java.time.LocalDateTime;
 

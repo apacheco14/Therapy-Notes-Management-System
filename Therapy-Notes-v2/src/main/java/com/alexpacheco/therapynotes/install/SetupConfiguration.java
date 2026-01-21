@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.install;
+package com.alexpacheco.therapynotes.install;
 
 /**
  * Data class holding all setup wizard configuration values. This is populated step-by-step as the user progresses through the wizard.

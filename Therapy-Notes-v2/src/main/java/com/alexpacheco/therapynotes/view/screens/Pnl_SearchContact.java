@@ -1,14 +1,14 @@
-package main.java.com.alexpacheco.therapynotes.view.screens;
+package com.alexpacheco.therapynotes.view.screens;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.enums.Screens;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.entities.Contact;
-import main.java.com.alexpacheco.therapynotes.view.components.Cmb_ClientSelection;
-import main.java.com.alexpacheco.therapynotes.view.tablemodels.ContactSearchResultsTableModel;
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.enums.Screens;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.entities.Contact;
+import com.alexpacheco.therapynotes.view.components.Cmb_ClientSelection;
+import com.alexpacheco.therapynotes.view.tablemodels.ContactSearchResultsTableModel;
 
 import java.awt.*;
 import java.util.List;

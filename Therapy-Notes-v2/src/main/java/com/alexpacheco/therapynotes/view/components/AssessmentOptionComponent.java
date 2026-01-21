@@ -1,8 +1,9 @@
-package main.java.com.alexpacheco.therapynotes.view.components;
+package com.alexpacheco.therapynotes.view.components;
 
 import javax.swing.*;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
-import main.java.com.alexpacheco.therapynotes.util.JavaUtils;
+
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
+import com.alexpacheco.therapynotes.util.JavaUtils;
 
 /**
  * Abstract base class for UI components associated with AssessmentOptions. Provides common behavior

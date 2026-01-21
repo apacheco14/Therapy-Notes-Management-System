@@ -1,11 +1,11 @@
-package main.java.com.alexpacheco.therapynotes.install;
+package com.alexpacheco.therapynotes.install;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import main.java.com.alexpacheco.therapynotes.controller.PinManager;
+import com.alexpacheco.therapynotes.controller.PinManager;
 
 import java.awt.*;
 import java.util.Arrays;

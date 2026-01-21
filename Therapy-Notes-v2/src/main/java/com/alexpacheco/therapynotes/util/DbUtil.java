@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.util;
+package com.alexpacheco.therapynotes.util;
 
 import java.io.File;
 import java.io.InputStream;
@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.AppController;
 
 public class DbUtil
 {

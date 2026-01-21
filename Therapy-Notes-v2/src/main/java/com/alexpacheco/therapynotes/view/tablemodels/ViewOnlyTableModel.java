@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.view.tablemodels;
+package com.alexpacheco.therapynotes.view.tablemodels;
 
 import javax.swing.table.DefaultTableModel;
 

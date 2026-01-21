@@ -1,8 +1,8 @@
-package main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions;
+package com.alexpacheco.therapynotes.controller.errorhandling.exceptions;
 
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.enums.ErrorCode;
-import main.java.com.alexpacheco.therapynotes.controller.enums.LogLevel;
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
+import com.alexpacheco.therapynotes.controller.enums.LogLevel;
 
 /**
  * Base exception for all business-related errors in the application.

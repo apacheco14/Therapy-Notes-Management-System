@@ -1,10 +1,10 @@
-package main.java.com.alexpacheco.therapynotes.controller;
+package com.alexpacheco.therapynotes.controller;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import main.java.com.alexpacheco.therapynotes.controller.enums.LogLevel;
-import main.java.com.alexpacheco.therapynotes.install.SetupConfigurationManager;
+import com.alexpacheco.therapynotes.controller.enums.LogLevel;
+import com.alexpacheco.therapynotes.install.SetupConfigurationManager;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;

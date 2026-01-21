@@ -1,4 +1,4 @@
-package test.java.com.alexpacheco.therapynotes;
+package com.alexpacheco.therapynotes;
 
 import org.junit.jupiter.api.*;
 

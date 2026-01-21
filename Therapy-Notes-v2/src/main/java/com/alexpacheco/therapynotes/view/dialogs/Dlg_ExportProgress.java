@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.view.dialogs;
+package com.alexpacheco.therapynotes.view.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

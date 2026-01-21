@@ -1,25 +1,25 @@
-package main.java.com.alexpacheco.therapynotes.model.dao;
+package com.alexpacheco.therapynotes.model.dao;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.entities.CollateralContact;
-import main.java.com.alexpacheco.therapynotes.model.entities.Note;
-import main.java.com.alexpacheco.therapynotes.model.entities.Referral;
-import main.java.com.alexpacheco.therapynotes.model.entities.Symptom;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AffectAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AppearanceAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.EyeContactAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.NextApptAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.SpeechAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.util.DateFormatUtil;
-import main.java.com.alexpacheco.therapynotes.util.DbUtil;
-import main.java.com.alexpacheco.therapynotes.util.JavaUtils;
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.entities.CollateralContact;
+import com.alexpacheco.therapynotes.model.entities.Note;
+import com.alexpacheco.therapynotes.model.entities.Referral;
+import com.alexpacheco.therapynotes.model.entities.Symptom;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AffectAssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AppearanceAssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.EyeContactAssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.NextApptAssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.SpeechAssessmentOption;
+import com.alexpacheco.therapynotes.util.DateFormatUtil;
+import com.alexpacheco.therapynotes.util.DbUtil;
+import com.alexpacheco.therapynotes.util.JavaUtils;
 
 public class NotesDao
 {

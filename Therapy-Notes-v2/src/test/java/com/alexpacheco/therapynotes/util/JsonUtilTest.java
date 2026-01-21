@@ -1,8 +1,6 @@
-package test.java.com.alexpacheco.therapynotes.util;
+package com.alexpacheco.therapynotes.util;
 
 import com.google.gson.JsonSyntaxException;
-
-import main.java.com.alexpacheco.therapynotes.util.JsonUtil;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;

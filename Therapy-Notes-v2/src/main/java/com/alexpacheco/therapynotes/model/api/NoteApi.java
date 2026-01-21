@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.model.api;
+package com.alexpacheco.therapynotes.model.api;
 
 /*
  * Business Logic Layer (Services)
@@ -14,12 +14,12 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.enums.ErrorCode;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.EntityValidator;
-import main.java.com.alexpacheco.therapynotes.model.dao.NotesDao;
-import main.java.com.alexpacheco.therapynotes.model.entities.Note;
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.EntityValidator;
+import com.alexpacheco.therapynotes.model.dao.NotesDao;
+import com.alexpacheco.therapynotes.model.entities.Note;
 
 public class NoteApi
 {

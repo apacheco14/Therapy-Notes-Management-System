@@ -1,6 +1,6 @@
-package main.java.com.alexpacheco.therapynotes.util.validators;
+package com.alexpacheco.therapynotes.util.validators;
 
-import main.java.com.alexpacheco.therapynotes.util.JavaUtils;
+import com.alexpacheco.therapynotes.util.JavaUtils;
 
 public class EmailValidator
 {

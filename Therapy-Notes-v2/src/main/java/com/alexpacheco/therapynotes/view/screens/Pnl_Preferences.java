@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.view.screens;
+package com.alexpacheco.therapynotes.view.screens;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -25,11 +25,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.enums.PreferenceKey;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.entities.Preference;
-import main.java.com.alexpacheco.therapynotes.util.PreferencesUtil;
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.enums.PreferenceKey;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.entities.Preference;
+import com.alexpacheco.therapynotes.util.PreferencesUtil;
 
 /**
  * Panel for editing user preferences. Organizes preferences into logical sections with appropriate input controls.

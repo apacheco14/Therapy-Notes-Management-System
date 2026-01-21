@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.view.components;
+package com.alexpacheco.therapynotes.view.components;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -7,9 +7,9 @@ import javax.swing.JComboBox;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.util.JavaUtils;
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.util.JavaUtils;
 
 public class Cmb_ClientSelection extends JComboBox<String>
 {

@@ -1,9 +1,9 @@
-package main.java.com.alexpacheco.therapynotes.install;
+package com.alexpacheco.therapynotes.install;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import main.java.com.alexpacheco.therapynotes.util.JavaUtils;
+import com.alexpacheco.therapynotes.util.JavaUtils;
 
 import java.awt.*;
 

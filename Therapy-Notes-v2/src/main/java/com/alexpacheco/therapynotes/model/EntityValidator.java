@@ -1,15 +1,15 @@
-package main.java.com.alexpacheco.therapynotes.model;
+package com.alexpacheco.therapynotes.model;
 
 import java.util.List;
 
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.MissingRequiredElementException;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.entities.Client;
-import main.java.com.alexpacheco.therapynotes.model.entities.Contact;
-import main.java.com.alexpacheco.therapynotes.model.entities.Note;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
-import main.java.com.alexpacheco.therapynotes.util.JavaUtils;
-import main.java.com.alexpacheco.therapynotes.util.PreferencesUtil;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.MissingRequiredElementException;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.entities.Client;
+import com.alexpacheco.therapynotes.model.entities.Contact;
+import com.alexpacheco.therapynotes.model.entities.Note;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
+import com.alexpacheco.therapynotes.util.JavaUtils;
+import com.alexpacheco.therapynotes.util.PreferencesUtil;
 
 public class EntityValidator
 {

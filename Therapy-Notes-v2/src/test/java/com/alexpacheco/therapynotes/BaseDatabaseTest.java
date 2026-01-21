@@ -1,12 +1,12 @@
-package test.java.com.alexpacheco.therapynotes;
+package com.alexpacheco.therapynotes;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
-import main.java.com.alexpacheco.therapynotes.controller.DatabaseInitializer;
-import main.java.com.alexpacheco.therapynotes.util.DbUtil;
+import com.alexpacheco.therapynotes.controller.DatabaseInitializer;
+import com.alexpacheco.therapynotes.util.DbUtil;
 
 public abstract class BaseDatabaseTest
 {

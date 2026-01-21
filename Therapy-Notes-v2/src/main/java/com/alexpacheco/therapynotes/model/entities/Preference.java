@@ -1,8 +1,8 @@
-package main.java.com.alexpacheco.therapynotes.model.entities;
+package com.alexpacheco.therapynotes.model.entities;
 
 import java.time.LocalDateTime;
 
-import main.java.com.alexpacheco.therapynotes.controller.enums.PreferenceType;
+import com.alexpacheco.therapynotes.controller.enums.PreferenceType;
 
 /**
  * Entity representing a user preference setting

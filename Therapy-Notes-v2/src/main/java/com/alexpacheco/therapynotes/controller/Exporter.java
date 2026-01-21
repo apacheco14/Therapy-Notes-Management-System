@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.controller;
+package com.alexpacheco.therapynotes.controller;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
-import main.java.com.alexpacheco.therapynotes.controller.enums.LogLevel;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.entities.Note;
-import main.java.com.alexpacheco.therapynotes.util.DbUtil;
-import main.java.com.alexpacheco.therapynotes.util.JavaUtils;
-import main.java.com.alexpacheco.therapynotes.util.export.NoteDocxExporter;
-import main.java.com.alexpacheco.therapynotes.util.export.NotePdfExporter;
+import com.alexpacheco.therapynotes.controller.enums.LogLevel;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.entities.Note;
+import com.alexpacheco.therapynotes.util.DbUtil;
+import com.alexpacheco.therapynotes.util.JavaUtils;
+import com.alexpacheco.therapynotes.util.export.NoteDocxExporter;
+import com.alexpacheco.therapynotes.util.export.NotePdfExporter;
 
 public class Exporter
 {

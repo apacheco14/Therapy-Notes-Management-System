@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.view.dialogs;
+package com.alexpacheco.therapynotes.view.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -22,9 +22,9 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.PinManager;
-import main.java.com.alexpacheco.therapynotes.controller.enums.LogLevel;
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.PinManager;
+import com.alexpacheco.therapynotes.controller.enums.LogLevel;
 
 /**
  * Dialog for setting up a new PIN when none exists. (For use from Settings menu when PIN was skipped during setup)

@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.controller.enums;
+package com.alexpacheco.therapynotes.controller.enums;
 
 /**
  * Enum representing configuration keys for various system options

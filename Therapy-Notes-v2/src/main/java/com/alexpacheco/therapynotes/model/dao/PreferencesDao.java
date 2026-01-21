@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.model.dao;
+package com.alexpacheco.therapynotes.model.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import main.java.com.alexpacheco.therapynotes.controller.enums.PreferenceType;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.entities.Preference;
-import main.java.com.alexpacheco.therapynotes.util.DateFormatUtil;
-import main.java.com.alexpacheco.therapynotes.util.DbUtil;
+import com.alexpacheco.therapynotes.controller.enums.PreferenceType;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.entities.Preference;
+import com.alexpacheco.therapynotes.util.DateFormatUtil;
+import com.alexpacheco.therapynotes.util.DbUtil;
 
 /**
  * Data Access Object for user preferences. Provides CRUD operations and utility methods for managing application preferences.

@@ -1,13 +1,13 @@
-package main.java.com.alexpacheco.therapynotes.model.api;
+package com.alexpacheco.therapynotes.model.api;
 
 import java.sql.SQLException;
 import java.util.List;
 
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.enums.ErrorCode;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.dao.CollateralContactsDao;
-import main.java.com.alexpacheco.therapynotes.model.entities.CollateralContact;
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.dao.CollateralContactsDao;
+import com.alexpacheco.therapynotes.model.entities.CollateralContact;
 
 public class CollateralContactApi
 {

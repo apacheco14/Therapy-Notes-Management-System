@@ -1,9 +1,11 @@
-package main.java.com.alexpacheco.therapynotes.view.screens;
+package com.alexpacheco.therapynotes.view.screens;
 
 import javax.swing.*;
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.enums.Screens;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.enums.Screens;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+
 import java.awt.*;
 
 public class Pnl_SearchClientsView extends Pnl_SearchClients

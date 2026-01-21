@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.view.screens;
+package com.alexpacheco.therapynotes.view.screens;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -32,30 +32,29 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.Exporter;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.entities.Client;
+import com.alexpacheco.therapynotes.model.entities.CollateralContact;
+import com.alexpacheco.therapynotes.model.entities.Note;
+import com.alexpacheco.therapynotes.model.entities.Referral;
+import com.alexpacheco.therapynotes.model.entities.Symptom;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AffectAssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AppearanceAssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionType;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.EyeContactAssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.NextApptAssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.SpeechAssessmentOption;
+import com.alexpacheco.therapynotes.util.DateFormatUtil;
+import com.alexpacheco.therapynotes.util.JavaUtils;
+import com.alexpacheco.therapynotes.util.PreferencesUtil;
+import com.alexpacheco.therapynotes.view.components.AssessmentOptionCheckBox;
+import com.alexpacheco.therapynotes.view.components.AssessmentOptionRadioButton;
+import com.alexpacheco.therapynotes.view.components.Cmb_ClientSelection;
+import com.alexpacheco.therapynotes.view.components.Cmb_ICD10Diagnosis;
 import com.toedter.calendar.JDateChooser;
-
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.Exporter;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.entities.Client;
-import main.java.com.alexpacheco.therapynotes.model.entities.CollateralContact;
-import main.java.com.alexpacheco.therapynotes.model.entities.Note;
-import main.java.com.alexpacheco.therapynotes.model.entities.Referral;
-import main.java.com.alexpacheco.therapynotes.model.entities.Symptom;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AffectAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AppearanceAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionType;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.EyeContactAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.NextApptAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.SpeechAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.util.DateFormatUtil;
-import main.java.com.alexpacheco.therapynotes.util.JavaUtils;
-import main.java.com.alexpacheco.therapynotes.util.PreferencesUtil;
-import main.java.com.alexpacheco.therapynotes.view.components.AssessmentOptionCheckBox;
-import main.java.com.alexpacheco.therapynotes.view.components.AssessmentOptionRadioButton;
-import main.java.com.alexpacheco.therapynotes.view.components.Cmb_ClientSelection;
-import main.java.com.alexpacheco.therapynotes.view.components.Cmb_ICD10Diagnosis;
 
 /**
  * Panel for creating or editing a client progress note. Contains sections for session info, clinical symptoms, narrative, mental status,

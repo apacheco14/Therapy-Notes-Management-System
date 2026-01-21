@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.view.tablemodels;
+package com.alexpacheco.therapynotes.view.tablemodels;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,8 +7,8 @@ import java.util.Set;
 
 import javax.swing.table.AbstractTableModel;
 
-import main.java.com.alexpacheco.therapynotes.model.entities.AppLog;
-import main.java.com.alexpacheco.therapynotes.util.DateFormatUtil;
+import com.alexpacheco.therapynotes.model.entities.AppLog;
+import com.alexpacheco.therapynotes.util.DateFormatUtil;
 
 /**
  * Table model for displaying application logs.

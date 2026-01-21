@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.view.screens;
+package com.alexpacheco.therapynotes.view.screens;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -27,10 +27,11 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.entities.Client;
-import main.java.com.alexpacheco.therapynotes.view.tablemodels.ClientSearchResultsTableModel;
+
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.entities.Client;
+import com.alexpacheco.therapynotes.view.tablemodels.ClientSearchResultsTableModel;
 
 public abstract class Pnl_SearchClients extends JPanel
 {

@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.controller.enums;
+package com.alexpacheco.therapynotes.controller.enums;
 
 /**
  * Enum defining all user preference keys with their default values and metadata.

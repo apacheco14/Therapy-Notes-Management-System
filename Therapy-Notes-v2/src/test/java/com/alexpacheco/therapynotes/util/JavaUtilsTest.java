@@ -1,8 +1,7 @@
-package test.java.com.alexpacheco.therapynotes.util;
+package com.alexpacheco.therapynotes.util;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import main.java.com.alexpacheco.therapynotes.util.JavaUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 

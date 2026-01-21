@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.view.components;
+package com.alexpacheco.therapynotes.view.components;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
 
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
 
 /**
  * A radio button component associated with an AssessmentOption. Typically used for single-select

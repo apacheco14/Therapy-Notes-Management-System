@@ -1,7 +1,8 @@
-package main.java.com.alexpacheco.therapynotes.view.components;
+package com.alexpacheco.therapynotes.view.components;
 
 import javax.swing.JCheckBox;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
+
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
 
 /**
  * A checkbox component associated with an AssessmentOption. Typically used for multi-select

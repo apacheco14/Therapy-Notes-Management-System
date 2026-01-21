@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.view.screens;
+package com.alexpacheco.therapynotes.view.screens;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -15,14 +15,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.entities.Contact;
-import main.java.com.alexpacheco.therapynotes.util.JavaUtils;
-import main.java.com.alexpacheco.therapynotes.view.components.Cmb_ClientSelection;
-import main.java.com.alexpacheco.therapynotes.view.components.Txt_EmailAddress;
-import main.java.com.alexpacheco.therapynotes.view.components.Txt_PhoneNumber;
-import main.java.com.alexpacheco.therapynotes.view.components.ValidatedTextField;
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.entities.Contact;
+import com.alexpacheco.therapynotes.util.JavaUtils;
+import com.alexpacheco.therapynotes.view.components.Cmb_ClientSelection;
+import com.alexpacheco.therapynotes.view.components.Txt_EmailAddress;
+import com.alexpacheco.therapynotes.view.components.Txt_PhoneNumber;
+import com.alexpacheco.therapynotes.view.components.ValidatedTextField;
 
 public class Pnl_NewEditContact extends JPanel
 {

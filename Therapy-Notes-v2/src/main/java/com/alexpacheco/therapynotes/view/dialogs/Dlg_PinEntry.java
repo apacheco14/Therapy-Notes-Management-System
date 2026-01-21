@@ -1,9 +1,10 @@
-package main.java.com.alexpacheco.therapynotes.view.dialogs;
+package com.alexpacheco.therapynotes.view.dialogs;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import main.java.com.alexpacheco.therapynotes.controller.PinManager;
+import com.alexpacheco.therapynotes.controller.PinManager;
+
 import java.awt.*;
 import java.awt.event.*;
 

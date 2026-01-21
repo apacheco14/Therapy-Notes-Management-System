@@ -1,13 +1,13 @@
-package main.java.com.alexpacheco.therapynotes.controller;
+package com.alexpacheco.therapynotes.controller;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import main.java.com.alexpacheco.therapynotes.controller.enums.LogLevel;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.install.SetupConfigurationManager;
-import main.java.com.alexpacheco.therapynotes.install.SetupWizardDialog;
+import com.alexpacheco.therapynotes.controller.enums.LogLevel;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.install.SetupConfigurationManager;
+import com.alexpacheco.therapynotes.install.SetupWizardDialog;
 
 public class AppEntryPoint
 {

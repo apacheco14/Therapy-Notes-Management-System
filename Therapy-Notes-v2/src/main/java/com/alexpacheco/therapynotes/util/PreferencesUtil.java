@@ -1,8 +1,8 @@
-package main.java.com.alexpacheco.therapynotes.util;
+package com.alexpacheco.therapynotes.util;
 
-import main.java.com.alexpacheco.therapynotes.controller.enums.PreferenceKey;
-import main.java.com.alexpacheco.therapynotes.model.api.PreferenceApi;
-import main.java.com.alexpacheco.therapynotes.model.entities.Preference;
+import com.alexpacheco.therapynotes.controller.enums.PreferenceKey;
+import com.alexpacheco.therapynotes.model.api.PreferenceApi;
+import com.alexpacheco.therapynotes.model.entities.Preference;
 
 /**
  * Utility class for accessing user preferences throughout the application. Provides static methods for retrieving preference values with

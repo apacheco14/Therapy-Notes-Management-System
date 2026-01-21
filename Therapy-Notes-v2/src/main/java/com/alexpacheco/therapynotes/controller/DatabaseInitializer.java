@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.controller;
+package com.alexpacheco.therapynotes.controller;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,14 +7,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.com.alexpacheco.therapynotes.controller.enums.ErrorCode;
-import main.java.com.alexpacheco.therapynotes.controller.enums.LogLevel;
-import main.java.com.alexpacheco.therapynotes.controller.enums.PreferenceKey;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.dao.PreferencesDao;
-import main.java.com.alexpacheco.therapynotes.model.entities.Preference;
-import main.java.com.alexpacheco.therapynotes.util.DbUtil;
-import main.java.com.alexpacheco.therapynotes.util.PreferencesUtil;
+import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
+import com.alexpacheco.therapynotes.controller.enums.LogLevel;
+import com.alexpacheco.therapynotes.controller.enums.PreferenceKey;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.dao.PreferencesDao;
+import com.alexpacheco.therapynotes.model.entities.Preference;
+import com.alexpacheco.therapynotes.util.DbUtil;
+import com.alexpacheco.therapynotes.util.PreferencesUtil;
 
 public class DatabaseInitializer
 {

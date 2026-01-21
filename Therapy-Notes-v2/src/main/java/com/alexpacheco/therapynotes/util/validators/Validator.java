@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.util.validators;
+package com.alexpacheco.therapynotes.util.validators;
 
 @FunctionalInterface
 public interface Validator

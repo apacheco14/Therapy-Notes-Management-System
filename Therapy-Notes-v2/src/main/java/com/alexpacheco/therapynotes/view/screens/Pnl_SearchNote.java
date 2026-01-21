@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.view.screens;
+package com.alexpacheco.therapynotes.view.screens;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -26,15 +26,14 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableColumnModel;
 
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.enums.Screens;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.entities.Note;
+import com.alexpacheco.therapynotes.util.DateFormatUtil;
+import com.alexpacheco.therapynotes.view.components.Cmb_ClientSelection;
+import com.alexpacheco.therapynotes.view.tablemodels.NoteSearchResultsTableModel;
 import com.toedter.calendar.JDateChooser;
-
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.enums.Screens;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.entities.Note;
-import main.java.com.alexpacheco.therapynotes.util.DateFormatUtil;
-import main.java.com.alexpacheco.therapynotes.view.components.Cmb_ClientSelection;
-import main.java.com.alexpacheco.therapynotes.view.tablemodels.NoteSearchResultsTableModel;
 
 public class Pnl_SearchNote extends JPanel
 {

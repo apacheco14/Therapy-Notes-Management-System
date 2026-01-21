@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.util.export;
+package com.alexpacheco.therapynotes.util.export;
 
 import java.awt.Color;
 import java.io.File;
@@ -9,14 +9,14 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.entities.Client;
-import main.java.com.alexpacheco.therapynotes.model.entities.CollateralContact;
-import main.java.com.alexpacheco.therapynotes.model.entities.Note;
-import main.java.com.alexpacheco.therapynotes.model.entities.Referral;
-import main.java.com.alexpacheco.therapynotes.model.entities.Symptom;
-import main.java.com.alexpacheco.therapynotes.util.DateFormatUtil;
-import main.java.com.alexpacheco.therapynotes.util.JavaUtils;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.entities.Client;
+import com.alexpacheco.therapynotes.model.entities.CollateralContact;
+import com.alexpacheco.therapynotes.model.entities.Note;
+import com.alexpacheco.therapynotes.model.entities.Referral;
+import com.alexpacheco.therapynotes.model.entities.Symptom;
+import com.alexpacheco.therapynotes.util.DateFormatUtil;
+import com.alexpacheco.therapynotes.util.JavaUtils;
 
 /**
  * Abstract base class for exporting therapy progress notes to various document formats.

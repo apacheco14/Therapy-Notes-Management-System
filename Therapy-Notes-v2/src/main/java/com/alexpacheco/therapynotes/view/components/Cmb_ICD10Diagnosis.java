@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.view.components;
+package com.alexpacheco.therapynotes.view.components;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -12,8 +12,8 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.util.JavaUtils;
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.util.JavaUtils;
 
 /**
  * A searchable combo box for selecting ICD-10 diagnosis codes. Displays codes in the format

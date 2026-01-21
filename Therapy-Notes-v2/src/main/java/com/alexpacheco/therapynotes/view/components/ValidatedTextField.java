@@ -1,11 +1,11 @@
-package main.java.com.alexpacheco.therapynotes.view.components;
+package com.alexpacheco.therapynotes.view.components;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import main.java.com.alexpacheco.therapynotes.util.validators.Validator;
+import com.alexpacheco.therapynotes.util.validators.Validator;
 
 import java.awt.*;
 import java.util.function.Consumer;

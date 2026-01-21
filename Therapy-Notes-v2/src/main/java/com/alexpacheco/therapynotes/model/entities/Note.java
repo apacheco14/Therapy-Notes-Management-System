@@ -1,13 +1,13 @@
-package main.java.com.alexpacheco.therapynotes.model.entities;
+package com.alexpacheco.therapynotes.model.entities;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AffectAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AppearanceAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.EyeContactAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.NextApptAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.SpeechAssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AffectAssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AppearanceAssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.EyeContactAssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.NextApptAssessmentOption;
+import com.alexpacheco.therapynotes.model.entities.assessmentoptions.SpeechAssessmentOption;
 
 public class Note
 {

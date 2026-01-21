@@ -1,6 +1,6 @@
-package main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions;
+package com.alexpacheco.therapynotes.controller.errorhandling.exceptions;
 
-import main.java.com.alexpacheco.therapynotes.controller.enums.ErrorCode;
+import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
 
 public class MissingRequiredElementException extends TherapyAppException
 {

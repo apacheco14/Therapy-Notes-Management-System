@@ -1,10 +1,9 @@
-package main.java.com.alexpacheco.therapynotes.util;
+package com.alexpacheco.therapynotes.util;
 
+import com.alexpacheco.therapynotes.controller.AppController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
 
 /**
  * Generic utility class for serializing and deserializing POJOs to/from JSON

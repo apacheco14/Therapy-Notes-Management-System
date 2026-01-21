@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.install;
+package com.alexpacheco.therapynotes.install;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

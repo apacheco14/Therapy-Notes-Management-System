@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.view.screens;
+package com.alexpacheco.therapynotes.view.screens;
 
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
@@ -6,16 +6,15 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.entities.Client;
+import com.alexpacheco.therapynotes.util.DateFormatUtil;
+import com.alexpacheco.therapynotes.util.JavaUtils;
+import com.alexpacheco.therapynotes.view.components.Txt_EmailAddress;
+import com.alexpacheco.therapynotes.view.components.Txt_PhoneNumber;
+import com.alexpacheco.therapynotes.view.components.ValidatedTextField;
 import com.toedter.calendar.JDateChooser;
-
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.entities.Client;
-import main.java.com.alexpacheco.therapynotes.util.DateFormatUtil;
-import main.java.com.alexpacheco.therapynotes.util.JavaUtils;
-import main.java.com.alexpacheco.therapynotes.view.components.Txt_EmailAddress;
-import main.java.com.alexpacheco.therapynotes.view.components.Txt_PhoneNumber;
-import main.java.com.alexpacheco.therapynotes.view.components.ValidatedTextField;
 
 import java.awt.*;
 import java.time.LocalDateTime;

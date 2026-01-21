@@ -1,21 +1,9 @@
-package test.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions;
+package com.alexpacheco.therapynotes.model.entities.assessmentoptions;
 
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionFactory;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionType;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.SymptomAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AppearanceAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.SpeechAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.AffectAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.EyeContactAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.ReferralAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.CollateralContactAssessmentOption;
-import main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions.NextApptAssessmentOption;
 
 class AssessmentOptionFactoryTest
 {

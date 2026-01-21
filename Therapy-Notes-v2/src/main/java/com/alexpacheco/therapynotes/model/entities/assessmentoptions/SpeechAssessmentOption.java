@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.model.entities.assessmentoptions;
+package com.alexpacheco.therapynotes.model.entities.assessmentoptions;
 
 public class SpeechAssessmentOption extends AssessmentOption
 {

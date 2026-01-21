@@ -1,6 +1,6 @@
-package main.java.com.alexpacheco.therapynotes.view.components;
+package com.alexpacheco.therapynotes.view.components;
 
-import main.java.com.alexpacheco.therapynotes.util.validators.EmailValidator;
+import com.alexpacheco.therapynotes.util.validators.EmailValidator;
 
 public class Txt_EmailAddress extends ValidatedTextField
 {

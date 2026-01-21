@@ -1,4 +1,4 @@
-package main.java.com.alexpacheco.therapynotes.controller.enums;
+package com.alexpacheco.therapynotes.controller.enums;
 
 public enum LogLevel
 {

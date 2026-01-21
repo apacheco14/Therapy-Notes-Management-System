@@ -1,26 +1,26 @@
-package main.java.com.alexpacheco.therapynotes.view;
+package com.alexpacheco.therapynotes.view;
 
 import javax.swing.*;
 
-import main.java.com.alexpacheco.therapynotes.controller.Exporter;
-import main.java.com.alexpacheco.therapynotes.controller.PinManager;
-import main.java.com.alexpacheco.therapynotes.controller.enums.Screens;
-import main.java.com.alexpacheco.therapynotes.view.dialogs.Dlg_ChangePin;
-import main.java.com.alexpacheco.therapynotes.view.dialogs.Dlg_AddPin;
-import main.java.com.alexpacheco.therapynotes.view.screens.Pnl_About;
-import main.java.com.alexpacheco.therapynotes.view.screens.Pnl_ExportNotes;
-import main.java.com.alexpacheco.therapynotes.view.screens.Pnl_ViewClientDetails;
-import main.java.com.alexpacheco.therapynotes.view.screens.Pnl_Configuration;
-import main.java.com.alexpacheco.therapynotes.view.screens.Pnl_HelpIndex;
-import main.java.com.alexpacheco.therapynotes.view.screens.Pnl_NewEditClient;
-import main.java.com.alexpacheco.therapynotes.view.screens.Pnl_NewEditContact;
-import main.java.com.alexpacheco.therapynotes.view.screens.Pnl_NewEditNote;
-import main.java.com.alexpacheco.therapynotes.view.screens.Pnl_Preferences;
-import main.java.com.alexpacheco.therapynotes.view.screens.Pnl_SearchClientsEdit;
-import main.java.com.alexpacheco.therapynotes.view.screens.Pnl_SearchContact;
-import main.java.com.alexpacheco.therapynotes.view.screens.Pnl_SearchNote;
-import main.java.com.alexpacheco.therapynotes.view.screens.Pnl_SearchClientsView;
-import main.java.com.alexpacheco.therapynotes.view.screens.Pnl_ViewLogs;
+import com.alexpacheco.therapynotes.controller.Exporter;
+import com.alexpacheco.therapynotes.controller.PinManager;
+import com.alexpacheco.therapynotes.controller.enums.Screens;
+import com.alexpacheco.therapynotes.view.dialogs.Dlg_AddPin;
+import com.alexpacheco.therapynotes.view.dialogs.Dlg_ChangePin;
+import com.alexpacheco.therapynotes.view.screens.Pnl_About;
+import com.alexpacheco.therapynotes.view.screens.Pnl_Configuration;
+import com.alexpacheco.therapynotes.view.screens.Pnl_ExportNotes;
+import com.alexpacheco.therapynotes.view.screens.Pnl_HelpIndex;
+import com.alexpacheco.therapynotes.view.screens.Pnl_NewEditClient;
+import com.alexpacheco.therapynotes.view.screens.Pnl_NewEditContact;
+import com.alexpacheco.therapynotes.view.screens.Pnl_NewEditNote;
+import com.alexpacheco.therapynotes.view.screens.Pnl_Preferences;
+import com.alexpacheco.therapynotes.view.screens.Pnl_SearchClientsEdit;
+import com.alexpacheco.therapynotes.view.screens.Pnl_SearchClientsView;
+import com.alexpacheco.therapynotes.view.screens.Pnl_SearchContact;
+import com.alexpacheco.therapynotes.view.screens.Pnl_SearchNote;
+import com.alexpacheco.therapynotes.view.screens.Pnl_ViewClientDetails;
+import com.alexpacheco.therapynotes.view.screens.Pnl_ViewLogs;
 
 import java.awt.*;
 import java.awt.event.*;

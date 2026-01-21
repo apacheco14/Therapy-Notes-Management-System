@@ -1,15 +1,15 @@
-package main.java.com.alexpacheco.therapynotes.model.api;
+package com.alexpacheco.therapynotes.model.api;
 
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-import main.java.com.alexpacheco.therapynotes.controller.AppController;
-import main.java.com.alexpacheco.therapynotes.controller.enums.ErrorCode;
-import main.java.com.alexpacheco.therapynotes.controller.enums.LogLevel;
-import main.java.com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
-import main.java.com.alexpacheco.therapynotes.model.dao.AppLogsDao;
-import main.java.com.alexpacheco.therapynotes.model.entities.AppLog;
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
+import com.alexpacheco.therapynotes.controller.enums.LogLevel;
+import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.dao.AppLogsDao;
+import com.alexpacheco.therapynotes.model.entities.AppLog;
 
 public class AppLogApi
 {
