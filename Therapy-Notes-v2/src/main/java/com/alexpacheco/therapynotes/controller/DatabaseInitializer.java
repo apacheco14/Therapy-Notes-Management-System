@@ -1,6 +1,5 @@
 package main.java.com.alexpacheco.therapynotes.controller;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,9 +18,9 @@ import main.java.com.alexpacheco.therapynotes.util.PreferencesUtil;
 
 public class DatabaseInitializer
 {
-	private static final String SCHEMA_SCRIPT_FILE = "src/main/resources/schema-config.sql";
-	private static final String TRIGGER_SCRIPT_FILE = "src/main/resources/trigger-config.sql";
-	private static final String OPTIONS_SCRIPT_FILE = "src/main/resources/populate-option-tables.sql";
+	private static final String SCHEMA_SCRIPT_FILE = "/main/resources/schema-config.sql";
+	private static final String TRIGGER_SCRIPT_FILE = "/main/resources/trigger-config.sql";
+	private static final String OPTIONS_SCRIPT_FILE = "/main/resources/populate-option-tables.sql";
 	
 	public static void initDb() throws TherapyAppException
 	{
@@ -29,17 +28,17 @@ public class DatabaseInitializer
 		{
 			if( conn != null )
 			{
-				DbUtil.executeSqlScript( conn, new File( SCHEMA_SCRIPT_FILE ) );
+				DbUtil.executeSqlScript( conn, DatabaseInitializer.class.getResourceAsStream( SCHEMA_SCRIPT_FILE ) );
 				AppController.logToDatabase( LogLevel.INFO, "DatabaseInitializer", "Database schema created successfully." );
 				System.out.println( "Database schema created successfully." );
 				
-				DbUtil.executeTriggerScript( conn, new File( TRIGGER_SCRIPT_FILE ) );
+				DbUtil.executeTriggerScript( conn, DatabaseInitializer.class.getResourceAsStream( TRIGGER_SCRIPT_FILE ) );
 				AppController.logToDatabase( LogLevel.INFO, "DatabaseInitializer", "Database triggers created successfully." );
 				System.out.println( "Database triggers created successfully." );
 				
 				if( !isDbPopulated( conn ) )
 				{
-					DbUtil.executeSqlScript( conn, new File( OPTIONS_SCRIPT_FILE ) );
+					DbUtil.executeSqlScript( conn, DatabaseInitializer.class.getResourceAsStream( OPTIONS_SCRIPT_FILE ) );
 					AppController.logToDatabase( LogLevel.INFO, "DatabaseInitializer", "Database lookup tables populated successfully." );
 					System.out.println( "Database lookup tables populated successfully." );
 				}

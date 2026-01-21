@@ -1,9 +1,8 @@
 package main.java.com.alexpacheco.therapynotes.controller;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -369,19 +368,10 @@ public class AppController
 	{
 		if( icd10Codes == null || icd10Codes.isEmpty() )
 		{
-			try
-			{
-				Path path = Paths.get( "src/main/resources/f_codes.txt" );
-				icd10Codes = Files.lines( path ).filter( line -> !line.isBlank() ) // Skips empty lines and lines with only whitespace
-						.collect( Collectors.toList() );
-				AppController.logToDatabase( LogLevel.INFO, "AppController", "ICD 10 codes loaded" );
-			}
-			catch( IOException e )
-			{
-				AppController.showBasicErrorPopup( "Error loading ICD 10 Codes." );
-				logException( "AppController", e );
-				icd10Codes = Collections.emptyList();
-			}
+			InputStream codesStream = AppController.class.getResourceAsStream( "/main/resources/f_codes.txt" );
+			BufferedReader reader = new BufferedReader( new InputStreamReader( codesStream ) );
+			icd10Codes = reader.lines().filter( line -> !line.isBlank() ).collect( Collectors.toList() );
+			AppController.logToDatabase( LogLevel.INFO, "AppController", "ICD 10 codes loaded" );
 		}
 		
 		return icd10Codes;

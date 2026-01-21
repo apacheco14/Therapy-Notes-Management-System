@@ -1,7 +1,7 @@
 package main.java.com.alexpacheco.therapynotes.util;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -67,12 +67,12 @@ public class DbUtil
 		return getConnection( getDbUrl() );
 	}
 	
-	public static void executeSqlScript( Connection conn, File inputFile )
+	public static void executeSqlScript( Connection conn, InputStream inputStream )
 	{
 		// Use a delimiter that handles the semicolon while ignoring them inside triggers
 		// Note: For complex scripts with triggers, it's often safer to split by a custom delimiter
 		// or ensure the Scanner handles the procedural blocks.
-		try( Scanner s = new Scanner( inputFile ).useDelimiter( ";" ) )
+		try( Scanner s = new Scanner( inputStream ).useDelimiter( ";" ) )
 		{
 			conn.setAutoCommit( false ); // Use a transaction for speed and safety
 			
@@ -95,11 +95,6 @@ public class DbUtil
 				System.err.println( "Error executing script: " + e.getMessage() );
 			}
 		}
-		catch( FileNotFoundException e )
-		{
-			AppController.logException( "DbUtil", e );
-			System.err.println( "Script file not found: " + e.getMessage() );
-		}
 		catch( SQLException e )
 		{
 			AppController.logException( "DbUtil", e );
@@ -110,10 +105,10 @@ public class DbUtil
 	/**
 	 * Reads a specialized trigger file where statements are separated by // instead of ; to avoid conflicts with internal trigger logic.
 	 */
-	public static void executeTriggerScript( Connection conn, File inputFile )
+	public static void executeTriggerScript( Connection conn, InputStream inputStream )
 	{
 		// Set the delimiter to //
-		try( Scanner s = new Scanner( inputFile ).useDelimiter( "//" ) )
+		try( Scanner s = new Scanner( inputStream ).useDelimiter( "//" ) )
 		{
 			conn.setAutoCommit( false );
 			
@@ -137,11 +132,6 @@ public class DbUtil
 				AppController.logException( "DbUtil", e );
 				System.err.println( "SQL Error while loading triggers: " + e.getMessage() );
 			}
-		}
-		catch( FileNotFoundException e )
-		{
-			AppController.logException( "DbUtil", e );
-			System.err.println( "Trigger config file not found: " + e.getMessage() );
 		}
 		catch( SQLException e )
 		{
