@@ -44,7 +44,7 @@ public class Note
 		return noteId;
 	}
 	
-	public void setNoteId(Integer noteId)
+	public void setNoteId( Integer noteId )
 	{
 		this.noteId = noteId;
 	}
@@ -54,7 +54,7 @@ public class Note
 		return client;
 	}
 	
-	public void setClient(Client client)
+	public void setClient( Client client )
 	{
 		this.client = client;
 	}
@@ -64,7 +64,7 @@ public class Note
 		return apptDateTime;
 	}
 	
-	public void setApptDateTime(LocalDateTime apptDateTime)
+	public void setApptDateTime( LocalDateTime apptDateTime )
 	{
 		this.apptDateTime = apptDateTime;
 	}
@@ -74,7 +74,7 @@ public class Note
 		return diagnosis;
 	}
 	
-	public void setDiagnosis(String diagnosis)
+	public void setDiagnosis( String diagnosis )
 	{
 		this.diagnosis = diagnosis;
 	}
@@ -84,7 +84,7 @@ public class Note
 		return sessionNumber;
 	}
 	
-	public void setSessionNumber(Integer sessionNumber)
+	public void setSessionNumber( Integer sessionNumber )
 	{
 		this.sessionNumber = sessionNumber;
 	}
@@ -94,17 +94,17 @@ public class Note
 		return sessionLength;
 	}
 	
-	public void setSessionLength(String sessionLength)
+	public void setSessionLength( String sessionLength )
 	{
 		this.sessionLength = sessionLength;
 	}
 	
 	public boolean isVirtualAppt()
 	{
-		return virtualAppt;
+		return Boolean.TRUE.equals( virtualAppt );
 	}
 	
-	public void setVirtualAppt(boolean virtualAppt)
+	public void setVirtualAppt( boolean virtualAppt )
 	{
 		this.virtualAppt = virtualAppt;
 	}
@@ -114,7 +114,7 @@ public class Note
 		return apptComment;
 	}
 	
-	public void setApptComment(String apptComment)
+	public void setApptComment( String apptComment )
 	{
 		this.apptComment = apptComment;
 	}
@@ -124,7 +124,7 @@ public class Note
 		return symptoms;
 	}
 	
-	public void setSymptoms(List<Symptom> symptoms)
+	public void setSymptoms( List<Symptom> symptoms )
 	{
 		this.symptoms = symptoms;
 	}
@@ -134,7 +134,7 @@ public class Note
 		return referrals;
 	}
 	
-	public void setReferrals(List<Referral> referrals)
+	public void setReferrals( List<Referral> referrals )
 	{
 		this.referrals = referrals;
 	}
@@ -144,7 +144,7 @@ public class Note
 		return collateralContacts;
 	}
 	
-	public void setCollateralContacts(List<CollateralContact> collateralContacts)
+	public void setCollateralContacts( List<CollateralContact> collateralContacts )
 	{
 		this.collateralContacts = collateralContacts;
 	}
@@ -154,7 +154,7 @@ public class Note
 		return narrative;
 	}
 	
-	public void setNarrative(String narrative)
+	public void setNarrative( String narrative )
 	{
 		this.narrative = narrative;
 	}
@@ -164,7 +164,7 @@ public class Note
 		return appearance;
 	}
 	
-	public void setAppearance(AppearanceAssessmentOption appearance)
+	public void setAppearance( AppearanceAssessmentOption appearance )
 	{
 		this.appearance = appearance;
 	}
@@ -174,7 +174,7 @@ public class Note
 		return appearanceComment;
 	}
 	
-	public void setAppearanceComment(String appearanceNotes)
+	public void setAppearanceComment( String appearanceNotes )
 	{
 		this.appearanceComment = appearanceNotes;
 	}
@@ -184,7 +184,7 @@ public class Note
 		return speech;
 	}
 	
-	public void setSpeech(SpeechAssessmentOption speech)
+	public void setSpeech( SpeechAssessmentOption speech )
 	{
 		this.speech = speech;
 	}
@@ -194,7 +194,7 @@ public class Note
 		return speechComment;
 	}
 	
-	public void setSpeechComment(String speechNotes)
+	public void setSpeechComment( String speechNotes )
 	{
 		this.speechComment = speechNotes;
 	}
@@ -204,7 +204,7 @@ public class Note
 		return affect;
 	}
 	
-	public void setAffect(AffectAssessmentOption affect)
+	public void setAffect( AffectAssessmentOption affect )
 	{
 		this.affect = affect;
 	}
@@ -214,7 +214,7 @@ public class Note
 		return affectComment;
 	}
 	
-	public void setAffectComment(String affectNotes)
+	public void setAffectComment( String affectNotes )
 	{
 		this.affectComment = affectNotes;
 	}
@@ -224,7 +224,7 @@ public class Note
 		return eyeContact;
 	}
 	
-	public void setEyeContact(EyeContactAssessmentOption eyeContact)
+	public void setEyeContact( EyeContactAssessmentOption eyeContact )
 	{
 		this.eyeContact = eyeContact;
 	}
@@ -234,7 +234,7 @@ public class Note
 		return eyeContactComment;
 	}
 	
-	public void setEyeContactComment(String eyeContactNotes)
+	public void setEyeContactComment( String eyeContactNotes )
 	{
 		this.eyeContactComment = eyeContactNotes;
 	}
@@ -244,7 +244,7 @@ public class Note
 		return nextAppt;
 	}
 	
-	public void setNextAppt(NextApptAssessmentOption nextAppt)
+	public void setNextAppt( NextApptAssessmentOption nextAppt )
 	{
 		this.nextAppt = nextAppt;
 	}
@@ -254,7 +254,7 @@ public class Note
 		return nextApptComment;
 	}
 	
-	public void setNextApptComment(String nextApptNotes)
+	public void setNextApptComment( String nextApptNotes )
 	{
 		this.nextApptComment = nextApptNotes;
 	}
@@ -263,28 +263,28 @@ public class Note
 	{
 		return referralComment;
 	}
-
-	public void setReferralComment(String symptomComment)
+	
+	public void setReferralComment( String symptomComment )
 	{
 		this.referralComment = symptomComment;
 	}
-
+	
 	public String getCollateralContactComment()
 	{
 		return collateralContactComment;
 	}
-
-	public void setCollateralContactComment(String collateralContactComment)
+	
+	public void setCollateralContactComment( String collateralContactComment )
 	{
 		this.collateralContactComment = collateralContactComment;
 	}
-
+	
 	public LocalDateTime getCertifiedDate()
 	{
 		return certifiedDate;
 	}
 	
-	public void setCertifiedDate(LocalDateTime certifiedDate)
+	public void setCertifiedDate( LocalDateTime certifiedDate )
 	{
 		this.certifiedDate = certifiedDate;
 	}
@@ -294,7 +294,7 @@ public class Note
 		return insertDate;
 	}
 	
-	public void setInsertDate(LocalDateTime insertDate)
+	public void setInsertDate( LocalDateTime insertDate )
 	{
 		this.insertDate = insertDate;
 	}
@@ -304,7 +304,7 @@ public class Note
 		return updateDate;
 	}
 	
-	public void setUpdateDate(LocalDateTime updateDate)
+	public void setUpdateDate( LocalDateTime updateDate )
 	{
 		this.updateDate = updateDate;
 	}
