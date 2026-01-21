@@ -426,7 +426,7 @@ public class NotesDao
 		n.setCollateralContactComment(rs.getString("collateral_contact_comment"));
 		n.setCertifiedDate(DateFormatUtil.toLocalDateTime(rs.getString("certified")));
 		n.setInsertDate(DateFormatUtil.toLocalDateTime(rs.getString("insert_date")));
-		n.setInsertDate(DateFormatUtil.toLocalDateTime(rs.getString("update_date")));
+		n.setUpdateDate(DateFormatUtil.toLocalDateTime(rs.getString("update_date")));
 		return n;
 	}
 }
