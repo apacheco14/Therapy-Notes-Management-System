@@ -14,7 +14,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 
 import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.CollateralContact;
 import com.alexpacheco.therapynotes.model.entities.Note;
 import com.alexpacheco.therapynotes.model.entities.Referral;

@@ -25,7 +25,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
 import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.CollateralContact;
 import com.alexpacheco.therapynotes.model.entities.Note;
 import com.alexpacheco.therapynotes.model.entities.Referral;

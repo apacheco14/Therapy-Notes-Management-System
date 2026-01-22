@@ -4,7 +4,7 @@ import javax.swing.*;
 
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.enums.Screens;
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 
 import java.awt.*;
 

@@ -27,7 +27,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.TableColumnModel;
 
 import com.alexpacheco.therapynotes.controller.AppController;
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.Note;
 import com.alexpacheco.therapynotes.util.DateFormatUtil;
 import com.alexpacheco.therapynotes.view.components.Cmb_ClientSelection;

@@ -34,7 +34,7 @@ import javax.swing.text.DocumentFilter;
 
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.Exporter;
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.Client;
 import com.alexpacheco.therapynotes.model.entities.CollateralContact;
 import com.alexpacheco.therapynotes.model.entities.Note;

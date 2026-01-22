@@ -8,7 +8,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 import com.alexpacheco.therapynotes.controller.AppController;
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.util.JavaUtils;
 
 public class Cmb_ClientSelection extends JComboBox<String>

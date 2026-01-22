@@ -4,7 +4,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.install.SetupConfigurationManager;
 import com.alexpacheco.therapynotes.install.SetupWizardDialog;
 import com.alexpacheco.therapynotes.util.AppLogger;

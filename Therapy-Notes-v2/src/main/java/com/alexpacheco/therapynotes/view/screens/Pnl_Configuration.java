@@ -30,7 +30,7 @@ import javax.swing.table.TableColumnModel;
 
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.enums.ConfigKey;
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionFactory;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionType;

@@ -1,4 +1,4 @@
-package com.alexpacheco.therapynotes.controller.errorhandling.exceptions;
+package com.alexpacheco.therapynotes.controller.exceptions;
 
 import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
 

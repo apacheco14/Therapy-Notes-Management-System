@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.alexpacheco.therapynotes.controller.enums.LogLevel;
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.dao.AppLogsDao;
 import com.alexpacheco.therapynotes.model.entities.AppLog;
 

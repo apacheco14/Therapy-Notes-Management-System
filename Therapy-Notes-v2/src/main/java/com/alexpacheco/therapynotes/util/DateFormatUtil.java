@@ -7,7 +7,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 
 public class DateFormatUtil
 {

@@ -17,7 +17,7 @@ import javax.swing.UIManager;
 
 import com.alexpacheco.therapynotes.controller.enums.ConfigKey;
 import com.alexpacheco.therapynotes.controller.enums.LogLevel;
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.install.SetupConfiguration;
 import com.alexpacheco.therapynotes.install.SetupConfigurationManager;
 import com.alexpacheco.therapynotes.model.api.AppLogApi;

@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.api.AppLogApi;
 import com.alexpacheco.therapynotes.model.entities.AppLog;
 import com.alexpacheco.therapynotes.model.entities.Note;

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.dao.PreferencesDao;
 import com.alexpacheco.therapynotes.model.entities.Preference;
 import com.alexpacheco.therapynotes.util.AppLogger;

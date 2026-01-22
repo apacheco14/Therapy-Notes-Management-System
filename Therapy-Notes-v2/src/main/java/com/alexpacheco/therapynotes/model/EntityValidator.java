@@ -2,8 +2,8 @@ package com.alexpacheco.therapynotes.model;
 
 import java.util.List;
 
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.MissingRequiredElementException;
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.exceptions.MissingRequiredElementException;
+import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.Client;
 import com.alexpacheco.therapynotes.model.entities.Contact;
 import com.alexpacheco.therapynotes.model.entities.Note;

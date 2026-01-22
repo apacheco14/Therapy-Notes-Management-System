@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.dao.SymptomsDao;
 import com.alexpacheco.therapynotes.model.entities.Symptom;
 import com.alexpacheco.therapynotes.util.AppLogger;

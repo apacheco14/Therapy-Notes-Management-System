@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.enums.LogLevel;
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.AppLog;
 import com.alexpacheco.therapynotes.view.tablemodels.LogTableModel;
 import com.toedter.calendar.JDateChooser;

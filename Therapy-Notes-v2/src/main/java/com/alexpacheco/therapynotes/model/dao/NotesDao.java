@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.alexpacheco.therapynotes.controller.AppController;
-import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.CollateralContact;
 import com.alexpacheco.therapynotes.model.entities.Note;
 import com.alexpacheco.therapynotes.model.entities.Referral;
