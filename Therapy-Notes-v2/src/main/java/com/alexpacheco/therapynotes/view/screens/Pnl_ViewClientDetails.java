@@ -2,17 +2,21 @@ package com.alexpacheco.therapynotes.view.screens;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.enums.Screens;
 import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.Client;
 import com.alexpacheco.therapynotes.model.entities.Contact;
+import com.alexpacheco.therapynotes.model.entities.Note;
 import com.alexpacheco.therapynotes.util.DateFormatUtil;
 import com.alexpacheco.therapynotes.util.JavaUtils;
 import com.alexpacheco.therapynotes.view.tablemodels.ContactsTableModel;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class Pnl_ViewClientDetails extends JPanel
@@ -36,6 +40,13 @@ public class Pnl_ViewClientDetails extends JPanel
 	private CardLayout contactsCardLayout;
 	private CardLayout parentCardLayout;
 	private JPanel parentPanel;
+	
+	// Session notes components
+	private JTable notesTable;
+	private DefaultTableModel notesTableModel;
+	private JScrollPane notesScrollPane;
+	private JPanel notesDisplayPanel;
+	private CardLayout notesCardLayout;
 	
 	public Pnl_ViewClientDetails( CardLayout cardLayout, JPanel mainPanel )
 	{
@@ -257,10 +268,63 @@ public class Pnl_ViewClientDetails extends JPanel
 		
 		contactsSection.add( contactsDisplayPanel, BorderLayout.CENTER );
 		
-		// Main content panel
+		// Session Notes section
+		JPanel notesSection = new JPanel( new BorderLayout() );
+		notesSection.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 10, 50, 10, 50 ),
+				BorderFactory.createTitledBorder( "Session Notes" ) ) );
+		
+		// Notes display panel with CardLayout
+		notesCardLayout = new CardLayout();
+		notesDisplayPanel = new JPanel( notesCardLayout );
+		
+		// Notes table - columns: Session Date, Note Title/Summary, Open Button
+		String[] notesColumns = { "Session Number", "Appointment Date", "Appointment Comment", "Action" };
+		notesTableModel = new DefaultTableModel( notesColumns, 0 )
+		{
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public boolean isCellEditable( int row, int column )
+			{
+				return column == 3; // Only the Action column is editable (for button)
+			}
+		};
+		
+		notesTable = new JTable( notesTableModel );
+		notesTable.setRowHeight( 30 );
+		notesTable.getTableHeader().setReorderingAllowed( false );
+		notesTable.setCellSelectionEnabled( false );
+		notesTable.setAutoCreateRowSorter( true );
+		
+		// Set up the button column
+		notesTable.getColumnModel().getColumn( 3 ).setCellRenderer( new ButtonRenderer() );
+		notesTable.getColumnModel().getColumn( 3 ).setCellEditor( new ButtonEditor() );
+		notesTable.getColumnModel().getColumn( 3 ).setPreferredWidth( 80 );
+		notesTable.getColumnModel().getColumn( 3 ).setMaxWidth( 100 );
+		
+		notesScrollPane = new JScrollPane( notesTable );
+		notesScrollPane.setPreferredSize( new Dimension( 0, 200 ) );
+		
+		JPanel noNotesPanel = new JPanel( new BorderLayout() );
+		JLabel noNotesLabel = new JLabel( "No session notes for this client", SwingConstants.CENTER );
+		noNotesLabel.setFont( new Font( "Arial", Font.ITALIC, 14 ) );
+		noNotesLabel.setForeground( Color.GRAY );
+		noNotesPanel.add( noNotesLabel, BorderLayout.CENTER );
+		
+		notesDisplayPanel.add( notesScrollPane, "table" );
+		notesDisplayPanel.add( noNotesPanel, "noNotes" );
+		
+		notesSection.add( notesDisplayPanel, BorderLayout.CENTER );
+		
+		// Main content panel - use BoxLayout for vertical stacking
+		JPanel sectionsPanel = new JPanel();
+		sectionsPanel.setLayout( new BoxLayout( sectionsPanel, BoxLayout.Y_AXIS ) );
+		sectionsPanel.add( contactsSection );
+		sectionsPanel.add( notesSection );
+		
 		JPanel contentPanel = new JPanel( new BorderLayout() );
 		contentPanel.add( detailsScrollPane, BorderLayout.NORTH );
-		contentPanel.add( contactsSection, BorderLayout.CENTER );
+		contentPanel.add( sectionsPanel, BorderLayout.CENTER );
 		
 		// Button panel
 		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER, 10, 10 ) );
@@ -290,6 +354,7 @@ public class Pnl_ViewClientDetails extends JPanel
 		{
 			displayClientDetails( client );
 			loadContacts( clientId );
+			loadNotes( clientId );
 			parentCardLayout.show( parentPanel, Screens.CLIENT_DETAILS.getPanelName() );
 		}
 		else
@@ -361,6 +426,117 @@ public class Pnl_ViewClientDetails extends JPanel
 			}
 			
 			contactsCardLayout.show( contactsDisplayPanel, "table" );
+		}
+	}
+	
+	private void loadNotes( Integer clientId )
+	{
+		try
+		{
+			List<Note> notes = AppController.getNotesByClientId( clientId );
+			displayNotes( notes );
+		}
+		catch( TherapyAppException e )
+		{
+			AppController.showBasicErrorPopup( e, "Error loading session notes:" );
+		}
+	}
+	
+	private void displayNotes( List<Note> notes )
+	{
+		notesTableModel.setRowCount( 0 );
+		
+		if( notes == null || notes.isEmpty() )
+		{
+			notesCardLayout.show( notesDisplayPanel, "noNotes" );
+		}
+		else
+		{
+			for( Note note : notes )
+			{
+				String apptDate = DateFormatUtil.toSimpleString( DateFormatUtil.toDate( note.getApptDateTime() ) );
+				
+				Object[] rowData = { note.getSessionNumber(), apptDate, note.getApptComment(), note.getNoteId() };
+				notesTableModel.addRow( rowData );
+			}
+			
+			notesCardLayout.show( notesDisplayPanel, "table" );
+		}
+	}
+	
+	/**
+	 * Custom renderer for the Open button in the notes table
+	 */
+	private class ButtonRenderer extends JButton implements TableCellRenderer
+	{
+		private static final long serialVersionUID = 1L;
+		
+		public ButtonRenderer()
+		{
+			setOpaque( true );
+		}
+		
+		@Override
+		public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
+				int column )
+		{
+			setText( "Open" );
+			return this;
+		}
+	}
+	
+	/**
+	 * Custom editor for the Open button in the notes table
+	 */
+	private class ButtonEditor extends DefaultCellEditor
+	{
+		private static final long serialVersionUID = 1L;
+		private JButton button;
+		private Integer noteId;
+		private boolean isPushed;
+		
+		public ButtonEditor()
+		{
+			super( new JCheckBox() );
+			button = new JButton( "Open" );
+			button.setOpaque( true );
+			button.addActionListener( new ActionListener()
+			{
+				@Override
+				public void actionPerformed( ActionEvent e )
+				{
+					fireEditingStopped();
+				}
+			} );
+		}
+		
+		@Override
+		public Component getTableCellEditorComponent( JTable table, Object value, boolean isSelected, int row, int column )
+		{
+			if( value instanceof Integer )
+			{
+				noteId = (Integer) value;
+			}
+			isPushed = true;
+			return button;
+		}
+		
+		@Override
+		public Object getCellEditorValue()
+		{
+			if( isPushed && noteId != null )
+			{
+				AppController.openNote( noteId );
+			}
+			isPushed = false;
+			return noteId;
+		}
+		
+		@Override
+		public boolean stopCellEditing()
+		{
+			isPushed = false;
+			return super.stopCellEditing();
 		}
 	}
 }

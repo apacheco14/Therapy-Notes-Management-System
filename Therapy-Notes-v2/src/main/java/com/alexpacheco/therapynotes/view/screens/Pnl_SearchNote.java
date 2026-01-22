@@ -27,7 +27,6 @@ import javax.swing.SwingConstants;
 import javax.swing.table.TableColumnModel;
 
 import com.alexpacheco.therapynotes.controller.AppController;
-import com.alexpacheco.therapynotes.controller.enums.Screens;
 import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.Note;
 import com.alexpacheco.therapynotes.util.DateFormatUtil;
@@ -47,17 +46,10 @@ public class Pnl_SearchNote extends JPanel
 	private JLabel noResultsLabel;
 	private JPanel resultsPanel;
 	private CardLayout resultsCardLayout;
-	private CardLayout parentCardLayout;
-	private JPanel parentPanel;
-	private Pnl_NewEditNote newEditNotePanel;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat( "MM/dd/yyyy" );
 	
-	public Pnl_SearchNote( CardLayout cardLayout, JPanel mainPanel, Pnl_NewEditNote newEditNotePanel )
+	public Pnl_SearchNote()
 	{
-		this.parentCardLayout = cardLayout;
-		this.parentPanel = mainPanel;
-		this.newEditNotePanel = newEditNotePanel;
-		
 		setLayout( new BorderLayout() );
 		
 		JLabel titleLabel = new JLabel( "Search Notes", SwingConstants.CENTER );
@@ -184,7 +176,7 @@ public class Pnl_SearchNote extends JPanel
 				button.addActionListener( e ->
 				{
 					Integer noteId = (Integer) tableModel.getNoteIdAt( currentRow );
-					openNote( noteId );
+					AppController.openNote( noteId );
 					fireEditingStopped();
 				} );
 				return button;
@@ -193,10 +185,11 @@ public class Pnl_SearchNote extends JPanel
 		
 		// Set column widths
 		TableColumnModel columnModel = resultsTable.getColumnModel();
-		columnModel.getColumn( 1 ).setPreferredWidth( 200 );
-		columnModel.getColumn( 2 ).setPreferredWidth( 150 );
-		columnModel.getColumn( 3 ).setPreferredWidth( 120 );
-		columnModel.getColumn( 4 ).setPreferredWidth( 80 );
+		columnModel.getColumn( NoteSearchResultsTableModel.COL_CLIENT ).setPreferredWidth( 200 );
+		columnModel.getColumn( NoteSearchResultsTableModel.COL_SESSION_NUM ).setPreferredWidth( 50 );
+		columnModel.getColumn( NoteSearchResultsTableModel.COL_APPT_DATE ).setPreferredWidth( 120 );
+		columnModel.getColumn( NoteSearchResultsTableModel.COL_APPT_COMMENT ).setPreferredWidth( 200 );
+		columnModel.getColumn( NoteSearchResultsTableModel.COL_OPEN_BUTTON ).setPreferredWidth( 50 );
 		
 		scrollPane = new JScrollPane( resultsTable );
 		
@@ -268,39 +261,19 @@ public class Pnl_SearchNote extends JPanel
 			{
 				Integer noteId = note.getNoteId();
 				String clientName = note.getClient().getFullName();
+				Integer sessionNumber = note.getSessionNumber();
 				Date apptDate = DateFormatUtil.toDate( note.getApptDateTime() );
 				String apptNote = note.getApptComment();
 				
 				String formattedDate = apptDate != null ? dateFormat.format( apptDate ) : "";
 				
 				Object[] rowData = { noteId, // Hidden column
-						clientName, formattedDate, apptNote, "Open" };
+						clientName, sessionNumber, formattedDate, apptNote, "Open" };
 				
 				tableModel.addRow( rowData );
 			}
 			
 			resultsCardLayout.show( resultsPanel, "table" );
-		}
-	}
-	
-	private void openNote( Integer noteId )
-	{
-		try
-		{
-			Note note = AppController.getNote( noteId );
-			if( note != null )
-			{
-				newEditNotePanel.loadNote( note );
-				parentCardLayout.show( parentPanel, Screens.NEW_EDIT_NOTE.getPanelName() );
-			}
-			else
-			{
-				JOptionPane.showMessageDialog( this, "Note not found.", "Error", JOptionPane.ERROR_MESSAGE );
-			}
-		}
-		catch( TherapyAppException e )
-		{
-			AppController.showBasicErrorPopup( e, "Error loading note:" );
 		}
 	}
 }

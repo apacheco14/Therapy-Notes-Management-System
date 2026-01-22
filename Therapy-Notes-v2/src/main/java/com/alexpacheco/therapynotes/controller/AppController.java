@@ -293,6 +293,19 @@ public class AppController
 		return notes;
 	}
 	
+	public static List<Note> getNotesByClientId( int clientId ) throws TherapyAppException
+	{
+		List<Note> notes = noteApi.searchNotes( clientId, null, null );
+		for( Note note : notes )
+		{
+			note.setSymptoms( symptomApi.getSelectedSymptomsForNote( note.getNoteId() ) );
+			note.setReferrals( referralApi.getSelectedReferralsForNote( note.getNoteId() ) );
+			note.setCollateralContacts( collateralContactApi.getSelectedCollateralContactsForNote( note.getNoteId() ) );
+		}
+		
+		return notes;
+	}
+	
 	public static Note getNote( int noteId ) throws TherapyAppException
 	{
 		Note note = noteApi.getNote( noteId );
@@ -429,5 +442,25 @@ public class AppController
 		{
 			window.updateMenu();
 		} );
+	}
+	
+	public static void openNote( Integer noteId )
+	{
+		try
+		{
+			Note note = AppController.getNote( noteId );
+			if( note != null )
+			{
+				window.openNote( note );
+			}
+			else
+			{
+				JOptionPane.showMessageDialog( window, "Note not found.", "Error", JOptionPane.ERROR_MESSAGE );
+			}
+		}
+		catch( TherapyAppException e )
+		{
+			AppController.showBasicErrorPopup( e, "Error loading note:" );
+		}
 	}
 }

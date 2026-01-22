@@ -5,6 +5,7 @@ import javax.swing.*;
 import com.alexpacheco.therapynotes.controller.Exporter;
 import com.alexpacheco.therapynotes.controller.PinManager;
 import com.alexpacheco.therapynotes.controller.enums.Screens;
+import com.alexpacheco.therapynotes.model.entities.Note;
 import com.alexpacheco.therapynotes.util.AppLogger;
 import com.alexpacheco.therapynotes.view.dialogs.Dlg_AddPin;
 import com.alexpacheco.therapynotes.view.dialogs.Dlg_ChangePin;
@@ -81,7 +82,7 @@ public class MainWindow extends JFrame
 		searchClientsViewPanel = new Pnl_SearchClientsView( cardLayout, mainPanel, clientDetailsPanel );
 		newEditContactPanel = new Pnl_NewEditContact();
 		newEditNotePanel = new Pnl_NewEditNote();
-		searchNotePanel = new Pnl_SearchNote( cardLayout, mainPanel, newEditNotePanel );
+		searchNotePanel = new Pnl_SearchNote();
 		searchClientsEditPanel = new Pnl_SearchClientsEdit( cardLayout, mainPanel, newEditClientPanel );
 		searchContactPanel = new Pnl_SearchContact( cardLayout, mainPanel, newEditContactPanel );
 		preferencesPanel = new Pnl_Preferences();
@@ -334,5 +335,11 @@ public class MainWindow extends JFrame
 		
 		settingsMenu.revalidate();
 		settingsMenu.repaint();
+	}
+	
+	public void openNote( Note note )
+	{
+		_changeScreen( Screens.NEW_EDIT_NOTE );
+		newEditNotePanel.loadNote( note );
 	}
 }
