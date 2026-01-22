@@ -62,8 +62,6 @@ public class Exporter
 		}
 		catch( IOException e )
 		{
-			System.err.println( "Failed to export logs to CSV: " + e.getMessage() );
-			e.printStackTrace();
 			AppLogger.error( "Failed to export logs to CSV: " + e.getMessage(), e );
 			
 			return false;

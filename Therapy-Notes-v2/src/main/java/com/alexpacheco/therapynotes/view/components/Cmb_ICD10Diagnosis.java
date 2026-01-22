@@ -13,12 +13,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.util.AppLogger;
 import com.alexpacheco.therapynotes.util.JavaUtils;
 
 /**
- * A searchable combo box for selecting ICD-10 diagnosis codes. Displays codes in the format
- * "&lt;code with decimal&gt; - &lt;short description&gt;". Filters the dropdown list as the user
- * types.
+ * A searchable combo box for selecting ICD-10 diagnosis codes. Displays codes in the format "&lt;code with decimal&gt; - &lt;short
+ * description&gt;". Filters the dropdown list as the user types.
  */
 public class Cmb_ICD10Diagnosis extends JComboBox<String>
 {
@@ -36,8 +36,8 @@ public class Cmb_ICD10Diagnosis extends JComboBox<String>
 		this.allCodes = new ArrayList<>();
 		this.model = new DefaultComboBoxModel<>();
 		
-		setModel(model);
-		setEditable(true);
+		setModel( model );
+		setEditable( true );
 		
 		editorField = (JTextField) getEditor().getEditorComponent();
 		
@@ -53,22 +53,22 @@ public class Cmb_ICD10Diagnosis extends JComboBox<String>
 		try
 		{
 			List<String> codes = AppController.getIcd10Codes();
-			if (codes != null)
+			if( codes != null )
 			{
 				allCodes.clear();
-				allCodes.addAll(codes);
+				allCodes.addAll( codes );
 				
 				model.removeAllElements();
-				model.addElement(""); // Blank option
-				for (String code : allCodes)
+				model.addElement( "" ); // Blank option
+				for( String code : allCodes )
 				{
-					model.addElement(code);
+					model.addElement( code );
 				}
 			}
 		}
-		catch (Exception e)
+		catch( Exception e )
 		{
-			System.err.println("Failed to load ICD-10 codes: " + e.getMessage());
+			AppLogger.warning( "Failed to load ICD-10 codes: " + e.getMessage() );
 		}
 	}
 	
@@ -77,36 +77,36 @@ public class Cmb_ICD10Diagnosis extends JComboBox<String>
 	 */
 	private void attachListeners()
 	{
-		editorField.addKeyListener(new KeyAdapter()
+		editorField.addKeyListener( new KeyAdapter()
 		{
 			@Override
-			public void keyReleased(KeyEvent e)
+			public void keyReleased( KeyEvent e )
 			{
 				int keyCode = e.getKeyCode();
 				
 				// Ignore navigation and action keys
-				if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_ENTER
+				if( keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_ENTER
 						|| keyCode == KeyEvent.VK_ESCAPE || keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_RIGHT
-						|| keyCode == KeyEvent.VK_SHIFT || keyCode == KeyEvent.VK_CONTROL || keyCode == KeyEvent.VK_ALT)
+						|| keyCode == KeyEvent.VK_SHIFT || keyCode == KeyEvent.VK_CONTROL || keyCode == KeyEvent.VK_ALT )
 				{
 					return;
 				}
 				
 				filterCodes();
 			}
-		});
+		} );
 		
-		editorField.addFocusListener(new FocusAdapter()
+		editorField.addFocusListener( new FocusAdapter()
 		{
 			@Override
-			public void focusGained(FocusEvent e)
+			public void focusGained( FocusEvent e )
 			{
-				if (editorField.getText().isEmpty())
+				if( editorField.getText().isEmpty() )
 				{
 					showPopup();
 				}
 			}
-		});
+		} );
 	}
 	
 	/**
@@ -114,14 +114,14 @@ public class Cmb_ICD10Diagnosis extends JComboBox<String>
 	 */
 	private void filterCodes()
 	{
-		if (isFiltering)
+		if( isFiltering )
 		{
 			return;
 		}
 		
 		isFiltering = true;
 		
-		SwingUtilities.invokeLater(() ->
+		SwingUtilities.invokeLater( () ->
 		{
 			try
 			{
@@ -131,39 +131,39 @@ public class Cmb_ICD10Diagnosis extends JComboBox<String>
 				
 				model.removeAllElements();
 				
-				if (searchText.isEmpty())
+				if( searchText.isEmpty() )
 				{
 					// Show all codes when search is empty
-					model.addElement("");
-					for (String code : allCodes)
+					model.addElement( "" );
+					for( String code : allCodes )
 					{
-						model.addElement(code);
+						model.addElement( code );
 					}
 				}
 				else
 				{
 					// Filter codes that contain the search text
-					for (String code : allCodes)
+					for( String code : allCodes )
 					{
-						if (code.toLowerCase().contains(searchText))
+						if( code.toLowerCase().contains( searchText ) )
 						{
-							model.addElement(code);
+							model.addElement( code );
 						}
 					}
 					
 					// Add a "no results" indicator if nothing matches
-					if (model.getSize() == 0)
+					if( model.getSize() == 0 )
 					{
-						model.addElement("No matching codes found");
+						model.addElement( "No matching codes found" );
 					}
 				}
 				
 				// Restore the typed text and caret position
-				editorField.setText(originalText);
-				editorField.setCaretPosition(Math.min(caretPosition, originalText.length()));
+				editorField.setText( originalText );
+				editorField.setCaretPosition( Math.min( caretPosition, originalText.length() ) );
 				
 				// Show the filtered dropdown
-				if (model.getSize() > 0)
+				if( model.getSize() > 0 )
 				{
 					showPopup();
 				}
@@ -172,7 +172,7 @@ public class Cmb_ICD10Diagnosis extends JComboBox<String>
 			{
 				isFiltering = false;
 			}
-		});
+		} );
 	}
 	
 	/**
@@ -184,7 +184,7 @@ public class Cmb_ICD10Diagnosis extends JComboBox<String>
 	{
 		Object selected = getSelectedItem();
 		
-		if (selected == null)
+		if( selected == null )
 		{
 			return "";
 		}
@@ -192,27 +192,27 @@ public class Cmb_ICD10Diagnosis extends JComboBox<String>
 		String value = selected.toString().trim();
 		
 		// Check if it's the "no results" placeholder
-		if ("No matching codes found".equals(value))
+		if( "No matching codes found".equals( value ) )
 		{
-			return JavaUtils.isNullOrEmpty(editorField.getText()) ? "" : editorField.getText();
+			return JavaUtils.isNullOrEmpty( editorField.getText() ) ? "" : editorField.getText();
 		}
 		
 		// Verify it's a valid code from our list
-		if (allCodes.contains(value))
+		if( allCodes.contains( value ) )
 		{
 			return value;
 		}
 		
 		// Check if user typed something that exactly matches a code
-		for (String code : allCodes)
+		for( String code : allCodes )
 		{
-			if (code.equalsIgnoreCase(value))
+			if( code.equalsIgnoreCase( value ) )
 			{
 				return code;
 			}
 		}
 		
-		return JavaUtils.isNullOrEmpty(editorField.getText()) ? "" : editorField.getText();
+		return JavaUtils.isNullOrEmpty( editorField.getText() ) ? "" : editorField.getText();
 	}
 	
 	/**
@@ -220,36 +220,36 @@ public class Cmb_ICD10Diagnosis extends JComboBox<String>
 	 * 
 	 * @param diagnosis The diagnosis string to select
 	 */
-	public void setDiagnosis(String diagnosis)
+	public void setDiagnosis( String diagnosis )
 	{
-		if (JavaUtils.isNullOrEmpty(diagnosis))
+		if( JavaUtils.isNullOrEmpty( diagnosis ) )
 		{
-			setSelectedItem("");
+			setSelectedItem( "" );
 			return;
 		}
 		
 		// Try to find exact match
-		for (String code : allCodes)
+		for( String code : allCodes )
 		{
-			if (code.equals(diagnosis))
+			if( code.equals( diagnosis ) )
 			{
-				setSelectedItem(code);
+				setSelectedItem( code );
 				return;
 			}
 		}
 		
 		// Try case-insensitive match
-		for (String code : allCodes)
+		for( String code : allCodes )
 		{
-			if (code.equalsIgnoreCase(diagnosis))
+			if( code.equalsIgnoreCase( diagnosis ) )
 			{
-				setSelectedItem(code);
+				setSelectedItem( code );
 				return;
 			}
 		}
 		
 		// If no match found, set the text anyway (for editing existing notes)
-		setSelectedItem(diagnosis);
+		setSelectedItem( diagnosis );
 	}
 	
 	/**
@@ -259,7 +259,7 @@ public class Cmb_ICD10Diagnosis extends JComboBox<String>
 	{
 		String currentSelection = getDiagnosis();
 		loadCodes();
-		setDiagnosis(currentSelection);
+		setDiagnosis( currentSelection );
 	}
 	
 	/**
@@ -267,7 +267,7 @@ public class Cmb_ICD10Diagnosis extends JComboBox<String>
 	 */
 	public void clear()
 	{
-		setSelectedItem("");
-		editorField.setText("");
+		setSelectedItem( "" );
+		editorField.setText( "" );
 	}
 }

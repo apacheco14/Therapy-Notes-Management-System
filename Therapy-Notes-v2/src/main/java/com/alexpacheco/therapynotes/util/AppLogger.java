@@ -171,6 +171,9 @@ public class AppLogger
 		record.setLoggerName( logger.getName() );
 		
 		logger.log( record );
+		
+		if( Level.SEVERE.equals( level ) )
+			System.err.println( message );
 	}
 	
 	/**
