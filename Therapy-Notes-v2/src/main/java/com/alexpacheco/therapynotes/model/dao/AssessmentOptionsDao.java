@@ -5,6 +5,7 @@ import java.util.List;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionFactory;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionType;
+import com.alexpacheco.therapynotes.util.AppLogger;
 import com.alexpacheco.therapynotes.util.DbUtil;
 
 import java.sql.*;
@@ -15,23 +16,25 @@ public class AssessmentOptionsDao
 	/**
 	 * Inserts a new assessment option into the database.
 	 */
-	public void createOption(AssessmentOption option) throws SQLException
+	public void createOption( AssessmentOption option ) throws SQLException
 	{
 		String sql = "INSERT INTO assessment_options (type, name, description) VALUES (?, ?, ?)";
 		
-		try (Connection conn = DbUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql))
+		try( Connection conn = DbUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement( sql ) )
 		{
-			pstmt.setString(1, option.getOptionType().getDbTypeKey());
-			pstmt.setString(2, option.getName());
-			pstmt.setString(3, option.getDescription());
+			pstmt.setString( 1, option.getOptionType().getDbTypeKey() );
+			pstmt.setString( 2, option.getName() );
+			pstmt.setString( 3, option.getDescription() );
 			pstmt.executeUpdate();
 		}
+		
+		AppLogger.logDatabaseOperation( "INSERT", "assessment_options", true );
 	}
 	
 	/**
 	 * Inserts new assessment options into the database in a single database transaction.
 	 */
-	public void createOptionsBatch(List<AssessmentOption> options) throws SQLException
+	public void createOptionsBatch( List<AssessmentOption> options ) throws SQLException
 	{
 		String sql = "INSERT INTO assessment_options (type, name, description) VALUES (?, ?, ?)";
 		
@@ -39,15 +42,15 @@ public class AssessmentOptionsDao
 		try
 		{
 			conn = DbUtil.getConnection();
-			conn.setAutoCommit(false); // Start Transaction
+			conn.setAutoCommit( false ); // Start Transaction
 			
-			try (PreparedStatement pstmt = conn.prepareStatement(sql))
+			try( PreparedStatement pstmt = conn.prepareStatement( sql ) )
 			{
-				for (AssessmentOption option : options)
+				for( AssessmentOption option : options )
 				{
-					pstmt.setString(1, option.getOptionType().getDbTypeKey());
-					pstmt.setString(2, option.getName());
-					pstmt.setString(3, option.getDescription());
+					pstmt.setString( 1, option.getOptionType().getDbTypeKey() );
+					pstmt.setString( 2, option.getName() );
+					pstmt.setString( 3, option.getDescription() );
 					pstmt.addBatch(); // Add to the local buffer
 				}
 				
@@ -55,20 +58,22 @@ public class AssessmentOptionsDao
 				conn.commit(); // Finalize the changes
 			}
 		}
-		catch (SQLException e)
+		catch( SQLException e )
 		{
-			if (conn != null)
+			if( conn != null )
 			{
 				conn.rollback(); // Undo everything if one update fails
 			}
+			AppLogger.logDatabaseOperation( "INSERT", "assessment_options", false );
 			throw e;
 		}
 		finally
 		{
-			if (conn != null)
+			if( conn != null )
 			{
-				conn.setAutoCommit(true);
+				conn.setAutoCommit( true );
 				conn.close();
+				AppLogger.logDatabaseOperation( "INSERT", "assessment_options", true );
 			}
 		}
 	}
@@ -76,28 +81,30 @@ public class AssessmentOptionsDao
 	/**
 	 * Updates a single existing option.
 	 */
-	public void updateOption(AssessmentOption option) throws SQLException
+	public void updateOption( AssessmentOption option ) throws SQLException
 	{
 		String sql = "UPDATE assessment_options SET name = ?, description = ? WHERE id = ?";
 		
-		try (Connection conn = DbUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql))
+		try( Connection conn = DbUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement( sql ) )
 		{
-			pstmt.setString(1, option.getName());
-			pstmt.setString(2, option.getDescription());
-			pstmt.setInt(3, option.getId());
+			pstmt.setString( 1, option.getName() );
+			pstmt.setString( 2, option.getDescription() );
+			pstmt.setInt( 3, option.getId() );
 			
 			int affectedRows = pstmt.executeUpdate();
-			if (affectedRows == 0)
+			if( affectedRows == 0 )
 			{
-				throw new SQLException("Update failed: Option ID " + option.getId() + " not found.");
+				throw new SQLException( "Update failed: Option ID " + option.getId() + " not found." );
 			}
 		}
+		
+		AppLogger.logDatabaseOperation( "UPDATE", "assessment_options", true );
 	}
 	
 	/**
 	 * Updates multiple options in a single database transaction.
 	 */
-	public void updateOptionsBatch(List<AssessmentOption> options) throws SQLException
+	public void updateOptionsBatch( List<AssessmentOption> options ) throws SQLException
 	{
 		String sql = "UPDATE assessment_options SET name = ?, description = ?, type = ? WHERE id = ?";
 		
@@ -105,16 +112,16 @@ public class AssessmentOptionsDao
 		try
 		{
 			conn = DbUtil.getConnection();
-			conn.setAutoCommit(false); // Start Transaction
+			conn.setAutoCommit( false ); // Start Transaction
 			
-			try (PreparedStatement pstmt = conn.prepareStatement(sql))
+			try( PreparedStatement pstmt = conn.prepareStatement( sql ) )
 			{
-				for (AssessmentOption option : options)
+				for( AssessmentOption option : options )
 				{
-					pstmt.setString(1, option.getName());
-					pstmt.setString(2, option.getDescription());
-					pstmt.setString(3, option.getOptionType().getDbTypeKey());
-					pstmt.setInt(4, option.getId());
+					pstmt.setString( 1, option.getName() );
+					pstmt.setString( 2, option.getDescription() );
+					pstmt.setString( 3, option.getOptionType().getDbTypeKey() );
+					pstmt.setInt( 4, option.getId() );
 					pstmt.addBatch(); // Add to the local buffer
 				}
 				
@@ -122,20 +129,22 @@ public class AssessmentOptionsDao
 				conn.commit(); // Finalize the changes
 			}
 		}
-		catch (SQLException e)
+		catch( SQLException e )
 		{
-			if (conn != null)
+			if( conn != null )
 			{
 				conn.rollback(); // Undo everything if one update fails
 			}
+			AppLogger.logDatabaseOperation( "UPDATE", "assessment_options", false );
 			throw e;
 		}
 		finally
 		{
-			if (conn != null)
+			if( conn != null )
 			{
-				conn.setAutoCommit(true);
+				conn.setAutoCommit( true );
 				conn.close();
+				AppLogger.logDatabaseOperation( "UPDATE", "assessment_options", true );
 			}
 		}
 	}
@@ -148,61 +157,65 @@ public class AssessmentOptionsDao
 		List<AssessmentOption> options = new ArrayList<>();
 		String sql = "SELECT * FROM assessment_options WHERE inactive = 0 ORDER BY type, name ASC";
 		
-		try (Connection conn = DbUtil.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql))
+		try( Connection conn = DbUtil.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery( sql ) )
 		{
-			while (rs.next())
+			while( rs.next() )
 			{
-				AssessmentOption option = AssessmentOptionFactory.createAssessmentOption(rs.getInt("id"), rs.getString("name"),
-						rs.getString("description"), rs.getString("type"));
-				options.add(option);
+				AssessmentOption option = AssessmentOptionFactory.createAssessmentOption( rs.getInt( "id" ), rs.getString( "name" ),
+						rs.getString( "description" ), rs.getString( "type" ) );
+				options.add( option );
 			}
 		}
+		
+		AppLogger.logDatabaseOperation( "SELECT", "assessment_options", true );
 		return options;
 	}
 	
 	/**
 	 * Retrieves options of a certain type.
 	 */
-	public List<AssessmentOption> getOptions(AssessmentOptionType type) throws SQLException
+	public List<AssessmentOption> getOptions( AssessmentOptionType type ) throws SQLException
 	{
 		List<AssessmentOption> options = new ArrayList<>();
 		String sql = "SELECT * FROM assessment_options WHERE inactive = 0 AND type = ? ORDER BY name ASC";
 		
-		try (Connection conn = DbUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql))
+		try( Connection conn = DbUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement( sql ) )
 		{
-			pstmt.setString(1, type.getDbTypeKey());
+			pstmt.setString( 1, type.getDbTypeKey() );
 			
-			try (ResultSet rs = pstmt.executeQuery())
+			try( ResultSet rs = pstmt.executeQuery() )
 			{
-				while (rs.next())
+				while( rs.next() )
 				{
-					AssessmentOption option = AssessmentOptionFactory.createAssessmentOption(rs.getInt("id"), rs.getString("name"),
-							rs.getString("description"), rs.getString("type"));
-					options.add(option);
+					AssessmentOption option = AssessmentOptionFactory.createAssessmentOption( rs.getInt( "id" ), rs.getString( "name" ),
+							rs.getString( "description" ), rs.getString( "type" ) );
+					options.add( option );
 				}
 			}
 		}
 		
+		AppLogger.logDatabaseOperation( "SELECT", "assessment_options", true );
 		return options;
 	}
 	
-	public AssessmentOption getOption(Integer assessmentOptionId) throws SQLException
+	public AssessmentOption getOption( Integer assessmentOptionId ) throws SQLException
 	{
 		String sql = "SELECT * FROM assessment_options WHERE id = ?";
-		try (Connection conn = DbUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql))
+		try( Connection conn = DbUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement( sql ) )
 		{
-			pstmt.setInt(1, assessmentOptionId);
+			pstmt.setInt( 1, assessmentOptionId );
 			
-			try (ResultSet rs = pstmt.executeQuery())
+			try( ResultSet rs = pstmt.executeQuery() )
 			{
-				while (rs.next())
+				while( rs.next() )
 				{
-					return AssessmentOptionFactory.createAssessmentOption(rs.getInt("id"), rs.getString("name"),
-							rs.getString("description"), rs.getString("type"));
+					return AssessmentOptionFactory.createAssessmentOption( rs.getInt( "id" ), rs.getString( "name" ),
+							rs.getString( "description" ), rs.getString( "type" ) );
 				}
 			}
 		}
 		
+		AppLogger.logDatabaseOperation( "SELECT", "assessment_options", true );
 		return null;
 	}
 }

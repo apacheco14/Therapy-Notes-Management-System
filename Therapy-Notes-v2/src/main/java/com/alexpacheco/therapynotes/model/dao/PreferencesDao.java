@@ -13,6 +13,7 @@ import java.util.Optional;
 import com.alexpacheco.therapynotes.controller.enums.PreferenceType;
 import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.Preference;
+import com.alexpacheco.therapynotes.util.AppLogger;
 import com.alexpacheco.therapynotes.util.DateFormatUtil;
 import com.alexpacheco.therapynotes.util.DbUtil;
 
@@ -36,8 +37,7 @@ public class PreferencesDao
 	private static final String SQL_INSERT = "INSERT INTO user_preferences (preference_key, preference_value, preference_type, "
 			+ "display_name, description, default_value, category) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 	
-	private static final String SQL_UPDATE_VALUE = "UPDATE user_preferences SET preference_value = ? "
-			+ "WHERE preference_key = ?";
+	private static final String SQL_UPDATE_VALUE = "UPDATE user_preferences SET preference_value = ? " + "WHERE preference_key = ?";
 	
 	private static final String SQL_UPDATE_FULL = "UPDATE user_preferences SET preference_value = ?, preference_type = ?, "
 			+ "display_name = ?, description = ?, default_value = ?, category = ? WHERE preference_key = ?";
@@ -104,6 +104,7 @@ public class PreferencesDao
 			}
 		}
 		
+		AppLogger.logDatabaseOperation( "SELECT", "user_preferences", true );
 		return Optional.empty();
 	}
 	
@@ -132,6 +133,7 @@ public class PreferencesDao
 			}
 		}
 		
+		AppLogger.logDatabaseOperation( "SELECT", "user_preferences", true );
 		return preferences;
 	}
 	
@@ -155,6 +157,7 @@ public class PreferencesDao
 			}
 		}
 		
+		AppLogger.logDatabaseOperation( "SELECT", "user_preferences", true );
 		return categories;
 	}
 	
@@ -198,6 +201,7 @@ public class PreferencesDao
 			}
 		}
 		
+		AppLogger.logDatabaseOperation( "SELECT", "user_preferences", true );
 		return preferences;
 	}
 	
@@ -221,6 +225,7 @@ public class PreferencesDao
 			stmt.setString( 6, preference.getDefaultValue() );
 			stmt.setString( 7, preference.getCategory() );
 			
+			AppLogger.logDatabaseOperation( "INSERT", "user_preferences", true );
 			return stmt.executeUpdate() > 0;
 		}
 	}
@@ -240,6 +245,7 @@ public class PreferencesDao
 			stmt.setString( 1, newValue );
 			stmt.setString( 2, preferenceKey );
 			
+			AppLogger.logDatabaseOperation( "UPDATE", "user_preferences", true );
 			return stmt.executeUpdate() > 0;
 		}
 	}
@@ -264,6 +270,7 @@ public class PreferencesDao
 			stmt.setString( 6, preference.getCategory() );
 			stmt.setString( 7, preference.getPreferenceKey() );
 			
+			AppLogger.logDatabaseOperation( "UPDATE", "user_preferences", true );
 			return stmt.executeUpdate() > 0;
 		}
 	}
@@ -321,6 +328,7 @@ public class PreferencesDao
 		try( Connection connection = DbUtil.getConnection(); PreparedStatement stmt = connection.prepareStatement( SQL_DELETE ) )
 		{
 			stmt.setString( 1, preferenceKey );
+			AppLogger.logDatabaseOperation( "DELETE", "user_preferences", true );
 			return stmt.executeUpdate() > 0;
 		}
 	}
@@ -337,6 +345,7 @@ public class PreferencesDao
 		try( Connection connection = DbUtil.getConnection(); PreparedStatement stmt = connection.prepareStatement( SQL_RESET_TO_DEFAULT ) )
 		{
 			stmt.setString( 1, preferenceKey );
+			AppLogger.logDatabaseOperation( "UPDATE", "user_preferences", true );
 			return stmt.executeUpdate() > 0;
 		}
 	}
@@ -354,6 +363,7 @@ public class PreferencesDao
 				PreparedStatement stmt = connection.prepareStatement( SQL_RESET_CATEGORY_TO_DEFAULTS ) )
 		{
 			stmt.setString( 1, category );
+			AppLogger.logDatabaseOperation( "UPDATE", "user_preferences", true );
 			return stmt.executeUpdate();
 		}
 	}
@@ -369,6 +379,7 @@ public class PreferencesDao
 				PreparedStatement stmt = connection.prepareStatement( SQL_RESET_ALL_TO_DEFAULTS ) )
 		{
 			stmt.executeUpdate();
+			AppLogger.logDatabaseOperation( "UPDATE", "user_preferences", true );
 		}
 	}
 	
@@ -387,6 +398,7 @@ public class PreferencesDao
 			
 			try( ResultSet rs = stmt.executeQuery() )
 			{
+				AppLogger.logDatabaseOperation( "SELECT", "user_preferences", true );
 				return rs.next();
 			}
 		}
@@ -409,6 +421,7 @@ public class PreferencesDao
 			{
 				if( rs.next() )
 				{
+					AppLogger.logDatabaseOperation( "SELECT", "user_preferences", true );
 					return rs.getInt( 1 );
 				}
 			}
@@ -447,8 +460,8 @@ public class PreferencesDao
 	 * 
 	 * @param rs The ResultSet positioned at the row to map
 	 * @return The mapped Preference object
-	 * @throws SQLException if database error occurs
-	 * @throws TherapyAppException 
+	 * @throws SQLException        if database error occurs
+	 * @throws TherapyAppException
 	 */
 	private Preference mapResultSetToPreference( ResultSet rs ) throws SQLException, TherapyAppException
 	{
