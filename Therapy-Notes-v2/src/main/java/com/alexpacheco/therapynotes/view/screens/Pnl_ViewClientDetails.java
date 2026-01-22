@@ -32,6 +32,7 @@ public class Pnl_ViewClientDetails extends JPanel
 	private JLabel phone1Label;
 	private JLabel phone2Label;
 	private JLabel phone3Label;
+	private JTextArea txtClientNotes;
 	private JTable contactsTable;
 	private DefaultTableModel contactsTableModel;
 	private JScrollPane contactsScrollPane;
@@ -80,6 +81,11 @@ public class Pnl_ViewClientDetails extends JPanel
 		phone1Label = new JLabel();
 		phone2Label = new JLabel();
 		phone3Label = new JLabel();
+		txtClientNotes = new JTextArea( 5, 50 );
+		txtClientNotes.setLineWrap( true );
+		txtClientNotes.setWrapStyleWord( true );
+		txtClientNotes.setFont( new Font( "Arial", Font.PLAIN, 12 ) );
+		txtClientNotes.setEnabled( false );
 		
 		Font labelFont = new Font( "Arial", Font.PLAIN, 14 );
 		Font valueFont = new Font( "Arial", Font.BOLD, 14 );
@@ -227,6 +233,13 @@ public class Pnl_ViewClientDetails extends JPanel
 		
 		gbc.gridx = 2;
 		detailsPanel.add( column3, gbc );
+		
+		// Add client notes to details panel
+		gbc.gridx = 0;
+		gbc.gridwidth = 3;
+		gbc.gridy = 1;
+		JScrollPane scrollPane = new JScrollPane( txtClientNotes );
+		detailsPanel.add( scrollPane, gbc );
 		
 		// Wrap details panel in a container with scroll
 		JPanel detailsContainer = new JPanel( new BorderLayout() );
@@ -378,6 +391,8 @@ public class Pnl_ViewClientDetails extends JPanel
 		phone1Label.setText( JavaUtils.isNullOrEmpty( client.getPhone1() ) ? "N/A" : client.getPhone1() );
 		phone2Label.setText( JavaUtils.isNullOrEmpty( client.getPhone2() ) ? "N/A" : client.getPhone2() );
 		phone3Label.setText( JavaUtils.isNullOrEmpty( client.getPhone3() ) ? "N/A" : client.getPhone3() );
+		
+		txtClientNotes.setText( JavaUtils.isNullOrEmpty( client.getClientNotes() ) ? "No notes" : client.getClientNotes() );
 	}
 	
 	private void goBack()

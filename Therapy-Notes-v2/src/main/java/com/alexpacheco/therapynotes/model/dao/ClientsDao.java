@@ -45,8 +45,8 @@ public class ClientsDao
 	 */
 	public void saveNew( Client client ) throws SQLException
 	{
-		String sql = "INSERT INTO clients (first_name, last_name, client_code, inactive, email1, email2, email3, phone1, phone2, phone3, date_of_birth)"
-				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO clients (first_name, last_name, client_code, inactive, email1, email2, email3, phone1, phone2, phone3, date_of_birth, client_notes)"
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		_save( client, sql );
 		AppLogger.logDatabaseOperation( "INSERT", "clients", true );
@@ -58,7 +58,7 @@ public class ClientsDao
 	public void saveExisting( Client client ) throws SQLException
 	{
 		String sql = "UPDATE clients SET first_name = ?, last_name = ?, client_code = ?, inactive = ?, email1 = ?,"
-				+ " email2 = ?, email3 = ?, phone1 = ?, phone2 = ?, phone3 = ?, date_of_birth = ? WHERE client_id = ?";
+				+ " email2 = ?, email3 = ?, phone1 = ?, phone2 = ?, phone3 = ?, date_of_birth = ?, client_notes = ? WHERE client_id = ?";
 		
 		_save( client, sql );
 		AppLogger.logDatabaseOperation( "UPDATE", "clients", true );
@@ -79,8 +79,9 @@ public class ClientsDao
 			pstmt.setString( 9, client.getPhone2() );
 			pstmt.setString( 10, client.getPhone3() );
 			pstmt.setString( 11, DateFormatUtil.toSqliteString( client.getDateOfBirth() ) );
+			pstmt.setString( 12, client.getClientNotes() );
 			if( client.getClientId() != null )
-				pstmt.setInt( 12, client.getClientId() );
+				pstmt.setInt( 13, client.getClientId() );
 			
 			pstmt.executeUpdate();
 		}
@@ -226,6 +227,7 @@ public class ClientsDao
 		c.setPhone3( rs.getString( "phone3" ) );
 		c.setDateOfBirth( DateFormatUtil.toDate( DateFormatUtil.toLocalDateTime( rs.getString( "date_of_birth" ) ) ) );
 		c.setInactive( JavaUtils.convertBitToBoolean( rs.getInt( "inactive" ) ) );
+		c.setClientNotes( rs.getString( "client_notes" ) );
 		return c;
 	}
 }

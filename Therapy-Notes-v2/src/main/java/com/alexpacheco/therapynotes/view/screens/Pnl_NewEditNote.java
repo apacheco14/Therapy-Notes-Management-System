@@ -161,6 +161,7 @@ public class Pnl_NewEditNote extends JPanel
 		txtNarrative = new JTextArea( 10, 50 );
 		txtNarrative.setLineWrap( true );
 		txtNarrative.setWrapStyleWord( true );
+		txtNarrative.setFont( new Font( "Arial", Font.PLAIN, 12 ) );
 		
 		// Mental Status
 		mentalStatusRadioButtons = new HashMap<>();

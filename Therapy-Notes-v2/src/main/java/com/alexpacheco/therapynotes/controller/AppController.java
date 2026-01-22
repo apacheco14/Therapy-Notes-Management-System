@@ -134,7 +134,7 @@ public class AppController
 		List<Client> clients = clientApi.getAllClients( false );
 		for( Client client : clients )
 		{
-			clientMap.put( client.getFirstName() + " " + client.getLastName(), client.getClientId() );
+			clientMap.put( client.getDisplayName(), client.getClientId() );
 		}
 		
 		return clientMap;

@@ -34,6 +34,7 @@ public class Pnl_NewEditClient extends JPanel
 	private ValidatedTextField phone1Field;
 	private ValidatedTextField phone2Field;
 	private ValidatedTextField phone3Field;
+	private JTextArea txtClientNotes;
 	private JLabel titleLabel;
 	
 	private boolean isEditMode = false;
@@ -69,6 +70,10 @@ public class Pnl_NewEditClient extends JPanel
 		phone1Field = new Txt_PhoneNumber();
 		phone2Field = new Txt_PhoneNumber();
 		phone3Field = new Txt_PhoneNumber();
+		txtClientNotes = new JTextArea( 5, 50 );
+		txtClientNotes.setLineWrap( true );
+		txtClientNotes.setWrapStyleWord( true );
+		txtClientNotes.setFont( new Font( "Arial", Font.PLAIN, 12 ) );
 		
 		// Column 0
 		gbc.gridx = 0;
@@ -89,6 +94,10 @@ public class Pnl_NewEditClient extends JPanel
 		
 		gbc.gridy = 4;
 		formPanel.add( new JLabel( "Email 3:" ), gbc );
+		
+		gbc.gridy = 5;
+		gbc.anchor = GridBagConstraints.NORTHEAST;
+		formPanel.add( new JLabel( "Notes:" ), gbc );
 		
 		// Column 1
 		gbc.gridx = 1;
@@ -154,6 +163,13 @@ public class Pnl_NewEditClient extends JPanel
 		
 		gbc.gridy = 4;
 		formPanel.add( phone3Field, gbc );
+		
+		gbc.gridx = 1;
+		gbc.anchor = GridBagConstraints.CENTER;
+		gbc.gridwidth = 3;
+		gbc.gridy = 5;
+		JScrollPane scrollPane = new JScrollPane( txtClientNotes );
+		formPanel.add( scrollPane, gbc );
 		
 		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER, 10, 10 ) );
 		buttonPanel.setBorder( BorderFactory.createEmptyBorder( 10, 0, 20, 0 ) );
@@ -227,6 +243,7 @@ public class Pnl_NewEditClient extends JPanel
 				phone1Field.setText( client.getPhone1() );
 				phone2Field.setText( client.getPhone2() );
 				phone3Field.setText( client.getPhone3() );
+				txtClientNotes.setText( client.getClientNotes() );
 			}
 			else
 			{
@@ -294,6 +311,7 @@ public class Pnl_NewEditClient extends JPanel
 			client.setPhone1( phone1Field.getText().trim() );
 			client.setPhone2( phone2Field.getText().trim() );
 			client.setPhone3( phone3Field.getText().trim() );
+			client.setClientNotes( txtClientNotes.getText() );
 			
 			if( isEditMode )
 			{
@@ -393,5 +411,6 @@ public class Pnl_NewEditClient extends JPanel
 		phone1Field.setText( "" );
 		phone2Field.setText( "" );
 		phone3Field.setText( "" );
+		txtClientNotes.setText( "" );
 	}
 }

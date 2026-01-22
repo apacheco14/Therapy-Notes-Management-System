@@ -19,13 +19,14 @@ public class Client
 	private String phone2;
 	private String phone3;
 	private Date dateOfBirth;
+	private String clientNotes;
 	
 	public Integer getClientId()
 	{
 		return clientId;
 	}
 	
-	public void setClientId(Integer clientId)
+	public void setClientId( Integer clientId )
 	{
 		this.clientId = clientId;
 	}
@@ -35,7 +36,7 @@ public class Client
 		return firstName;
 	}
 	
-	public void setFirstName(String firstName)
+	public void setFirstName( String firstName )
 	{
 		this.firstName = firstName;
 	}
@@ -45,7 +46,7 @@ public class Client
 		return lastName;
 	}
 	
-	public void setLastName(String lastName)
+	public void setLastName( String lastName )
 	{
 		this.lastName = lastName;
 	}
@@ -55,7 +56,7 @@ public class Client
 		return clientCode;
 	}
 	
-	public void setClientCode(String clientCode)
+	public void setClientCode( String clientCode )
 	{
 		this.clientCode = clientCode;
 	}
@@ -65,7 +66,7 @@ public class Client
 		return inactive;
 	}
 	
-	public void setInactive(boolean inactive)
+	public void setInactive( boolean inactive )
 	{
 		this.inactive = inactive;
 	}
@@ -75,7 +76,7 @@ public class Client
 		return insertDate;
 	}
 	
-	public void setInsertDate(LocalDateTime insertDate)
+	public void setInsertDate( LocalDateTime insertDate )
 	{
 		this.insertDate = insertDate;
 	}
@@ -85,7 +86,7 @@ public class Client
 		return updateDate;
 	}
 	
-	public void setUpdateDate(LocalDateTime updateDate)
+	public void setUpdateDate( LocalDateTime updateDate )
 	{
 		this.updateDate = updateDate;
 	}
@@ -95,7 +96,7 @@ public class Client
 		return email1;
 	}
 	
-	public void setEmail1(String email1)
+	public void setEmail1( String email1 )
 	{
 		this.email1 = email1;
 	}
@@ -105,7 +106,7 @@ public class Client
 		return email2;
 	}
 	
-	public void setEmail2(String email2)
+	public void setEmail2( String email2 )
 	{
 		this.email2 = email2;
 	}
@@ -115,7 +116,7 @@ public class Client
 		return email3;
 	}
 	
-	public void setEmail3(String email3)
+	public void setEmail3( String email3 )
 	{
 		this.email3 = email3;
 	}
@@ -125,7 +126,7 @@ public class Client
 		return phone1;
 	}
 	
-	public void setPhone1(String phone1)
+	public void setPhone1( String phone1 )
 	{
 		this.phone1 = phone1;
 	}
@@ -135,7 +136,7 @@ public class Client
 		return phone2;
 	}
 	
-	public void setPhone2(String phone2)
+	public void setPhone2( String phone2 )
 	{
 		this.phone2 = phone2;
 	}
@@ -145,7 +146,7 @@ public class Client
 		return phone3;
 	}
 	
-	public void setPhone3(String phone3)
+	public void setPhone3( String phone3 )
 	{
 		this.phone3 = phone3;
 	}
@@ -155,13 +156,28 @@ public class Client
 		return dateOfBirth;
 	}
 	
-	public void setDateOfBirth(Date dateOfBirth)
+	public void setDateOfBirth( Date dateOfBirth )
 	{
 		this.dateOfBirth = dateOfBirth;
 	}
 	
+	public String getClientNotes()
+	{
+		return clientNotes;
+	}
+
+	public void setClientNotes( String clientNotes )
+	{
+		this.clientNotes = clientNotes;
+	}
+
 	public String getFullName()
 	{
 		return this.firstName + " " + this.lastName;
+	}
+	
+	public String getDisplayName()
+	{
+		return getClientCode() + " - " + getFullName();
 	}
 }

@@ -260,7 +260,7 @@ public class Pnl_SearchNote extends JPanel
 			for( Note note : notes )
 			{
 				Integer noteId = note.getNoteId();
-				String clientName = note.getClient().getFullName();
+				String clientName = note.getClient().getDisplayName();
 				Integer sessionNumber = note.getSessionNumber();
 				Date apptDate = DateFormatUtil.toDate( note.getApptDateTime() );
 				String apptNote = note.getApptComment();
