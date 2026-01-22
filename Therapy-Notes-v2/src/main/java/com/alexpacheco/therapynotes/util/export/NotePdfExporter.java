@@ -13,13 +13,12 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 
-import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
-import com.alexpacheco.therapynotes.controller.enums.LogLevel;
 import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.CollateralContact;
 import com.alexpacheco.therapynotes.model.entities.Note;
 import com.alexpacheco.therapynotes.model.entities.Referral;
+import com.alexpacheco.therapynotes.util.AppLogger;
 
 /**
  * Exports therapy progress notes to PDF format. Creates professionally formatted documents with all
@@ -101,10 +100,11 @@ public class NotePdfExporter extends AbstractNoteExporter
 			File outputFile = new File(outputPath);
 			outputFile.getParentFile().mkdirs();
 			document.save(outputFile);
-			AppController.logToDatabase(LogLevel.INFO, "NotePdfExporter", "Note ID " + note.getNoteId() + " exported to " + outputFile);
+			AppLogger.logExport( "Note ID " + note.getNoteId(), outputPath, true );
 		}
 		catch (IOException e)
 		{
+			AppLogger.logExport( "Note ID " + note.getNoteId(), outputPath, false );
 			throw new TherapyAppException("Failed to export note to PDF: " + e.getMessage(), ErrorCode.DB_ERROR);
 		}
 	}

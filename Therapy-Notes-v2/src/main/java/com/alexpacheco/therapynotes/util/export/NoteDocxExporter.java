@@ -24,18 +24,16 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
-import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
-import com.alexpacheco.therapynotes.controller.enums.LogLevel;
 import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.CollateralContact;
 import com.alexpacheco.therapynotes.model.entities.Note;
 import com.alexpacheco.therapynotes.model.entities.Referral;
+import com.alexpacheco.therapynotes.util.AppLogger;
 
 /**
- * Exports therapy progress notes to Microsoft Word (DOCX) format. Creates professionally formatted
- * documents with all note sections including client info, session details, symptoms, narrative,
- * mental status, and administrative information.
+ * Exports therapy progress notes to Microsoft Word (DOCX) format. Creates professionally formatted documents with all note sections
+ * including client info, session details, symptoms, narrative, mental status, and administrative information.
  */
 public class NoteDocxExporter extends AbstractNoteExporter
 {
@@ -46,17 +44,17 @@ public class NoteDocxExporter extends AbstractNoteExporter
 	private static final String FONT_NAME = PREFERRED_FONT;
 	
 	// Font sizes in half-points (multiply pt by 2)
-	private static final int TITLE_FONT_SIZE_HP = (int) (TITLE_FONT_SIZE * 2);
-	private static final int SECTION_FONT_SIZE_HP = (int) (SECTION_FONT_SIZE * 2);
-	private static final int BODY_FONT_SIZE_HP = (int) (BODY_FONT_SIZE * 2);
-	private static final int SMALL_FONT_SIZE_HP = (int) (SMALL_FONT_SIZE * 2);
-	private static final int FOOTER_FONT_SIZE_HP = (int) (FOOTER_FONT_SIZE * 2);
+	private static final int TITLE_FONT_SIZE_HP = (int) ( TITLE_FONT_SIZE * 2 );
+	private static final int SECTION_FONT_SIZE_HP = (int) ( SECTION_FONT_SIZE * 2 );
+	private static final int BODY_FONT_SIZE_HP = (int) ( BODY_FONT_SIZE * 2 );
+	private static final int SMALL_FONT_SIZE_HP = (int) ( SMALL_FONT_SIZE * 2 );
+	private static final int FOOTER_FONT_SIZE_HP = (int) ( FOOTER_FONT_SIZE * 2 );
 	
 	// Colors as hex strings (for POI)
-	private static final String HEADER_TEXT_COLOR_HEX = toHexString(HEADER_TEXT_RGB);
-	private static final String LABEL_TEXT_COLOR_HEX = toHexString(LABEL_TEXT_RGB);
-	private static final String CERTIFIED_COLOR_HEX = toHexString(CERTIFIED_RGB);
-	private static final String TABLE_HEADER_BG_HEX = toHexString(TABLE_HEADER_BG_RGB);
+	private static final String HEADER_TEXT_COLOR_HEX = toHexString( HEADER_TEXT_RGB );
+	private static final String LABEL_TEXT_COLOR_HEX = toHexString( LABEL_TEXT_RGB );
+	private static final String CERTIFIED_COLOR_HEX = toHexString( CERTIFIED_RGB );
+	private static final String TABLE_HEADER_BG_HEX = toHexString( TABLE_HEADER_BG_RGB );
 	
 	// ===== Abstract Method Implementations =====
 	
@@ -73,9 +71,9 @@ public class NoteDocxExporter extends AbstractNoteExporter
 	}
 	
 	@Override
-	protected void doExport(Note note, String outputPath) throws TherapyAppException
+	protected void doExport( Note note, String outputPath ) throws TherapyAppException
 	{
-		exportToDocx(note, outputPath);
+		exportToDocx( note, outputPath );
 	}
 	
 	// ===== Public Static Methods =====
@@ -87,37 +85,38 @@ public class NoteDocxExporter extends AbstractNoteExporter
 	 * @param outputPath The path where the document should be saved
 	 * @throws TherapyAppException If export fails
 	 */
-	public static void exportToDocx(Note note, String outputPath) throws TherapyAppException
+	public static void exportToDocx( Note note, String outputPath ) throws TherapyAppException
 	{
-		if (note == null)
+		if( note == null )
 		{
-			throw new TherapyAppException("Cannot export null note", ErrorCode.REQ_MISSING);
+			throw new TherapyAppException( "Cannot export null note", ErrorCode.REQ_MISSING );
 		}
 		
 		// Prepare all display data
-		NoteExportData data = prepareExportData(note);
+		NoteExportData data = prepareExportData( note );
 		
-		try (XWPFDocument document = new XWPFDocument())
+		try( XWPFDocument document = new XWPFDocument() )
 		{
 			// Set up page size and margins (US Letter)
-			setupPageLayout(document);
+			setupPageLayout( document );
 			
 			// Build document sections
-			buildDocument(document, data);
+			buildDocument( document, data );
 			
 			// Save to file
-			File outputFile = new File(outputPath);
+			File outputFile = new File( outputPath );
 			outputFile.getParentFile().mkdirs();
 			
-			try (FileOutputStream out = new FileOutputStream(outputFile))
+			try( FileOutputStream out = new FileOutputStream( outputFile ) )
 			{
-				document.write(out);
+				document.write( out );
 			}
-			AppController.logToDatabase(LogLevel.INFO, "NoteDocxExporter", "Note ID " + note.getNoteId() + " exported to " + outputFile);
+			AppLogger.logExport( "Note ID " + note.getNoteId(), outputPath, true );
 		}
-		catch (IOException e)
+		catch( IOException e )
 		{
-			throw new TherapyAppException("Failed to export note to DOCX: " + e.getMessage(), ErrorCode.DB_ERROR);
+			AppLogger.logExport( "Note ID " + note.getNoteId(), outputPath, false );
+			throw new TherapyAppException( "Failed to export note to DOCX: " + e.getMessage(), ErrorCode.DB_ERROR );
 		}
 	}
 	
@@ -130,9 +129,9 @@ public class NoteDocxExporter extends AbstractNoteExporter
 	 * @return The path to the created file, or null if cancelled
 	 * @throws TherapyAppException If export fails
 	 */
-	public static String exportToDocx(Note note, File outputDirectory, String filename) throws TherapyAppException
+	public static String exportToDocx( Note note, File outputDirectory, String filename ) throws TherapyAppException
 	{
-		return INSTANCE.exportWithFileChooser(note, outputDirectory, filename);
+		return INSTANCE.exportWithFileChooser( note, outputDirectory, filename );
 	}
 	
 	// ===== Page Setup =====
@@ -140,22 +139,22 @@ public class NoteDocxExporter extends AbstractNoteExporter
 	/**
 	 * Sets up the page layout with US Letter size and 1-inch margins.
 	 */
-	private static void setupPageLayout(XWPFDocument document)
+	private static void setupPageLayout( XWPFDocument document )
 	{
 		CTSectPr sectPr = document.getDocument().getBody().addNewSectPr();
 		
 		// Page size - US Letter
 		CTPageSz pageSize = sectPr.addNewPgSz();
-		pageSize.setW(BigInteger.valueOf(PAGE_WIDTH_TWIPS));
-		pageSize.setH(BigInteger.valueOf(PAGE_HEIGHT_TWIPS));
-		pageSize.setOrient(STPageOrientation.PORTRAIT);
+		pageSize.setW( BigInteger.valueOf( PAGE_WIDTH_TWIPS ) );
+		pageSize.setH( BigInteger.valueOf( PAGE_HEIGHT_TWIPS ) );
+		pageSize.setOrient( STPageOrientation.PORTRAIT );
 		
 		// Margins - 1 inch all around
 		CTPageMar margins = sectPr.addNewPgMar();
-		margins.setTop(BigInteger.valueOf(MARGIN_TWIPS));
-		margins.setBottom(BigInteger.valueOf(MARGIN_TWIPS));
-		margins.setLeft(BigInteger.valueOf(MARGIN_TWIPS));
-		margins.setRight(BigInteger.valueOf(MARGIN_TWIPS));
+		margins.setTop( BigInteger.valueOf( MARGIN_TWIPS ) );
+		margins.setBottom( BigInteger.valueOf( MARGIN_TWIPS ) );
+		margins.setLeft( BigInteger.valueOf( MARGIN_TWIPS ) );
+		margins.setRight( BigInteger.valueOf( MARGIN_TWIPS ) );
 	}
 	
 	// ===== Document Building =====
@@ -163,103 +162,103 @@ public class NoteDocxExporter extends AbstractNoteExporter
 	/**
 	 * Builds all document sections using pre-processed export data.
 	 */
-	private static void buildDocument(XWPFDocument document, NoteExportData data)
+	private static void buildDocument( XWPFDocument document, NoteExportData data )
 	{
-		addDocumentHeader(document, data);
-		addClientInfoSection(document, data);
-		addSessionInfoSection(document, data);
-		addNarrativeSection(document, data);
-		addSymptomsSection(document, data);
-		addMentalStatusSection(document, data);
-		addCollateralContactsSection(document, data);
-		addReferralsSection(document, data);
-		addFollowUpSection(document, data);
-		addDocumentFooter(document, data);
+		addDocumentHeader( document, data );
+		addClientInfoSection( document, data );
+		addSessionInfoSection( document, data );
+		addNarrativeSection( document, data );
+		addSymptomsSection( document, data );
+		addMentalStatusSection( document, data );
+		addCollateralContactsSection( document, data );
+		addReferralsSection( document, data );
+		addFollowUpSection( document, data );
+		addDocumentFooter( document, data );
 	}
 	
 	/**
 	 * Adds the document title and certification status.
 	 */
-	private static void addDocumentHeader(XWPFDocument document, NoteExportData data)
+	private static void addDocumentHeader( XWPFDocument document, NoteExportData data )
 	{
 		// Title
 		XWPFParagraph titlePara = document.createParagraph();
-		titlePara.setAlignment(ParagraphAlignment.CENTER);
-		titlePara.setSpacingAfter(100);
+		titlePara.setAlignment( ParagraphAlignment.CENTER );
+		titlePara.setSpacingAfter( 100 );
 		
 		XWPFRun titleRun = titlePara.createRun();
-		titleRun.setText("THERAPY PROGRESS NOTE");
-		titleRun.setBold(true);
-		titleRun.setFontSize(TITLE_FONT_SIZE_HP / 2);
-		titleRun.setFontFamily(FONT_NAME);
-		titleRun.setColor(HEADER_TEXT_COLOR_HEX);
+		titleRun.setText( "THERAPY PROGRESS NOTE" );
+		titleRun.setBold( true );
+		titleRun.setFontSize( TITLE_FONT_SIZE_HP / 2 );
+		titleRun.setFontFamily( FONT_NAME );
+		titleRun.setColor( HEADER_TEXT_COLOR_HEX );
 		
 		// Certification status
-		if (data.isCertified)
+		if( data.isCertified )
 		{
 			XWPFParagraph certPara = document.createParagraph();
-			certPara.setAlignment(ParagraphAlignment.CENTER);
-			certPara.setSpacingAfter(200);
+			certPara.setAlignment( ParagraphAlignment.CENTER );
+			certPara.setSpacingAfter( 200 );
 			
 			XWPFRun certRun = certPara.createRun();
-			certRun.setText(data.certificationText);
-			certRun.setItalic(true);
-			certRun.setFontSize(SMALL_FONT_SIZE_HP / 2);
-			certRun.setFontFamily(FONT_NAME);
-			certRun.setColor(CERTIFIED_COLOR_HEX);
+			certRun.setText( data.certificationText );
+			certRun.setItalic( true );
+			certRun.setFontSize( SMALL_FONT_SIZE_HP / 2 );
+			certRun.setFontFamily( FONT_NAME );
+			certRun.setColor( CERTIFIED_COLOR_HEX );
 		}
 	}
 	
 	/**
 	 * Adds the client information section.
 	 */
-	private static void addClientInfoSection(XWPFDocument document, NoteExportData data)
+	private static void addClientInfoSection( XWPFDocument document, NoteExportData data )
 	{
-		addSectionHeading(document, "Client Information");
+		addSectionHeading( document, "Client Information" );
 		
-		addLabelValuePair(document, "Client", data.clientName);
-		addLabelValuePair(document, "Client Code", data.clientCode);
-		addLabelValuePair(document, "Date of Birth", data.dateOfBirth);
+		addLabelValuePair( document, "Client", data.clientName );
+		addLabelValuePair( document, "Client Code", data.clientCode );
+		addLabelValuePair( document, "Date of Birth", data.dateOfBirth );
 	}
 	
 	/**
 	 * Adds the session information section.
 	 */
-	private static void addSessionInfoSection(XWPFDocument document, NoteExportData data)
+	private static void addSessionInfoSection( XWPFDocument document, NoteExportData data )
 	{
-		addSectionHeading(document, "Session Information");
+		addSectionHeading( document, "Session Information" );
 		
-		addLabelValuePair(document, "Appointment Date", data.apptDate);
-		addLabelValuePair(document, "Session Type", data.sessionType);
-		addLabelValuePair(document, "Session Number", data.sessionNumber);
-		addLabelValuePair(document, "Session Length", data.sessionLength);
-		addLabelValuePair(document, "Diagnosis", data.diagnosis);
+		addLabelValuePair( document, "Appointment Date", data.apptDate );
+		addLabelValuePair( document, "Session Type", data.sessionType );
+		addLabelValuePair( document, "Session Number", data.sessionNumber );
+		addLabelValuePair( document, "Session Length", data.sessionLength );
+		addLabelValuePair( document, "Diagnosis", data.diagnosis );
 		
-		if (data.hasApptComment)
+		if( data.hasApptComment )
 		{
-			addLabelValuePair(document, "Appointment Comment", data.apptComment);
+			addLabelValuePair( document, "Appointment Comment", data.apptComment );
 		}
 	}
 	
 	/**
 	 * Adds the narrative section.
 	 */
-	private static void addNarrativeSection(XWPFDocument document, NoteExportData data)
+	private static void addNarrativeSection( XWPFDocument document, NoteExportData data )
 	{
-		addSectionHeading(document, "Session Narrative");
+		addSectionHeading( document, "Session Narrative" );
 		
-		if (!data.hasNarrative)
+		if( !data.hasNarrative )
 		{
-			addBodyText(document, "No narrative recorded.", true);
+			addBodyText( document, "No narrative recorded.", true );
 		}
 		else
 		{
-			String[] paragraphs = data.narrative.split("\n");
-			for (String para : paragraphs)
+			String[] paragraphs = data.narrative.split( "\n" );
+			for( String para : paragraphs )
 			{
-				if (!para.trim().isEmpty())
+				if( !para.trim().isEmpty() )
 				{
-					addBodyText(document, para.trim(), false);
+					addBodyText( document, para.trim(), false );
 				}
 			}
 		}
@@ -268,170 +267,170 @@ public class NoteDocxExporter extends AbstractNoteExporter
 	/**
 	 * Adds the symptoms section.
 	 */
-	private static void addSymptomsSection(XWPFDocument document, NoteExportData data)
+	private static void addSymptomsSection( XWPFDocument document, NoteExportData data )
 	{
-		addSectionHeading(document, "Presenting Symptoms");
-		addBodyText(document, data.symptomsText, !data.hasSymptoms);
+		addSectionHeading( document, "Presenting Symptoms" );
+		addBodyText( document, data.symptomsText, !data.hasSymptoms );
 	}
 	
 	/**
 	 * Adds the mental status section as a table.
 	 */
-	private static void addMentalStatusSection(XWPFDocument document, NoteExportData data)
+	private static void addMentalStatusSection( XWPFDocument document, NoteExportData data )
 	{
-		addSectionHeading(document, "Mental Status Assessment");
+		addSectionHeading( document, "Mental Status Assessment" );
 		
 		String[][] tableData = data.getMentalStatusTableData();
 		
 		// Create table
-		XWPFTable table = document.createTable(tableData.length, 3);
-		table.setTableAlignment(TableRowAlign.LEFT);
+		XWPFTable table = document.createTable( tableData.length, 3 );
+		table.setTableAlignment( TableRowAlign.LEFT );
 		
 		// Set table width to 100%
 		CTTblWidth tableWidth = table.getCTTbl().getTblPr().addNewTblW();
-		tableWidth.setType(STTblWidth.PCT);
-		tableWidth.setW(BigInteger.valueOf(5000)); // 5000 = 100% in PCT
+		tableWidth.setType( STTblWidth.PCT );
+		tableWidth.setW( BigInteger.valueOf( 5000 ) ); // 5000 = 100% in PCT
 		
 		// Column widths (approximate percentages: 25%, 30%, 45%)
 		int[] colWidths = { 1250, 1500, 2250 }; // Sum = 5000 (100%)
 		
-		for (int row = 0; row < tableData.length; row++)
+		for( int row = 0; row < tableData.length; row++ )
 		{
-			XWPFTableRow tableRow = table.getRow(row);
+			XWPFTableRow tableRow = table.getRow( row );
 			
-			for (int col = 0; col < tableData[row].length; col++)
+			for( int col = 0; col < tableData[row].length; col++ )
 			{
-				XWPFTableCell cell = tableRow.getCell(col);
+				XWPFTableCell cell = tableRow.getCell( col );
 				
 				// Set cell width
 				CTTblWidth cellWidth = cell.getCTTc().addNewTcPr().addNewTcW();
-				cellWidth.setType(STTblWidth.PCT);
-				cellWidth.setW(BigInteger.valueOf(colWidths[col]));
+				cellWidth.setType( STTblWidth.PCT );
+				cellWidth.setW( BigInteger.valueOf( colWidths[col] ) );
 				
 				// Header row styling
-				if (row == 0)
+				if( row == 0 )
 				{
 					CTShd shading = cell.getCTTc().getTcPr().addNewShd();
-					shading.setVal(STShd.CLEAR);
-					shading.setFill(TABLE_HEADER_BG_HEX);
+					shading.setVal( STShd.CLEAR );
+					shading.setFill( TABLE_HEADER_BG_HEX );
 				}
 				
 				// Cell text
-				XWPFParagraph cellPara = cell.getParagraphs().get(0);
-				cellPara.setSpacingBefore(50);
-				cellPara.setSpacingAfter(50);
+				XWPFParagraph cellPara = cell.getParagraphs().get( 0 );
+				cellPara.setSpacingBefore( 50 );
+				cellPara.setSpacingAfter( 50 );
 				
 				XWPFRun cellRun = cellPara.createRun();
-				cellRun.setText(tableData[row][col] != null ? tableData[row][col] : "");
-				cellRun.setFontFamily(FONT_NAME);
-				cellRun.setFontSize(SMALL_FONT_SIZE_HP / 2);
+				cellRun.setText( tableData[row][col] != null ? tableData[row][col] : "" );
+				cellRun.setFontFamily( FONT_NAME );
+				cellRun.setFontSize( SMALL_FONT_SIZE_HP / 2 );
 				
-				if (row == 0)
+				if( row == 0 )
 				{
-					cellRun.setBold(true);
+					cellRun.setBold( true );
 				}
 			}
 		}
 		
 		// Add spacing after table
 		XWPFParagraph spacer = document.createParagraph();
-		spacer.setSpacingAfter(200);
+		spacer.setSpacingAfter( 200 );
 	}
 	
 	/**
 	 * Adds the collateral contacts section.
 	 */
-	private static void addCollateralContactsSection(XWPFDocument document, NoteExportData data)
+	private static void addCollateralContactsSection( XWPFDocument document, NoteExportData data )
 	{
-		if (!data.hasCollateralContacts)
+		if( !data.hasCollateralContacts )
 		{
 			return;
 		}
 		
-		addSectionHeading(document, "Collateral Contacts");
+		addSectionHeading( document, "Collateral Contacts" );
 		
-		for (CollateralContact contact : data.collateralContacts)
+		for( CollateralContact contact : data.collateralContacts )
 		{
 			XWPFParagraph para = document.createParagraph();
-			para.setSpacingAfter(50);
+			para.setSpacingAfter( 50 );
 			
 			XWPFRun run = para.createRun();
-			run.setText(getCollateralContactDisplayName(contact));
-			run.setBold(true);
-			run.setFontFamily(FONT_NAME);
-			run.setFontSize(BODY_FONT_SIZE_HP / 2);
+			run.setText( getCollateralContactDisplayName( contact ) );
+			run.setBold( true );
+			run.setFontFamily( FONT_NAME );
+			run.setFontSize( BODY_FONT_SIZE_HP / 2 );
 		}
 		
-		if (data.hasCollateralContactComment)
+		if( data.hasCollateralContactComment )
 		{
-			addBodyText(document, data.collateralContactComment, false);
+			addBodyText( document, data.collateralContactComment, false );
 		}
 	}
 	
 	/**
 	 * Adds the referrals section.
 	 */
-	private static void addReferralsSection(XWPFDocument document, NoteExportData data)
+	private static void addReferralsSection( XWPFDocument document, NoteExportData data )
 	{
-		if (!data.hasReferrals)
+		if( !data.hasReferrals )
 		{
 			return;
 		}
 		
-		addSectionHeading(document, "Referrals Made");
+		addSectionHeading( document, "Referrals Made" );
 		
-		for (Referral referral : data.referrals)
+		for( Referral referral : data.referrals )
 		{
 			XWPFParagraph para = document.createParagraph();
-			para.setSpacingAfter(50);
+			para.setSpacingAfter( 50 );
 			
 			XWPFRun run = para.createRun();
-			run.setText(getReferralDisplayName(referral));
-			run.setBold(true);
-			run.setFontFamily(FONT_NAME);
-			run.setFontSize(BODY_FONT_SIZE_HP / 2);
+			run.setText( getReferralDisplayName( referral ) );
+			run.setBold( true );
+			run.setFontFamily( FONT_NAME );
+			run.setFontSize( BODY_FONT_SIZE_HP / 2 );
 		}
 		
-		if (data.hasReferralComment)
+		if( data.hasReferralComment )
 		{
-			addBodyText(document, data.referralComment, false);
+			addBodyText( document, data.referralComment, false );
 		}
 	}
 	
 	/**
 	 * Adds the follow-up section.
 	 */
-	private static void addFollowUpSection(XWPFDocument document, NoteExportData data)
+	private static void addFollowUpSection( XWPFDocument document, NoteExportData data )
 	{
-		addSectionHeading(document, "Follow-Up");
+		addSectionHeading( document, "Follow-Up" );
 		
-		addLabelValuePair(document, "Next Appointment", data.nextAppt);
+		addLabelValuePair( document, "Next Appointment", data.nextAppt );
 		
-		if (data.hasNextApptComment)
+		if( data.hasNextApptComment )
 		{
-			addLabelValuePair(document, "Comment", data.nextApptComment);
+			addLabelValuePair( document, "Comment", data.nextApptComment );
 		}
 	}
 	
 	/**
 	 * Adds the document footer.
 	 */
-	private static void addDocumentFooter(XWPFDocument document, NoteExportData data)
+	private static void addDocumentFooter( XWPFDocument document, NoteExportData data )
 	{
 		// Divider line (using border on paragraph)
 		XWPFParagraph dividerPara = document.createParagraph();
-		dividerPara.setSpacingBefore(400);
-		dividerPara.setBorderTop(Borders.SINGLE);
+		dividerPara.setSpacingBefore( 400 );
+		dividerPara.setBorderTop( Borders.SINGLE );
 		
 		// Footer text
 		XWPFParagraph footerPara = document.createParagraph();
-		footerPara.setSpacingBefore(100);
+		footerPara.setSpacingBefore( 100 );
 		
 		XWPFRun footerRun = footerPara.createRun();
-		footerRun.setText(data.getFooterText());
-		footerRun.setFontFamily(FONT_NAME);
-		footerRun.setFontSize(FOOTER_FONT_SIZE_HP / 2);
-		footerRun.setColor(LABEL_TEXT_COLOR_HEX);
+		footerRun.setText( data.getFooterText() );
+		footerRun.setFontFamily( FONT_NAME );
+		footerRun.setFontSize( FOOTER_FONT_SIZE_HP / 2 );
+		footerRun.setColor( LABEL_TEXT_COLOR_HEX );
 	}
 	
 	// ===== Helper Methods =====
@@ -439,66 +438,66 @@ public class NoteDocxExporter extends AbstractNoteExporter
 	/**
 	 * Adds a section heading with underline.
 	 */
-	private static void addSectionHeading(XWPFDocument document, String text)
+	private static void addSectionHeading( XWPFDocument document, String text )
 	{
 		XWPFParagraph para = document.createParagraph();
-		para.setSpacingBefore(400);
-		para.setSpacingAfter(100);
+		para.setSpacingBefore( 400 );
+		para.setSpacingAfter( 100 );
 		
 		XWPFRun run = para.createRun();
-		run.setText(text);
-		run.setBold(true);
-		run.setUnderline(UnderlinePatterns.SINGLE);
-		run.setFontFamily(FONT_NAME);
-		run.setFontSize(SECTION_FONT_SIZE_HP / 2);
-		run.setColor(HEADER_TEXT_COLOR_HEX);
+		run.setText( text );
+		run.setBold( true );
+		run.setUnderline( UnderlinePatterns.SINGLE );
+		run.setFontFamily( FONT_NAME );
+		run.setFontSize( SECTION_FONT_SIZE_HP / 2 );
+		run.setColor( HEADER_TEXT_COLOR_HEX );
 	}
 	
 	/**
 	 * Adds a label-value pair on a single line.
 	 */
-	private static void addLabelValuePair(XWPFDocument document, String label, String value)
+	private static void addLabelValuePair( XWPFDocument document, String label, String value )
 	{
 		XWPFParagraph para = document.createParagraph();
-		para.setSpacingAfter(50);
+		para.setSpacingAfter( 50 );
 		
 		// Label (bold, gray)
 		XWPFRun labelRun = para.createRun();
-		labelRun.setText(label + ": ");
-		labelRun.setBold(true);
-		labelRun.setFontFamily(FONT_NAME);
-		labelRun.setFontSize(BODY_FONT_SIZE_HP / 2);
-		labelRun.setColor(LABEL_TEXT_COLOR_HEX);
+		labelRun.setText( label + ": " );
+		labelRun.setBold( true );
+		labelRun.setFontFamily( FONT_NAME );
+		labelRun.setFontSize( BODY_FONT_SIZE_HP / 2 );
+		labelRun.setColor( LABEL_TEXT_COLOR_HEX );
 		
 		// Value (regular, black)
 		XWPFRun valueRun = para.createRun();
-		valueRun.setText(value != null ? value : "Not specified");
-		valueRun.setFontFamily(FONT_NAME);
-		valueRun.setFontSize(BODY_FONT_SIZE_HP / 2);
-		valueRun.setColor("000000");
+		valueRun.setText( value != null ? value : "Not specified" );
+		valueRun.setFontFamily( FONT_NAME );
+		valueRun.setFontSize( BODY_FONT_SIZE_HP / 2 );
+		valueRun.setColor( "000000" );
 	}
 	
 	/**
 	 * Adds body text, optionally italicized for placeholder text.
 	 */
-	private static void addBodyText(XWPFDocument document, String text, boolean isPlaceholder)
+	private static void addBodyText( XWPFDocument document, String text, boolean isPlaceholder )
 	{
 		XWPFParagraph para = document.createParagraph();
-		para.setSpacingAfter(150);
+		para.setSpacingAfter( 150 );
 		
 		XWPFRun run = para.createRun();
-		run.setText(text);
-		run.setFontFamily(FONT_NAME);
-		run.setFontSize(BODY_FONT_SIZE_HP / 2);
+		run.setText( text );
+		run.setFontFamily( FONT_NAME );
+		run.setFontSize( BODY_FONT_SIZE_HP / 2 );
 		
-		if (isPlaceholder)
+		if( isPlaceholder )
 		{
-			run.setItalic(true);
-			run.setColor(LABEL_TEXT_COLOR_HEX);
+			run.setItalic( true );
+			run.setColor( LABEL_TEXT_COLOR_HEX );
 		}
 		else
 		{
-			run.setColor("000000");
+			run.setColor( "000000" );
 		}
 	}
 }

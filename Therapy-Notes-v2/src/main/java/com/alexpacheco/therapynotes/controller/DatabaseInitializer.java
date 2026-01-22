@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
-import com.alexpacheco.therapynotes.controller.enums.LogLevel;
 import com.alexpacheco.therapynotes.controller.enums.PreferenceKey;
 import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.dao.PreferencesDao;
 import com.alexpacheco.therapynotes.model.entities.Preference;
+import com.alexpacheco.therapynotes.util.AppLogger;
 import com.alexpacheco.therapynotes.util.DbUtil;
 import com.alexpacheco.therapynotes.util.PreferencesUtil;
 
@@ -29,24 +29,21 @@ public class DatabaseInitializer
 			if( conn != null )
 			{
 				DbUtil.executeSqlScript( conn, DatabaseInitializer.class.getResourceAsStream( SCHEMA_SCRIPT_FILE ) );
-				AppController.logToDatabase( LogLevel.INFO, "DatabaseInitializer", "Database schema created successfully." );
-				System.out.println( "Database schema created successfully." );
+				AppLogger.info( "Database schema created successfully." );
 				
 				DbUtil.executeTriggerScript( conn, DatabaseInitializer.class.getResourceAsStream( TRIGGER_SCRIPT_FILE ) );
-				AppController.logToDatabase( LogLevel.INFO, "DatabaseInitializer", "Database triggers created successfully." );
-				System.out.println( "Database triggers created successfully." );
+				AppLogger.info( "Database triggers created successfully." );
 				
 				if( !isDbPopulated( conn ) )
 				{
 					DbUtil.executeSqlScript( conn, DatabaseInitializer.class.getResourceAsStream( OPTIONS_SCRIPT_FILE ) );
-					AppController.logToDatabase( LogLevel.INFO, "DatabaseInitializer", "Database lookup tables populated successfully." );
-					System.out.println( "Database lookup tables populated successfully." );
+					AppLogger.info( "Database lookup tables populated successfully." );
 				}
 			}
 		}
 		catch( SQLException e )
 		{
-			AppController.logException( "DatabaseInitializer", e );
+			AppLogger.error( "Error initializing database: " + e.getMessage(), e );
 			throw new TherapyAppException( e.getMessage(), ErrorCode.DB_ERROR );
 		}
 	}
@@ -66,41 +63,11 @@ public class DatabaseInitializer
 		}
 		catch( SQLException e )
 		{
-			AppController.logException( "DatabaseInitializer", e );
+			AppLogger.logDatabaseError( "SELECT COUNT(*)", "assessment_options", e );
 			throw new TherapyAppException( e.getMessage(), ErrorCode.DB_ERROR );
 		}
 		
 		return false;
-	}
-	
-	/**
-	 * Deletes all log entries older than 90 days from the database. Should be called on application startup to maintain database size.
-	 * 
-	 * @return the number of log entries deleted
-	 */
-	public static int cleanupOldLogs( int daysToKeep )
-	{
-		String sql = "DELETE FROM app_logs WHERE timestamp < datetime('now', '-" + daysToKeep + " days')";
-		int rowsDeleted = 0;
-		
-		try( Connection conn = DbUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement( sql ) )
-		{
-			rowsDeleted = pstmt.executeUpdate();
-			
-			if( rowsDeleted > 0 )
-			{
-				AppController.logToDatabase( LogLevel.INFO, "AppController",
-						"Cleaned up " + rowsDeleted + " log entries older than 90 days" );
-			}
-		}
-		catch( SQLException e )
-		{
-			System.err.println( "Failed to cleanup old logs: " + e.getMessage() );
-			e.printStackTrace();
-			AppController.logException( "AppController", e );
-		}
-		
-		return rowsDeleted;
 	}
 	
 	public static void initializeDefaultPreferences() throws TherapyAppException
@@ -118,7 +85,7 @@ public class DatabaseInitializer
 		}
 		catch( SQLException e )
 		{
-			AppController.logException( "DatabaseInitializer", e );
+			AppLogger.error( "Failed to initialize default preferences: " + e.getMessage(), e );
 			throw new TherapyAppException( e.getMessage(), ErrorCode.DB_ERROR );
 		}
 	}

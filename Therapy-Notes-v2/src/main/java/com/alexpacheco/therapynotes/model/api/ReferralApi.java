@@ -3,26 +3,26 @@ package com.alexpacheco.therapynotes.model.api;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
 import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.dao.ReferralsDao;
 import com.alexpacheco.therapynotes.model.entities.Referral;
+import com.alexpacheco.therapynotes.util.AppLogger;
 
 public class ReferralApi
 {
 	private final ReferralsDao referralsDao = new ReferralsDao();
 	
-	public List<Referral> getSelectedReferralsForNote(Integer noteId) throws TherapyAppException
+	public List<Referral> getSelectedReferralsForNote( Integer noteId ) throws TherapyAppException
 	{
 		try
 		{
-			return referralsDao.getSelectedReferralsForNote(noteId);
+			return referralsDao.getSelectedReferralsForNote( noteId );
 		}
-		catch (SQLException e)
+		catch( SQLException e )
 		{
-			AppController.logException("ReferralApi", e);
-			throw new TherapyAppException("Error occurred while retrieving referrals for note.", ErrorCode.DB_ERROR);
+			AppLogger.error( e );
+			throw new TherapyAppException( "Error occurred while retrieving referrals for note.", ErrorCode.DB_ERROR );
 		}
 	}
 }

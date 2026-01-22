@@ -53,6 +53,7 @@ public class DbUtil
 		
 		if( conn != null )
 		{
+			AppLogger.debug( "Connected to SQLite database." );
 			System.out.println( "Connected to SQLite database." );
 		}
 		
@@ -91,13 +92,13 @@ public class DbUtil
 			catch( SQLException e )
 			{
 				conn.rollback();
-				AppController.logException( "DbUtil", e );
+				AppLogger.error( "Error executing script: " + e.getMessage(), e );
 				System.err.println( "Error executing script: " + e.getMessage() );
 			}
 		}
 		catch( SQLException e )
 		{
-			AppController.logException( "DbUtil", e );
+			AppLogger.error( "Transaction error: " + e.getMessage(), e );
 			System.err.println( "Transaction error: " + e.getMessage() );
 		}
 	}
@@ -129,13 +130,13 @@ public class DbUtil
 			catch( SQLException e )
 			{
 				conn.rollback();
-				AppController.logException( "DbUtil", e );
+				AppLogger.error( "SQL Error while loading triggers: " + e.getMessage(), e );
 				System.err.println( "SQL Error while loading triggers: " + e.getMessage() );
 			}
 		}
 		catch( SQLException e )
 		{
-			AppController.logException( "DbUtil", e );
+			AppLogger.error( "Transaction error: " + e.getMessage(), e );
 			System.err.println( "Transaction error: " + e.getMessage() );
 		}
 	}

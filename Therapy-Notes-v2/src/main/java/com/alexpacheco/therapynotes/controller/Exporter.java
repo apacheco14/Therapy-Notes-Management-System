@@ -4,18 +4,17 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 
-import com.alexpacheco.therapynotes.controller.enums.LogLevel;
 import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.api.AppLogApi;
+import com.alexpacheco.therapynotes.model.entities.AppLog;
 import com.alexpacheco.therapynotes.model.entities.Note;
-import com.alexpacheco.therapynotes.util.DbUtil;
+import com.alexpacheco.therapynotes.util.AppLogger;
+import com.alexpacheco.therapynotes.util.DateFormatUtil;
 import com.alexpacheco.therapynotes.util.JavaUtils;
 import com.alexpacheco.therapynotes.util.export.NoteDocxExporter;
 import com.alexpacheco.therapynotes.util.export.NotePdfExporter;
@@ -32,52 +31,40 @@ public class Exporter
 	 */
 	public static boolean exportLogsToCSV( File outputFile )
 	{
-		String sql = "SELECT id, session_id, timestamp, level, source, message, exception_stacktrace FROM app_logs ORDER BY timestamp DESC";
-		
-		try( Connection conn = DbUtil.getConnection();
-				PreparedStatement pstmt = conn.prepareStatement( sql );
-				ResultSet rs = pstmt.executeQuery();
-				FileWriter writer = new FileWriter( outputFile );
-				BufferedWriter bw = new BufferedWriter( writer ) )
+		AppLogApi api = new AppLogApi();
+		List<AppLog> appLogs = api.getRecentLogs( 1000 );
+		try( FileWriter writer = new FileWriter( outputFile ); BufferedWriter bw = new BufferedWriter( writer ) )
 		{
 			// Write CSV header
 			bw.write( "ID,Session ID,Timestamp,Log Level,Source,Message,Exception Stacktrace" );
 			bw.newLine();
 			
 			// Write data rows
-			while( rs.next() )
+			for( AppLog log : appLogs )
 			{
 				StringBuilder row = new StringBuilder();
 				
-				row.append( rs.getInt( "id" ) ).append( "," );
-				row.append( escapeCsvValue( rs.getString( "session_id" ) ) ).append( "," );
-				row.append( escapeCsvValue( rs.getString( "timestamp" ) ) ).append( "," );
-				row.append( escapeCsvValue( rs.getString( "level" ) ) ).append( "," );
-				row.append( escapeCsvValue( rs.getString( "source" ) ) ).append( "," );
-				row.append( escapeCsvValue( rs.getString( "message" ) ) ).append( "," );
-				row.append( escapeCsvValue( rs.getString( "exception_stacktrace" ) ) );
+				row.append( log.getId() ).append( "," );
+				row.append( escapeCsvValue( log.getSessionId() ) ).append( "," );
+				row.append( escapeCsvValue( DateFormatUtil.toSqliteString( log.getTimestamp() ) ) ).append( "," );
+				row.append( escapeCsvValue( log.getLevel() ) ).append( "," );
+				row.append( escapeCsvValue( log.getSource() ) ).append( "," );
+				row.append( escapeCsvValue( log.getMessage() ) ).append( "," );
+				row.append( escapeCsvValue( "" ) );
 				
 				bw.write( row.toString() );
 				bw.newLine();
 			}
 			
-			AppController.logToDatabase( LogLevel.INFO, "AppController", "Exported logs to CSV: " + outputFile.getAbsolutePath() );
+			AppLogger.info( "Exported logs to CSV: " + outputFile.getAbsolutePath() );
 			return true;
 			
 		}
-		catch( SQLException | IOException e )
+		catch( IOException e )
 		{
 			System.err.println( "Failed to export logs to CSV: " + e.getMessage() );
 			e.printStackTrace();
-			
-			try
-			{
-				AppController.logToDatabase( LogLevel.ERROR, "AppController", "Failed to export logs to CSV: " + e.getMessage() );
-			}
-			catch( Exception logEx )
-			{
-				// Ignore - can't log the logging error
-			}
+			AppLogger.error( "Failed to export logs to CSV: " + e.getMessage(), e );
 			
 			return false;
 		}

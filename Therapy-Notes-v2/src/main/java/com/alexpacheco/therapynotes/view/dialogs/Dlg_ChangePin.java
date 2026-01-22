@@ -25,7 +25,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.PinManager;
-import com.alexpacheco.therapynotes.controller.enums.LogLevel;
+import com.alexpacheco.therapynotes.util.AppLogger;
 
 /**
  * Dialog for changing the application PIN.
@@ -286,7 +286,6 @@ public class Dlg_ChangePin extends JDialog
 				showError( "Current PIN is incorrect." );
 				txtCurrentPin.requestFocus();
 				txtCurrentPin.selectAll();
-				AppController.logToDatabase( LogLevel.WARN, "Dlg_ChangePin", "PIN changed attempted but incorrect current PIN provided" );
 			}
 			
 		}
@@ -295,7 +294,6 @@ public class Dlg_ChangePin extends JDialog
 			Arrays.fill( currentPin, '\0' );
 			Arrays.fill( newPin, '\0' );
 			Arrays.fill( confirmPin, '\0' );
-			AppController.logToDatabase( LogLevel.INFO, "Dlg_ChangePin", "PIN changed" );
 			AppController.updateMenu();
 		}
 	}
@@ -329,13 +327,11 @@ public class Dlg_ChangePin extends JDialog
 				showError( "Current PIN is incorrect." );
 				txtCurrentPin.requestFocus();
 				txtCurrentPin.selectAll();
-				AppController.logToDatabase( LogLevel.WARN, "Dlg_ChangePin", "PIN removal attempted but incorrect current PIN provided" );
 			}
 		}
 		finally
 		{
 			Arrays.fill( currentPin, '\0' );
-			AppController.logToDatabase( LogLevel.INFO, "Dlg_ChangePin", "PIN removed" );
 			AppController.updateMenu();
 		}
 	}
@@ -359,6 +355,7 @@ public class Dlg_ChangePin extends JDialog
 	{
 		Dlg_ChangePin dialog = new Dlg_ChangePin( parent );
 		dialog.setVisible( true );
+		AppLogger.logDialogOpened( "Change PIN" );
 		return dialog.isPinChanged();
 	}
 }

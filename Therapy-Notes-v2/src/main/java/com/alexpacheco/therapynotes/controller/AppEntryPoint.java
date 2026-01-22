@@ -4,27 +4,22 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import com.alexpacheco.therapynotes.controller.enums.LogLevel;
 import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.install.SetupConfigurationManager;
 import com.alexpacheco.therapynotes.install.SetupWizardDialog;
+import com.alexpacheco.therapynotes.util.AppLogger;
 
 public class AppEntryPoint
 {
 	public static void main( String[] args )
 	{
-		AppController.initializeSession();
-		
 		SwingUtilities.invokeLater( () ->
 		{
 			_showSetupIfNeeded();
 			_initializeDatabase();
 			
-			AppController.logToDatabase( LogLevel.INFO, "AppEntryPoint", "Application started" );
-			AppController.logToDatabase( LogLevel.INFO, "AppEntryPoint",
-					"DB configured at: " + SetupConfigurationManager.loadConfiguration().getDatabasePath() );
+			AppLogger.info( "DB configured at: " + SetupConfigurationManager.loadConfiguration().getDatabasePath() );
 			
-			DatabaseInitializer.cleanupOldLogs( 90 );
 			_initializeDefaultPreferences();
 			
 			AppController.launchMainWindow();
@@ -54,6 +49,7 @@ public class AppEntryPoint
 				
 				if( result != JOptionPane.YES_OPTION )
 				{
+					AppLogger.logShutdown();
 					System.exit( 0 );
 					return;
 				}
@@ -70,6 +66,7 @@ public class AppEntryPoint
 		catch( TherapyAppException e )
 		{
 			AppController.showBasicErrorPopup( e, "Critical database initialization error:" );
+			AppLogger.logShutdown();
 			System.exit( 0 );
 		}
 	}

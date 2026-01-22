@@ -5,6 +5,7 @@ import javax.swing.*;
 import com.alexpacheco.therapynotes.controller.Exporter;
 import com.alexpacheco.therapynotes.controller.PinManager;
 import com.alexpacheco.therapynotes.controller.enums.Screens;
+import com.alexpacheco.therapynotes.util.AppLogger;
 import com.alexpacheco.therapynotes.view.dialogs.Dlg_AddPin;
 import com.alexpacheco.therapynotes.view.dialogs.Dlg_ChangePin;
 import com.alexpacheco.therapynotes.view.screens.Pnl_About;
@@ -276,6 +277,7 @@ public class MainWindow extends JFrame
 	
 	private void _changeScreen( Screens panel )
 	{
+		AppLogger.logNavigation( currentScreen.getPanelName(), panel.getPanelName() );
 		switch( panel )
 		{
 			case SEARCH_CLIENTS_VIEW:
@@ -315,6 +317,7 @@ public class MainWindow extends JFrame
 		
 		if( result == JOptionPane.YES_OPTION )
 		{
+			AppLogger.logShutdown();
 			System.exit( 0 );
 		}
 	}

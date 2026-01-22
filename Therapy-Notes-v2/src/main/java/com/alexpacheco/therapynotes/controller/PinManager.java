@@ -3,8 +3,8 @@ package com.alexpacheco.therapynotes.controller;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import com.alexpacheco.therapynotes.controller.enums.LogLevel;
 import com.alexpacheco.therapynotes.install.SetupConfigurationManager;
+import com.alexpacheco.therapynotes.util.AppLogger;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -122,7 +122,7 @@ public class PinManager
 			if( saltBase64 == null || storedHashBase64 == null )
 			{
 				clearCharArray( pin );
-				AppController.logToDatabase( LogLevel.WARN, "PinManager", "PIN verification attempted but PIN not configured" );
+				AppLogger.info( "PIN verification attempted but PIN not configured" );
 				return new VerificationResult( false, "PIN not configured.", false );
 			}
 			
@@ -141,24 +141,24 @@ public class PinManager
 			if( matches )
 			{
 				resetFailedAttempts();
-				AppController.logToDatabase( LogLevel.INFO, "PinManager", "PIN verification passed" );
+				AppLogger.logLogin( matches );
 				return new VerificationResult( true, null, false );
 			}
 			else
 			{
+				AppLogger.logLogin( matches );
 				int attempts = incrementFailedAttempts();
 				int remaining = MAX_FAILED_ATTEMPTS - attempts;
 				
 				if( remaining <= 0 )
 				{
 					setLockout();
-					AppController.logToDatabase( LogLevel.WARN, "PinManager", "Incorrect PIN. Account locked." );
+					AppLogger.info( "Too many failed attempts (" + attempts + "). Account locked." );
 					return new VerificationResult( false, "Too many failed attempts. Account locked for " + LOCKOUT_MINUTES + " minutes.",
 							true );
 				}
 				else
 				{
-					AppController.logToDatabase( LogLevel.WARN, "PinManager", "Incorrect PIN. " + remaining + " attempt(s) remaining." );
 					return new VerificationResult( false, "Incorrect PIN. " + remaining + " attempt(s) remaining.", false );
 				}
 			}
@@ -167,7 +167,7 @@ public class PinManager
 		catch( Exception e )
 		{
 			clearCharArray( pin );
-			AppController.logException( "PinManager", e );
+			AppLogger.error( "Verification error: " + e.getMessage(), e );
 			return new VerificationResult( false, "Verification error: " + e.getMessage(), false );
 		}
 	}
@@ -191,6 +191,7 @@ public class PinManager
 		}
 		
 		setupPin( newPin, newHint );
+		AppLogger.info( "PIN changed" );
 		return true;
 	}
 	
@@ -216,6 +217,7 @@ public class PinManager
 			SetupConfigurationManager.setValue( KEY_PIN_SALT, "" );
 			SetupConfigurationManager.setValue( KEY_PIN_HINT, "" );
 			resetFailedAttempts();
+			AppLogger.info( "PIN removed" );
 			return true;
 		}
 		catch( Exception e )
@@ -417,7 +419,7 @@ public class PinManager
 		}
 		catch( Exception e )
 		{
-			AppController.logException( "PinManager", e );
+			AppLogger.error( e.getMessage(), e );
 		}
 		return attempts;
 	}
@@ -431,7 +433,7 @@ public class PinManager
 		}
 		catch( Exception e )
 		{
-			AppController.logException( "PinManager", e );
+			AppLogger.error( e.getMessage(), e );
 		}
 	}
 	
@@ -444,7 +446,7 @@ public class PinManager
 		}
 		catch( Exception e )
 		{
-			AppController.logException( "PinManager", e );
+			AppLogger.error( e.getMessage(), e );
 		}
 	}
 	
@@ -461,7 +463,7 @@ public class PinManager
 		}
 		catch( Exception e )
 		{
-			AppController.logException( "PinManager", e );
+			AppLogger.error( e.getMessage(), e );
 			return null;
 		}
 	}

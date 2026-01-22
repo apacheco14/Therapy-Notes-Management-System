@@ -3,14 +3,11 @@ package com.alexpacheco.therapynotes.controller;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.swing.JFrame;
@@ -40,7 +37,7 @@ import com.alexpacheco.therapynotes.model.entities.Preference;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionFactory;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionType;
-import com.alexpacheco.therapynotes.util.DbUtil;
+import com.alexpacheco.therapynotes.util.AppLogger;
 import com.alexpacheco.therapynotes.util.JavaUtils;
 import com.alexpacheco.therapynotes.view.MainWindow;
 import com.alexpacheco.therapynotes.view.dialogs.Dlg_PinEntry;
@@ -48,7 +45,6 @@ import com.alexpacheco.therapynotes.view.dialogs.Dlg_PinEntry;
 public class AppController
 {
 	private static MainWindow window;
-	private static String currentSessionId;
 	private static List<String> icd10Codes;
 	private static NoteApi noteApi = new NoteApi();
 	private static ClientApi clientApi = new ClientApi();
@@ -60,41 +56,6 @@ public class AppController
 	private static AppLogApi appLogApi = new AppLogApi();
 	private static PreferenceApi preferenceApi = new PreferenceApi();
 	
-	public static void initializeSession()
-	{
-		if( JavaUtils.isNullOrEmpty( currentSessionId ) )
-			currentSessionId = UUID.randomUUID().toString();
-	}
-	
-	public static String getSessionId()
-	{
-		return currentSessionId;
-	}
-	
-	public static void logException( String source, Exception e )
-	{
-		logToDatabase( LogLevel.ERROR, source, e.getMessage() );
-		logToDatabase( LogLevel.ERROR, source, JavaUtils.getStackTraceAsString( e ) );
-	}
-	
-	public static void logToDatabase( LogLevel level, String source, String message )
-	{
-		String sql = "INSERT INTO app_logs (level, source, message, session_id) VALUES (?, ?, ?, ?)";
-		try( PreparedStatement pstmt = DbUtil.getConnection().prepareStatement( sql ) )
-		{
-			pstmt.setString( 1, level.getDbCode() );
-			pstmt.setString( 2, source );
-			pstmt.setString( 3, message );
-			pstmt.setString( 4, currentSessionId );
-			pstmt.executeUpdate();
-		}
-		catch( SQLException e )
-		{
-			System.err.println( "Logging failed: " + e.getMessage() );
-			e.printStackTrace();
-		}
-	}
-	
 	public static void launchMainWindow()
 	{
 		try
@@ -103,7 +64,7 @@ public class AppController
 		}
 		catch( Exception e )
 		{
-			AppController.logException( "AppController", e );
+			AppLogger.error( "Error setting look and feel.", e );
 			AppController.showBasicErrorPopup( "Error setting look and feel." );
 		}
 		
@@ -111,10 +72,12 @@ public class AppController
 		{
 			if( !Dlg_PinEntry.authenticate( null ) )
 			{
+				AppLogger.logShutdown();
 				System.exit( 0 );
 			}
 		}
 		
+		AppLogger.logStartup();
 		window = new MainWindow();
 		window.setVisible( true );
 	}
@@ -371,7 +334,7 @@ public class AppController
 			InputStream codesStream = AppController.class.getResourceAsStream( "/f_codes.txt" );
 			BufferedReader reader = new BufferedReader( new InputStreamReader( codesStream ) );
 			icd10Codes = reader.lines().filter( line -> !line.isBlank() ).collect( Collectors.toList() );
-			AppController.logToDatabase( LogLevel.INFO, "AppController", "ICD 10 codes loaded" );
+			AppLogger.info( "ICD 10 codes loaded" );
 		}
 		
 		return icd10Codes;

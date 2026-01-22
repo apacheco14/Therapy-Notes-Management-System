@@ -4,11 +4,11 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
 import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.dao.PreferencesDao;
 import com.alexpacheco.therapynotes.model.entities.Preference;
+import com.alexpacheco.therapynotes.util.AppLogger;
 
 public class PreferenceApi
 {
@@ -22,7 +22,7 @@ public class PreferenceApi
 		}
 		catch( SQLException e )
 		{
-			AppController.logException( "PreferenceApi", e );
+			AppLogger.error( e );
 			throw new TherapyAppException( "An internal database error occurred.", ErrorCode.DB_ERROR );
 		}
 	}
@@ -35,7 +35,7 @@ public class PreferenceApi
 		}
 		catch( SQLException e )
 		{
-			AppController.logException( "PreferenceApi", e );
+			AppLogger.error( e );
 			throw new TherapyAppException( "An internal database error occurred.", ErrorCode.DB_ERROR );
 		}
 	}
@@ -57,7 +57,7 @@ public class PreferenceApi
 		}
 		catch( SQLException | TherapyAppException e )
 		{
-			AppController.logException( "PreferenceApi", e );
+			AppLogger.error( e );
 			return defaultValue;
 		}
 	}
@@ -79,7 +79,7 @@ public class PreferenceApi
 		}
 		catch( SQLException | TherapyAppException e )
 		{
-			AppController.logException( "PreferenceApi", e );
+			AppLogger.error( e );
 			return defaultValue;
 		}
 	}
@@ -101,7 +101,7 @@ public class PreferenceApi
 		}
 		catch( SQLException | TherapyAppException e )
 		{
-			AppController.logException( "PreferenceApi", e );
+			AppLogger.error( e );
 			return defaultValue;
 		}
 	}
@@ -123,7 +123,7 @@ public class PreferenceApi
 		}
 		catch( SQLException | TherapyAppException e )
 		{
-			AppController.logException( "PreferenceApi", e );
+			AppLogger.error( e );
 			return defaultValue;
 		}
 	}

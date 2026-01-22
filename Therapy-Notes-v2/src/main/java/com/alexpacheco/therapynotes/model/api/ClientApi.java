@@ -3,13 +3,13 @@ package com.alexpacheco.therapynotes.model.api;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
 import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.ResourceConflictException;
 import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.EntityValidator;
 import com.alexpacheco.therapynotes.model.dao.ClientsDao;
 import com.alexpacheco.therapynotes.model.entities.Client;
+import com.alexpacheco.therapynotes.util.AppLogger;
 
 public class ClientApi
 {
@@ -18,93 +18,93 @@ public class ClientApi
 	/**
 	 * Creates a new client and validates the unique client_code.
 	 */
-	public void createClient(Client client) throws TherapyAppException
+	public void createClient( Client client ) throws TherapyAppException
 	{
-		EntityValidator.validateClient(client);
+		EntityValidator.validateClient( client );
 		
 		try
 		{
 			// Check if code already exists to provide a better error than a SQL crash
-			if (clientDao.existsByCode(client.getClientCode()))
+			if( clientDao.existsByCode( client.getClientCode() ) )
 			{
-				throw new ResourceConflictException("Client code '" + client.getClientCode() + "' is already in use.");
+				throw new ResourceConflictException( "Client code '" + client.getClientCode() + "' is already in use." );
 			}
 			
-			clientDao.saveNew(client);
+			clientDao.saveNew( client );
 		}
-		catch (SQLException e)
+		catch( SQLException e )
 		{
-			AppController.logException("ClientApi", e);
+			AppLogger.error( e );
 			// SQLite specific error code for unique constraint is 19
-			if (e.getErrorCode() == 19 || e.getMessage().contains("UNIQUE"))
+			if( e.getErrorCode() == 19 || e.getMessage().contains( "UNIQUE" ) )
 			{
 				throw new ResourceConflictException(
-						"The client code '" + client.getClientCode() + "' is already assigned to another patient.");
+						"The client code '" + client.getClientCode() + "' is already assigned to another patient." );
 			}
 			
 			// Fallback for other database errors
-			throw new TherapyAppException("An internal database error occurred.", ErrorCode.DB_ERROR);
+			throw new TherapyAppException( "An internal database error occurred.", ErrorCode.DB_ERROR );
 		}
 	}
 	
 	/**
 	 * Edits an existing client and validates the unique client_code.
 	 */
-	public void updateClient(Client client) throws TherapyAppException
+	public void updateClient( Client client ) throws TherapyAppException
 	{
-		EntityValidator.validateClient(client);
+		EntityValidator.validateClient( client );
 		
 		try
 		{
-			clientDao.saveExisting(client);
+			clientDao.saveExisting( client );
 		}
-		catch (SQLException e)
+		catch( SQLException e )
 		{
-			AppController.logException("ClientApi", e);
-			throw new TherapyAppException("An internal database error occurred.", ErrorCode.DB_ERROR);
+			AppLogger.error( e );
+			throw new TherapyAppException( "An internal database error occurred.", ErrorCode.DB_ERROR );
 		}
 	}
 	
 	/**
 	 * Searches for Clients based on any one or a combination of columns.
 	 */
-	public List<Client> findClients(String firstName, String lastName, String clientCode, boolean includeInactive)
+	public List<Client> findClients( String firstName, String lastName, String clientCode, boolean includeInactive )
 			throws TherapyAppException
 	{
 		try
 		{
-			return clientDao.findClients(firstName, lastName, clientCode, includeInactive);
+			return clientDao.findClients( firstName, lastName, clientCode, includeInactive );
 		}
-		catch (SQLException e)
+		catch( SQLException e )
 		{
-			AppController.logException("ClientApi", e);
-			throw new TherapyAppException("Error occurred while searching for clients.", ErrorCode.DB_ERROR);
-		}
-	}
-	
-	public List<Client> getAllClients(boolean includeInactive) throws TherapyAppException
-	{
-		try
-		{
-			return clientDao.getAllClients(includeInactive);
-		}
-		catch (SQLException e)
-		{
-			AppController.logException("ClientApi", e);
-			throw new TherapyAppException("Error occurred while searching for clients.", ErrorCode.DB_ERROR);
+			AppLogger.error( e );
+			throw new TherapyAppException( "Error occurred while searching for clients.", ErrorCode.DB_ERROR );
 		}
 	}
 	
-	public Client getClient(int clientId) throws TherapyAppException
+	public List<Client> getAllClients( boolean includeInactive ) throws TherapyAppException
 	{
 		try
 		{
-			return clientDao.getClientById(clientId);
+			return clientDao.getAllClients( includeInactive );
 		}
-		catch (SQLException e)
+		catch( SQLException e )
 		{
-			AppController.logException("ClientApi", e);
-			throw new TherapyAppException("Error occurred while searching for clients.", ErrorCode.DB_ERROR);
+			AppLogger.error( e );
+			throw new TherapyAppException( "Error occurred while searching for clients.", ErrorCode.DB_ERROR );
+		}
+	}
+	
+	public Client getClient( int clientId ) throws TherapyAppException
+	{
+		try
+		{
+			return clientDao.getClientById( clientId );
+		}
+		catch( SQLException e )
+		{
+			AppLogger.error( e );
+			throw new TherapyAppException( "Error occurred while searching for clients.", ErrorCode.DB_ERROR );
 		}
 	}
 }

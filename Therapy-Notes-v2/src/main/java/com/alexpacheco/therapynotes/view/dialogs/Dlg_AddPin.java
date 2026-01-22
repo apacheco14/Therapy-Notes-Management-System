@@ -24,7 +24,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.PinManager;
-import com.alexpacheco.therapynotes.controller.enums.LogLevel;
+import com.alexpacheco.therapynotes.util.AppLogger;
 
 /**
  * Dialog for setting up a new PIN when none exists. (For use from Settings menu when PIN was skipped during setup)
@@ -257,7 +257,6 @@ public class Dlg_AddPin extends JDialog
 		{
 			Arrays.fill( pin, '\0' );
 			Arrays.fill( confirm, '\0' );
-			AppController.logToDatabase( LogLevel.INFO, "Dlg_AddPin", "PIN added" );
 			AppController.updateMenu();
 		}
 	}
@@ -281,6 +280,7 @@ public class Dlg_AddPin extends JDialog
 	{
 		Dlg_AddPin dialog = new Dlg_AddPin( parent );
 		dialog.setVisible( true );
+		AppLogger.logDialogOpened( "Add PIN" );
 		return dialog.isPinSetup();
 	}
 }

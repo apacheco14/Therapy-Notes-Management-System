@@ -3,7 +3,7 @@ package com.alexpacheco.therapynotes.view.screens;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.util.AppLogger;
 
 import java.awt.*;
 
@@ -60,7 +60,7 @@ public class Pnl_About extends JPanel
 		aiDisclaimerLabel.setFont( new Font( "Arial", Font.PLAIN, 10 ) );
 		aiDisclaimerLabel.setAlignmentX( Component.CENTER_ALIGNMENT );
 		
-		JLabel sessionIdLabel = new JLabel( "Session ID: " + AppController.getSessionId() );
+		JLabel sessionIdLabel = new JLabel( "Session ID: " + AppLogger.getSessionId() );
 		sessionIdLabel.setFont( new Font( "Arial", Font.PLAIN, 10 ) );
 		sessionIdLabel.setHorizontalAlignment( SwingConstants.RIGHT );
 		sessionIdLabel.setBorder( new EmptyBorder( 1, 2, 1, 2 ) );

@@ -3,13 +3,13 @@ package com.alexpacheco.therapynotes.model.api;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.enums.ErrorCode;
 import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.EntityValidator;
 import com.alexpacheco.therapynotes.model.dao.AssessmentOptionsDao;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionType;
+import com.alexpacheco.therapynotes.util.AppLogger;
 
 public class AssessmentOptionApi
 {
@@ -18,73 +18,73 @@ public class AssessmentOptionApi
 	/**
 	 * Creates a new AssessmentOption
 	 */
-	public void createAssessmentOptions(List<AssessmentOption> options) throws TherapyAppException
+	public void createAssessmentOptions( List<AssessmentOption> options ) throws TherapyAppException
 	{
-		EntityValidator.validateAssessmentOptions(options);
+		EntityValidator.validateAssessmentOptions( options );
 		
 		try
 		{
-			if (options.size() == 1)
-				dao.createOption(options.get(0));
+			if( options.size() == 1 )
+				dao.createOption( options.get( 0 ) );
 			else
-				dao.createOptionsBatch(options);
+				dao.createOptionsBatch( options );
 		}
-		catch (SQLException e)
+		catch( SQLException e )
 		{
-			AppController.logException("AssessmentOptionApi", e);
-			throw new TherapyAppException("An internal database error occurred.", ErrorCode.DB_ERROR);
+			AppLogger.error( e );
+			throw new TherapyAppException( "An internal database error occurred.", ErrorCode.DB_ERROR );
 		}
 	}
 	
 	/**
 	 * Edits existing AssessmentOption objects.
 	 */
-	public void editAssessmentOptions(List<AssessmentOption> options) throws TherapyAppException
+	public void editAssessmentOptions( List<AssessmentOption> options ) throws TherapyAppException
 	{
-		EntityValidator.validateAssessmentOptions(options);
+		EntityValidator.validateAssessmentOptions( options );
 		try
 		{
-			if (options.size() == 1)
-				dao.updateOption(options.get(0));
+			if( options.size() == 1 )
+				dao.updateOption( options.get( 0 ) );
 			else
-				dao.updateOptionsBatch(options);
+				dao.updateOptionsBatch( options );
 		}
-		catch (SQLException e)
+		catch( SQLException e )
 		{
-			AppController.logException("AssessmentOptionApi", e);
-			throw new TherapyAppException("An internal database error occurred.", ErrorCode.DB_ERROR);
+			AppLogger.error( e );
+			throw new TherapyAppException( "An internal database error occurred.", ErrorCode.DB_ERROR );
 		}
 	}
 	
-	public List<AssessmentOption> getOptions(AssessmentOptionType type) throws TherapyAppException
+	public List<AssessmentOption> getOptions( AssessmentOptionType type ) throws TherapyAppException
 	{
 		try
 		{
-			if(type == null)
+			if( type == null )
 				return dao.getOptions();
 			else
-				return dao.getOptions(type);
+				return dao.getOptions( type );
 		}
-		catch (SQLException e)
+		catch( SQLException e )
 		{
-			AppController.logException("AssessmentOptionApi", e);
-			throw new TherapyAppException("An internal database error occurred.", ErrorCode.DB_ERROR);
+			AppLogger.error( e );
+			throw new TherapyAppException( "An internal database error occurred.", ErrorCode.DB_ERROR );
 		}
 	}
-
-	public AssessmentOption getOption(Integer assessmentOptionId) throws TherapyAppException
+	
+	public AssessmentOption getOption( Integer assessmentOptionId ) throws TherapyAppException
 	{
 		try
 		{
-			if(assessmentOptionId == null)
+			if( assessmentOptionId == null )
 				return null;
 			else
-				return dao.getOption(assessmentOptionId);
+				return dao.getOption( assessmentOptionId );
 		}
-		catch (SQLException e)
+		catch( SQLException e )
 		{
-			AppController.logException("AssessmentOptionApi", e);
-			throw new TherapyAppException("An internal database error occurred.", ErrorCode.DB_ERROR);
+			AppLogger.error( e );
+			throw new TherapyAppException( "An internal database error occurred.", ErrorCode.DB_ERROR );
 		}
 	}
 }

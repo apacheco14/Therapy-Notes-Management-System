@@ -158,19 +158,6 @@ CREATE INDEX IF NOT EXISTS "contact_client_fk_idx" ON "contacts" ("linked_client
 -- 5. MAINTENANCE
 -----------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS "app_logs" (
-  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-  "session_id" TEXT NOT NULL,
-  "level" TEXT NOT NULL,
-  "source" TEXT NOT NULL,
-  "message" TEXT NOT NULL,
-  "exception_stacktrace" TEXT DEFAULT NULL,
-  "timestamp" DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE INDEX IF NOT EXISTS "idx_logs_timestamp" ON "app_logs"("timestamp");
-CREATE INDEX IF NOT EXISTS "idx_logs_level" ON "app_logs"("level");
-
 CREATE TABLE IF NOT EXISTS "user_preferences" (
   "preference_key" TEXT PRIMARY KEY,
   "preference_value" TEXT,
