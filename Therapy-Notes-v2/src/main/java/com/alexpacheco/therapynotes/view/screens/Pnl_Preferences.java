@@ -27,8 +27,10 @@ import javax.swing.SwingConstants;
 
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.enums.PreferenceKey;
+import com.alexpacheco.therapynotes.controller.enums.PreferenceType;
 import com.alexpacheco.therapynotes.controller.errorhandling.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.Preference;
+import com.alexpacheco.therapynotes.util.AppLogger;
 import com.alexpacheco.therapynotes.util.PreferencesUtil;
 
 /**
@@ -515,6 +517,7 @@ public class Pnl_Preferences extends JPanel
 			
 			// Save all preferences
 			AppController.savePrefernces( preferencesToSave );
+			_logChanges( preferencesToSave );
 			
 			// Update original values
 			storeOriginalValues();
@@ -526,6 +529,95 @@ public class Pnl_Preferences extends JPanel
 		catch( TherapyAppException e )
 		{
 			JOptionPane.showMessageDialog( this, "Error saving preferences: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE );
+		}
+	}
+	
+	private void _logChanges( List<Preference> preferencesToSave )
+	{
+		for( Preference pref : preferencesToSave )
+		{
+			PreferenceKey key = PreferenceKey.fromKey( pref.getPreferenceKey() );
+			Object originalValue = originalValues.get( key );
+			String newValueStr = pref.getPreferenceValue();
+			
+			if( _hasValueChanged( originalValue, newValueStr, pref.getPreferenceType() ) )
+			{
+				AppLogger.logPreferenceChange( pref.getPreferenceKey(), _formatValueForLog( newValueStr, pref.getPreferenceType() ) );
+			}
+		}
+	}
+	
+	private boolean _hasValueChanged( Object originalValue, String newValueStr, PreferenceType type )
+	{
+		// Handle nulls
+		if( originalValue == null && newValueStr == null )
+		{
+			return false;
+		}
+		if( originalValue == null || newValueStr == null )
+		{
+			return true;
+		}
+		
+		// Compare based on type
+		if( type == null )
+		{
+			return !originalValue.toString().equals( newValueStr );
+		}
+		
+		switch( type )
+		{
+			case BOOLEAN:
+				return !originalValue.equals( Boolean.parseBoolean( newValueStr ) );
+			case INTEGER:
+				try
+				{
+					return !originalValue.equals( Integer.parseInt( newValueStr ) );
+				}
+				catch( NumberFormatException e )
+				{
+					return true;
+				}
+			case DOUBLE:
+				try
+				{
+					return !originalValue.equals( Double.parseDouble( newValueStr ) );
+				}
+				catch( NumberFormatException e )
+				{
+					return true;
+				}
+			case STRING:
+			default:
+				return !originalValue.toString().equals( newValueStr );
+		}
+	}
+	
+	private String _formatValueForLog( Object value, PreferenceType type )
+	{
+		if( value == null )
+		{
+			return "(not set)";
+		}
+		
+		if( type == null )
+		{
+			return value.toString();
+		}
+		
+		switch( type )
+		{
+			case BOOLEAN:
+				if( value instanceof Boolean )
+				{
+					return (Boolean) value ? "enabled" : "disabled";
+				}
+				return Boolean.parseBoolean( value.toString() ) ? "enabled" : "disabled";
+			case INTEGER:
+			case DOUBLE:
+			case STRING:
+			default:
+				return value.toString();
 		}
 	}
 	

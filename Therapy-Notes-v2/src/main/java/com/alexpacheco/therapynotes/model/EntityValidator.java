@@ -8,6 +8,7 @@ import com.alexpacheco.therapynotes.model.entities.Client;
 import com.alexpacheco.therapynotes.model.entities.Contact;
 import com.alexpacheco.therapynotes.model.entities.Note;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
+import com.alexpacheco.therapynotes.util.AppLogger;
 import com.alexpacheco.therapynotes.util.JavaUtils;
 import com.alexpacheco.therapynotes.util.PreferencesUtil;
 
@@ -15,6 +16,8 @@ public class EntityValidator
 {
 	public static void validateClient( Client client ) throws TherapyAppException
 	{
+		AppLogger.debug( client.toString() );
+		
 		if( client.getClientCode() == null || client.getClientCode().length() < 3 )
 			throw new MissingRequiredElementException( "Client code must be at least 3 characters." );
 		
@@ -33,6 +36,8 @@ public class EntityValidator
 	
 	public static void validateNote( Note note ) throws TherapyAppException
 	{
+		AppLogger.debug( note.toString() );
+		
 		if( JavaUtils.isNullOrEmpty( note.getDiagnosis() ) && PreferencesUtil.isNoteDiagnosisRequired() )
 			throw new MissingRequiredElementException( "Diagnosis is required." );
 		
@@ -75,6 +80,8 @@ public class EntityValidator
 	
 	public static void validateAssessmentOption( AssessmentOption option ) throws TherapyAppException
 	{
+		AppLogger.debug( option.toString() );
+		
 		if( option.getOptionType() == null )
 			throw new MissingRequiredElementException( "Assessment option type is required." );
 		
@@ -84,6 +91,8 @@ public class EntityValidator
 	
 	public static void validateContact( Contact contact ) throws TherapyAppException
 	{
+		AppLogger.debug( contact.toString() );
+		
 		if( JavaUtils.isNullOrEmpty( contact.getFirstName() ) && JavaUtils.isNullOrEmpty( contact.getLastName() ) )
 			throw new MissingRequiredElementException( "First or last name is required." );
 		
