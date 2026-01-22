@@ -47,7 +47,7 @@ Java Swing-based practice management system designed specifically for mental hea
 
 ## Installation & Setup
 ### Requirements
-- Java 11 or higher
+- Java 17 or higher
 - SQLite (included in application bundle)
 - Free disk space
 
@@ -68,8 +68,8 @@ java -jar therapy-notes.jar
 4. **Initial Setup:**
 - The application will launch a configuration wizard on first run
 	- Configure practice information
-	- Set your practice PIN (minimum 4 digits)
-	- Choose where to store the database
+	- Set your application PIN (minimum 4 digits)
+	- Choose where to save your data
 
 ## Usage
 
@@ -109,7 +109,7 @@ This application handles sensitive health information and implements security be
 
 The application follows established design patterns for maintainability and extensibility:
 
-- **Separation of Concerns:** Clear division between UI, Data Access, and Business Logic
+- **Separation of Concerns:** Clear division between UI, Business Logic, and Data Access
 - **Abstract Base Classes:** Shared functionality centralized in abstract parent classes
 - **Factory Pattern:** Assessment and configuration object creation
 - **SwingWorker:** Asynchronous operations for responsive UI
