@@ -20,52 +20,52 @@ public class ValidatedTextField extends JTextField
 	private final Border defaultBorder;
 	private final Border errorBorder;
 	
-	public ValidatedTextField(int columns, Validator validator, String errorMessage)
+	public ValidatedTextField( int columns, Validator validator, String errorMessage )
 	{
-		super(null, null, columns);
+		super( null, null, columns );
 		this.validator = validator;
 		this.errorMessage = errorMessage;
 		this.defaultBorder = getBorder();
-		this.errorBorder = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.RED), defaultBorder);
+		this.errorBorder = BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( Color.RED ), defaultBorder );
 		
-		getDocument().addDocumentListener(new DocumentListener()
+		getDocument().addDocumentListener( new DocumentListener()
 		{
 			@Override
-			public void insertUpdate(DocumentEvent e)
+			public void insertUpdate( DocumentEvent e )
 			{
 				validateField();
 			}
 			
 			@Override
-			public void removeUpdate(DocumentEvent e)
+			public void removeUpdate( DocumentEvent e )
 			{
 				validateField();
 			}
 			
 			@Override
-			public void changedUpdate(DocumentEvent e)
+			public void changedUpdate( DocumentEvent e )
 			{
 				validateField();
 			}
-		});
+		} );
 	}
 	
 	private void validateField()
 	{
 		String text = getText();
-		boolean valid = validator.isValid(text);
+		boolean valid = validator.isValid( text );
 		
-		setBorder(valid || text.isBlank() ? defaultBorder : errorBorder);
-		setToolTipText(valid || text.isBlank() ? null : errorMessage);
+		setBorder( valid || text.isBlank() ? defaultBorder : errorBorder );
+		setToolTipText( valid || text.isBlank() ? null : errorMessage );
 		
-		if (validityListener != null)
+		if( validityListener != null )
 		{
-			validityListener.accept(valid);
+			validityListener.accept( valid );
 		}
 	}
 	
 	/** Allows external components (e.g., buttons) to react to validity */
-	public void setValidityListener(Consumer<Boolean> listener)
+	public void setValidityListener( Consumer<Boolean> listener )
 	{
 		this.validityListener = listener;
 	}
@@ -73,6 +73,6 @@ public class ValidatedTextField extends JTextField
 	/** Explicit validity check (useful on form submit) */
 	public boolean isInputValid()
 	{
-		return validator.isValid(getText());
+		return validator.isValid( getText() );
 	}
 }
