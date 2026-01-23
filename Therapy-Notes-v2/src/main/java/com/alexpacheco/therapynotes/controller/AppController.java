@@ -404,6 +404,14 @@ public class AppController
 	}
 	
 	/**
+	 * Get practitioner name
+	 */
+	public static String getPractitionerName()
+	{
+		return SetupConfigurationManager.getValue( "practice.practitioner" );
+	}
+	
+	/**
 	 * Get formatted practice header for documents/exports.
 	 */
 	public static String getPracticeHeader()

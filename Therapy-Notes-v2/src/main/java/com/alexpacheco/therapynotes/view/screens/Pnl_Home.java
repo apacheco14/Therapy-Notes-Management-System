@@ -17,6 +17,7 @@ import javax.swing.SwingConstants;
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.util.AppIcon;
+import com.alexpacheco.therapynotes.util.JavaUtils;
 
 /**
  * Home screen panel displaying the application icon and title. Can be used as a welcome/landing screen or dashboard header.
@@ -25,7 +26,7 @@ public class Pnl_Home extends JPanel
 {
 	private static final long serialVersionUID = -6573309009119411416L;
 	private static final String APP_TITLE = "Notes Management System";
-	private static final String APP_SUBTITLE = "";
+	private static final String APP_SUBTITLE = "Welcome back";
 	
 	private static final Color TITLE_COLOR = new Color( 74, 144, 164 ); // Matches icon color #4A90A4
 	private static final Color SUBTITLE_COLOR = new Color( 100, 116, 129 );
@@ -83,7 +84,10 @@ public class Pnl_Home extends JPanel
 		headerPanel.add( Box.createVerticalStrut( 8 ) );
 		
 		// Subtitle
-		lblSubtitle = new JLabel( APP_SUBTITLE );
+		if( !JavaUtils.isNullOrEmpty( AppController.getPractitionerName() ) )
+			lblSubtitle = new JLabel( APP_SUBTITLE + ", " + AppController.getPractitionerName() );
+		else
+			lblSubtitle = new JLabel( APP_SUBTITLE );
 		lblSubtitle.setFont( AppFonts.createFont( Font.PLAIN, 14 ) );
 		lblSubtitle.setForeground( SUBTITLE_COLOR );
 		lblSubtitle.setAlignmentX( CENTER_ALIGNMENT );
