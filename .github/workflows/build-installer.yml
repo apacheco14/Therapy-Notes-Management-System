@@ -66,7 +66,8 @@ jobs:
             --type exe `
             --win-dir-chooser `
             --win-menu `
-            --win-shortcut
+            --win-shortcut `
+            --win-upgrade-uuid "7cae61c8-89b4-4703-9c7c-b1ae04a99143"
       
       - name: Upload installer
         uses: actions/upload-artifact@v4
