@@ -126,6 +126,9 @@ Tests use in-memory SQLite databases for isolated, reliable testing without exte
 This application is designed to support mental health practitioners in practice management and documentation. Users are responsible for ensuring compliance with all applicable healthcare regulations, including HIPAA and state-specific privacy laws. Always follow your jurisdiction's requirements for clinical record management and patient data protection.
 
 
+## Acknowledgements
+Credit to Dr. Sarah Conklin, Psy.D. for the idea for this application and providing specific requirements to get it started.
+
 **Version:** 1.0.0
 
 **UUID:** 7cae61c8-89b4-4703-9c7c-b1ae04a99143
