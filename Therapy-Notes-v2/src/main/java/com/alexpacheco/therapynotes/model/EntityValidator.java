@@ -38,6 +38,9 @@ public class EntityValidator
 	{
 		AppLogger.debug( note.toString() );
 		
+		if( note.getClient() == null || note.getClient().getClientId() == null )
+			throw new MissingRequiredElementException( "Client is required." );
+		
 		if( JavaUtils.isNullOrEmpty( note.getDiagnosis() ) && PreferencesUtil.isNoteDiagnosisRequired() )
 			throw new MissingRequiredElementException( "Diagnosis is required." );
 		
