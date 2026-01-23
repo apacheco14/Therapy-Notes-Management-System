@@ -55,7 +55,7 @@ jobs:
             --app-version ${{ steps.version.outputs.VERSION }} `
             --vendor "Alex Pacheco" `
             --description "Note management for mental health professionals" `
-            --icon src\main\resources\icons\app-icon.ico `
+            --icon src\main\resources\icons\therapy_app_icon.ico `
             --dest dist/ `
             --type exe `
             --win-dir-chooser `
