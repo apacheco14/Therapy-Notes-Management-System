@@ -26,6 +26,20 @@
 					<release>17</release>
 				</configuration>
 			</plugin>
+			<!-- Standard JAR plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.3.0</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>com.alexpacheco.therapynotes.controller.AppEntryPoint</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<!-- Shade plugin to create fat JAR -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -42,6 +56,7 @@
 									<mainClass>com.alexpacheco.therapynotes.controller.AppEntryPoint</mainClass>
 								</transformer>
 							</transformers>
+							<outputFile>${project.build.directory}/${project.artifactId}-${project.version}-full.jar</outputFile>
 							<filters>
 								<filter>
 									<artifact>*:*</artifact>
@@ -92,6 +107,7 @@
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
 			<version>5.10.2</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

@@ -12,9 +12,9 @@ public abstract class BaseDatabaseTest
 {
 	protected static Connection conn;
 	protected static final String DB_URL = "jdbc:sqlite::memory:"; // Use in-memory for testing
-	private static final String SCHEMA_SCRIPT_FILE = "/main/resources/schema-config.sql";
-	private static final String TRIGGER_SCRIPT_FILE = "/main/resources/trigger-config.sql";
-	private static final String OPTIONS_SCRIPT_FILE = "/main/resources/populate-option-tables.sql";
+	private static final String SCHEMA_SCRIPT_FILE = "/schema-config.sql";
+	private static final String TRIGGER_SCRIPT_FILE = "/trigger-config.sql";
+	private static final String OPTIONS_SCRIPT_FILE = "/populate-option-tables.sql";
 	
 	@BeforeAll
 	static void init() throws SQLException
