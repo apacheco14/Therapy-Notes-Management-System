@@ -1,66 +1,76 @@
 package com.alexpacheco.therapynotes.model.entities.assessmentoptions;
 
+import com.alexpacheco.therapynotes.util.JavaUtils;
+
 public class AssessmentOptionFactory
 {
-	public static AssessmentOption createAssessmentOption(int id, String name, String description, String dbTypeKey)
+	public static AssessmentOption createAssessmentOption( int id, String name, String description, String dbTypeKey )
 	{
-		if(dbTypeKey == null)
+		if( JavaUtils.isNullOrEmpty( dbTypeKey ) )
 			return null;
 		
-		return createAssessmentOption(id, name, description, AssessmentOptionType.getByDbTypeKey(dbTypeKey));
+		try
+		{
+			AssessmentOptionType type = AssessmentOptionType.getByDbTypeKey( dbTypeKey );
+			return createAssessmentOption( id, name, description, type );
+		}
+		catch( IllegalArgumentException e )
+		{
+			return null;
+		}
 	}
 	
-	public static AssessmentOption createAssessmentOption(String name, String description, AssessmentOptionType type)
+	public static AssessmentOption createAssessmentOption( String name, String description, AssessmentOptionType type )
 	{
-		if (type == null)
+		if( type == null )
 			return null;
 		
-		switch (type)
+		switch( type )
 		{
 			case SYMPTOMS:
-				return new SymptomAssessmentOption(name, description);
+				return new SymptomAssessmentOption( name, description );
 			case APPEARANCE:
-				return new AppearanceAssessmentOption(name, description);
+				return new AppearanceAssessmentOption( name, description );
 			case SPEECH:
-				return new SpeechAssessmentOption(name, description);
+				return new SpeechAssessmentOption( name, description );
 			case AFFECT:
-				return new AffectAssessmentOption(name, description);
+				return new AffectAssessmentOption( name, description );
 			case EYE_CONTACT:
-				return new EyeContactAssessmentOption(name, description);
+				return new EyeContactAssessmentOption( name, description );
 			case REFERRALS:
-				return new ReferralAssessmentOption(name, description);
+				return new ReferralAssessmentOption( name, description );
 			case COLL_CONTACTS:
-				return new CollateralContactAssessmentOption(name, description);
+				return new CollateralContactAssessmentOption( name, description );
 			case NEXT_APPT:
-				return new NextApptAssessmentOption(name, description);
+				return new NextApptAssessmentOption( name, description );
 			default:
 				return null;
 		}
 	}
 	
-	public static AssessmentOption createAssessmentOption(int id, String name, String description, AssessmentOptionType type)
+	public static AssessmentOption createAssessmentOption( int id, String name, String description, AssessmentOptionType type )
 	{
-		if (type == null)
+		if( type == null )
 			return null;
 		
-		switch (type)
+		switch( type )
 		{
 			case SYMPTOMS:
-				return new SymptomAssessmentOption(id, name, description);
+				return new SymptomAssessmentOption( id, name, description );
 			case APPEARANCE:
-				return new AppearanceAssessmentOption(id, name, description);
+				return new AppearanceAssessmentOption( id, name, description );
 			case SPEECH:
-				return new SpeechAssessmentOption(id, name, description);
+				return new SpeechAssessmentOption( id, name, description );
 			case AFFECT:
-				return new AffectAssessmentOption(id, name, description);
+				return new AffectAssessmentOption( id, name, description );
 			case EYE_CONTACT:
-				return new EyeContactAssessmentOption(id, name, description);
+				return new EyeContactAssessmentOption( id, name, description );
 			case REFERRALS:
-				return new ReferralAssessmentOption(id, name, description);
+				return new ReferralAssessmentOption( id, name, description );
 			case COLL_CONTACTS:
-				return new CollateralContactAssessmentOption(id, name, description);
+				return new CollateralContactAssessmentOption( id, name, description );
 			case NEXT_APPT:
-				return new NextApptAssessmentOption(id, name, description);
+				return new NextApptAssessmentOption( id, name, description );
 			default:
 				return null;
 		}
