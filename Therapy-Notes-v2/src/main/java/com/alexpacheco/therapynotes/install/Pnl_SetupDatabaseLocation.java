@@ -2,6 +2,9 @@ package com.alexpacheco.therapynotes.install;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import com.alexpacheco.therapynotes.util.AppFonts;
+
 import java.awt.*;
 import java.io.File;
 
@@ -113,6 +116,7 @@ public class Pnl_SetupDatabaseLocation extends AbstractSetupStepPanel
 		
 		txtCustomPath = new JTextField();
 		txtCustomPath.setEnabled( false );
+		txtCustomPath.setFont( AppFonts.getTextFieldFont() );
 		
 		btnBrowse = new JButton( "Browse..." );
 		btnBrowse.setEnabled( false );

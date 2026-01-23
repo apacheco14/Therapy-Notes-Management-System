@@ -3,6 +3,8 @@ package com.alexpacheco.therapynotes.install;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import com.alexpacheco.therapynotes.util.AppFonts;
+
 import java.awt.*;
 
 /**
@@ -113,7 +115,6 @@ public class Pnl_SetupPracticeInfo extends AbstractSetupStepPanel
 		txtAddress = new JTextArea( 3, 30 );
 		txtAddress.setLineWrap( true );
 		txtAddress.setWrapStyleWord( true );
-		txtAddress.setFont( txtPracticeName.getFont() );
 		JScrollPane addressScroll = new JScrollPane( txtAddress );
 		addressScroll.setAlignmentX( Component.LEFT_ALIGNMENT );
 		addressScroll.setMaximumSize( new Dimension( Integer.MAX_VALUE, 80 ) );
@@ -124,10 +125,12 @@ public class Pnl_SetupPracticeInfo extends AbstractSetupStepPanel
 		
 		container.add( addressPanel );
 		
+		AppFonts.applyTextFieldFont( txtPracticeName, txtPractitionerName, txtLicenseNumber, txtPhone, txtEmail, txtAddress );
+		
 		// Required fields note
 		container.add( createVerticalSpacer( 10 ) );
 		JLabel requiredNote = new JLabel( "* Required fields" );
-		requiredNote.setFont( requiredNote.getFont().deriveFont( Font.ITALIC, 11f ) );
+		requiredNote.setFont( AppFonts.getSmallFont().deriveFont( Font.ITALIC ) );
 		requiredNote.setForeground( Color.GRAY );
 		requiredNote.setAlignmentX( Component.LEFT_ALIGNMENT );
 		container.add( requiredNote );

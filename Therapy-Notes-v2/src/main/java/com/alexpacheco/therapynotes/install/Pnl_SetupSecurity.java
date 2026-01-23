@@ -6,6 +6,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import com.alexpacheco.therapynotes.controller.PinManager;
+import com.alexpacheco.therapynotes.util.AppFonts;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -175,6 +176,8 @@ public class Pnl_SetupSecurity extends AbstractSetupStepPanel
 		txtHint.setMaximumSize( new Dimension( 350, 30 ) );
 		txtHint.setAlignmentX( Component.LEFT_ALIGNMENT );
 		txtHint.setToolTipText( "A hint to help you remember your PIN (don't make it too obvious!)" );
+		
+		AppFonts.applyTextFieldFont( txtPin, txtConfirmPin, txtHint );
 		
 		JLabel hintNote = new JLabel( "<html><body style='color: #888888; font-size: 10px;'>"
 				+ "This hint will be shown after failed PIN attempts" + "</body></html>" );
