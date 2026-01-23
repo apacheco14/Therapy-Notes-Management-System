@@ -33,6 +33,16 @@ public class Cmb_ICD10Diagnosis extends JComboBox<String>
 	 */
 	public Cmb_ICD10Diagnosis()
 	{
+		this( AppController.getIcd10Codes() );
+	}
+	
+	/**
+	 * Package-private constructor for testing.
+	 * 
+	 * @param codes List of ICD-10 codes to populate
+	 */
+	Cmb_ICD10Diagnosis( List<String> codes )
+	{
 		this.allCodes = new ArrayList<>();
 		this.model = new DefaultComboBoxModel<>();
 		
@@ -41,30 +51,34 @@ public class Cmb_ICD10Diagnosis extends JComboBox<String>
 		
 		editorField = (JTextField) getEditor().getEditorComponent();
 		
-		loadCodes();
+		setCodes( codes );
 		attachListeners();
 	}
 	
 	/**
-	 * Loads ICD-10 codes from the controller.
+	 * Sets the codes
 	 */
+	private void setCodes( List<String> codes )
+	{
+		if( codes != null )
+		{
+			allCodes.clear();
+			allCodes.addAll( codes );
+			
+			model.removeAllElements();
+			model.addElement( "" ); // Blank option
+			for( String code : allCodes )
+			{
+				model.addElement( code );
+			}
+		}
+	}
+	
 	private void loadCodes()
 	{
 		try
 		{
-			List<String> codes = AppController.getIcd10Codes();
-			if( codes != null )
-			{
-				allCodes.clear();
-				allCodes.addAll( codes );
-				
-				model.removeAllElements();
-				model.addElement( "" ); // Blank option
-				for( String code : allCodes )
-				{
-					model.addElement( code );
-				}
-			}
+			setCodes( AppController.getIcd10Codes() );
 		}
 		catch( Exception e )
 		{
