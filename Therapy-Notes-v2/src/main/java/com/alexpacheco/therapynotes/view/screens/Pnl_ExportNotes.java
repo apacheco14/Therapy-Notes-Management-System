@@ -34,6 +34,7 @@ import javax.swing.border.TitledBorder;
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.Note;
+import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.util.AppLogger;
 import com.alexpacheco.therapynotes.util.DateFormatUtil;
 import com.alexpacheco.therapynotes.util.JavaUtils;
@@ -189,7 +190,7 @@ public class Pnl_ExportNotes extends JPanel
 		
 		// Title
 		JLabel titleLabel = new JLabel( "Export Notes", SwingConstants.CENTER );
-		titleLabel.setFont( new Font( "Arial", Font.BOLD, 24 ) );
+		titleLabel.setFont( AppFonts.getScreenTitleFont() );
 		titleLabel.setBorder( BorderFactory.createEmptyBorder( 20, 0, 20, 0 ) );
 		add( titleLabel, BorderLayout.NORTH );
 		

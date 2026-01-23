@@ -3,6 +3,8 @@ package com.alexpacheco.therapynotes.view.screens;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.util.AppLogger;
 
 import java.awt.*;
@@ -14,17 +16,19 @@ public class Pnl_About extends JPanel
 	public Pnl_About()
 	{
 		setLayout( new BorderLayout() );
+		setBackground( AppController.getBackgroundColor() );
 		
 		JPanel contentPanel = new JPanel();
 		contentPanel.setLayout( new BoxLayout( contentPanel, BoxLayout.Y_AXIS ) );
 		contentPanel.setBorder( BorderFactory.createEmptyBorder( 50, 50, 50, 50 ) );
+		contentPanel.setBackground( AppController.getBackgroundColor() );
 		
 		JLabel titleLabel = new JLabel( "Notes Management System" );
-		titleLabel.setFont( new Font( "Arial", Font.BOLD, 32 ) );
+		titleLabel.setFont( AppFonts.getScreenTitleFont() );
 		titleLabel.setAlignmentX( Component.CENTER_ALIGNMENT );
 		
 		JLabel versionLabel = new JLabel( "Version 1.0.0" );
-		versionLabel.setFont( new Font( "Arial", Font.PLAIN, 16 ) );
+		versionLabel.setFont( AppFonts.getHeaderFont() );
 		versionLabel.setAlignmentX( Component.CENTER_ALIGNMENT );
 		
 		JLabel emptySpace1 = new JLabel( " " );

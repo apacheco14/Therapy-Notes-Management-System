@@ -12,16 +12,18 @@ import javax.swing.text.JTextComponent;
 public final class AppFonts
 {
 	// Font family - using a cross-platform safe font
-	private static final String DEFAULT_FAMILY = "Segoe UI";
+	private static final String DEFAULT_FAMILY = Font.SANS_SERIF;
 	private static final String FALLBACK_FAMILY = Font.SANS_SERIF;
 	
 	// Standard sizes
+	private static final int SCREEN_TITLE_SIZE = 26;
 	private static final int TEXT_FIELD_SIZE = 14;
 	private static final int LABEL_SIZE = 13;
 	private static final int HEADER_SIZE = 16;
 	private static final int SMALL_SIZE = 11;
 	
 	// Cached font instances for reuse
+	private static Font titleFont;
 	private static Font textFieldFont;
 	private static Font textFieldBoldFont;
 	private static Font labelFont;
@@ -52,6 +54,18 @@ public final class AppFonts
 		UIManager.put( "Table.font", getLabelFont() );
 		UIManager.put( "TableHeader.font", getTextFieldFont() );
 		UIManager.put( "TitledBorder.font", getLabelFont() );
+	}
+	
+	/**
+	 * Returns the standard font for screen titles.
+	 */
+	public static Font getScreenTitleFont()
+	{
+		if( titleFont == null )
+		{
+			titleFont = createFont( Font.BOLD, SCREEN_TITLE_SIZE );
+		}
+		return titleFont;
 	}
 	
 	/**

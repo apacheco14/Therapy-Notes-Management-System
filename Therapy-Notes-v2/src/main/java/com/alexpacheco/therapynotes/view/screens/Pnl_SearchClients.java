@@ -31,6 +31,7 @@ import javax.swing.text.DocumentFilter;
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.Client;
+import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.view.tablemodels.ClientSearchResultsTableModel;
 
 public abstract class Pnl_SearchClients extends JPanel
@@ -49,29 +50,29 @@ public abstract class Pnl_SearchClients extends JPanel
 	protected JPanel parentPanel;
 	protected CardLayout resultsCardLayout;
 	
-	protected Pnl_SearchClients(CardLayout cardLayout, JPanel mainPanel)
+	protected Pnl_SearchClients( CardLayout cardLayout, JPanel mainPanel )
 	{
 		this.parentCardLayout = cardLayout;
 		this.parentPanel = mainPanel;
 		
-		setLayout(new BorderLayout());
+		setLayout( new BorderLayout() );
 		
-		JLabel titleLabel = new JLabel("Search Clients", SwingConstants.CENTER);
-		titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-		titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+		JLabel titleLabel = new JLabel( "Search Clients", SwingConstants.CENTER );
+		titleLabel.setFont( AppFonts.getScreenTitleFont() );
+		titleLabel.setBorder( BorderFactory.createEmptyBorder( 20, 0, 20, 0 ) );
 		
 		// Search criteria panel
-		JPanel searchPanel = new JPanel(new GridBagLayout());
-		searchPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 50, 10, 50),
-				BorderFactory.createTitledBorder("Search Criteria")));
+		JPanel searchPanel = new JPanel( new GridBagLayout() );
+		searchPanel.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 10, 50, 10, 50 ),
+				BorderFactory.createTitledBorder( "Search Criteria" ) ) );
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.insets = new Insets(5, 5, 5, 5);
+		gbc.insets = new Insets( 5, 5, 5, 5 );
 		
-		firstNameField = new JTextField(20);
-		lastNameField = new JTextField(20);
-		clientCodeField = new JTextField(20);
+		firstNameField = new JTextField( 20 );
+		lastNameField = new JTextField( 20 );
+		clientCodeField = new JTextField( 20 );
 		_setupClientCodeField();
 		showInactiveCheckBox = new JCheckBox();
 		
@@ -80,44 +81,44 @@ public abstract class Pnl_SearchClients extends JPanel
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.weightx = 0.0;
-		searchPanel.add(new JLabel("First Name:"), gbc);
+		searchPanel.add( new JLabel( "First Name:" ), gbc );
 		
 		gbc.gridx = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.weightx = 1.0;
-		searchPanel.add(firstNameField, gbc);
+		searchPanel.add( firstNameField, gbc );
 		
 		gbc.gridx = 2;
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.weightx = 0.0;
-		searchPanel.add(new JLabel("Last Name:"), gbc);
+		searchPanel.add( new JLabel( "Last Name:" ), gbc );
 		
 		gbc.gridx = 3;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.weightx = 1.0;
-		searchPanel.add(lastNameField, gbc);
+		searchPanel.add( lastNameField, gbc );
 		
 		// Row 1
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.weightx = 0.0;
-		searchPanel.add(new JLabel("Client Code:"), gbc);
+		searchPanel.add( new JLabel( "Client Code:" ), gbc );
 		
 		gbc.gridx = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.weightx = 1.0;
-		searchPanel.add(clientCodeField, gbc);
+		searchPanel.add( clientCodeField, gbc );
 		
 		gbc.gridx = 2;
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.weightx = 0.0;
-		searchPanel.add(new JLabel("Show Inactive:"), gbc);
+		searchPanel.add( new JLabel( "Show Inactive:" ), gbc );
 		
 		gbc.gridx = 3;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.weightx = 1.0;
-		searchPanel.add(showInactiveCheckBox, gbc);
+		searchPanel.add( showInactiveCheckBox, gbc );
 		
 		// Button row
 		gbc.gridx = 0;
@@ -126,91 +127,91 @@ public abstract class Pnl_SearchClients extends JPanel
 		gbc.anchor = GridBagConstraints.CENTER;
 		gbc.weightx = 0.0;
 		
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-		JButton clearButton = new JButton("Clear Fields");
-		JButton searchButton = new JButton("Search");
+		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER, 10, 10 ) );
+		JButton clearButton = new JButton( "Clear Fields" );
+		JButton searchButton = new JButton( "Search" );
 		
-		clearButton.addActionListener(e -> clearFields());
-		searchButton.addActionListener(e -> _performSearch());
+		clearButton.addActionListener( e -> clearFields() );
+		searchButton.addActionListener( e -> _performSearch() );
 		
-		buttonPanel.add(clearButton);
-		buttonPanel.add(searchButton);
-		searchPanel.add(buttonPanel, gbc);
+		buttonPanel.add( clearButton );
+		buttonPanel.add( searchButton );
+		searchPanel.add( buttonPanel, gbc );
 		
 		// Results panel
 		resultsCardLayout = new CardLayout();
-		resultsPanel = new JPanel(resultsCardLayout);
-		resultsPanel.setBorder(BorderFactory.createEmptyBorder(10, 50, 20, 50));
+		resultsPanel = new JPanel( resultsCardLayout );
+		resultsPanel.setBorder( BorderFactory.createEmptyBorder( 10, 50, 20, 50 ) );
 		
 		// Table setup
 		tableModel = new ClientSearchResultsTableModel();
 		
-		resultsTable = new JTable(tableModel);
-		resultsTable.setRowHeight(30);
-		resultsTable.getTableHeader().setReorderingAllowed(false);
+		resultsTable = new JTable( tableModel );
+		resultsTable.setRowHeight( 30 );
+		resultsTable.getTableHeader().setReorderingAllowed( false );
 		
 		// Hide the Client ID column
 		TableColumnModel columnModel = resultsTable.getColumnModel();
-		columnModel.getColumn(ClientSearchResultsTableModel.COL_ID).setMinWidth(0);
-		columnModel.getColumn(ClientSearchResultsTableModel.COL_ID).setMaxWidth(0);
-		columnModel.getColumn(ClientSearchResultsTableModel.COL_ID).setWidth(0);
+		columnModel.getColumn( ClientSearchResultsTableModel.COL_ID ).setMinWidth( 0 );
+		columnModel.getColumn( ClientSearchResultsTableModel.COL_ID ).setMaxWidth( 0 );
+		columnModel.getColumn( ClientSearchResultsTableModel.COL_ID ).setWidth( 0 );
 		
 		// Add button to last column
-		resultsTable.getColumn("Action").setCellRenderer((table, value, isSelected, hasFocus, row, column) ->
+		resultsTable.getColumn( "Action" ).setCellRenderer( ( table, value, isSelected, hasFocus, row, column ) ->
 		{
-			JButton button = new JButton(getRowLevelButtonTitle());
+			JButton button = new JButton( getRowLevelButtonTitle() );
 			return button;
-		});
+		} );
 		
-		resultsTable.getColumn("Action").setCellEditor(new DefaultCellEditor(new JCheckBox())
+		resultsTable.getColumn( "Action" ).setCellEditor( new DefaultCellEditor( new JCheckBox() )
 		{
 			private static final long serialVersionUID = 2025493518599780008L;
-			private JButton button = new JButton(getRowLevelButtonTitle());
+			private JButton button = new JButton( getRowLevelButtonTitle() );
 			private int currentRow;
 			
 			@Override
-			public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column)
+			public Component getTableCellEditorComponent( JTable table, Object value, boolean isSelected, int row, int column )
 			{
 				currentRow = row;
 				
 				// Remove all previous action listeners
-				for (java.awt.event.ActionListener al : button.getActionListeners())
+				for( java.awt.event.ActionListener al : button.getActionListeners() )
 				{
-					button.removeActionListener(al);
+					button.removeActionListener( al );
 				}
 				
 				// Add new action listener for this row
-				button.addActionListener(e ->
+				button.addActionListener( e ->
 				{
-					Integer clientId = (Integer) tableModel.getValueAt(currentRow, ClientSearchResultsTableModel.COL_ID);
-					doRowLevelAction(clientId);
+					Integer clientId = (Integer) tableModel.getValueAt( currentRow, ClientSearchResultsTableModel.COL_ID );
+					doRowLevelAction( clientId );
 					fireEditingStopped();
-				});
+				} );
 				return button;
 			}
-		});
+		} );
 		
 		// Set column widths
-		columnModel.getColumn(ClientSearchResultsTableModel.COL_FIRST_NAME).setPreferredWidth(150);
-		columnModel.getColumn(ClientSearchResultsTableModel.COL_LAST_NAME).setPreferredWidth(150);
-		columnModel.getColumn(ClientSearchResultsTableModel.COL_CLIENT_CODE).setPreferredWidth(120);
-		columnModel.getColumn(ClientSearchResultsTableModel.COL_STATUS).setPreferredWidth(100);
-		columnModel.getColumn(ClientSearchResultsTableModel.COL_BUTTON).setPreferredWidth(80);
+		columnModel.getColumn( ClientSearchResultsTableModel.COL_FIRST_NAME ).setPreferredWidth( 150 );
+		columnModel.getColumn( ClientSearchResultsTableModel.COL_LAST_NAME ).setPreferredWidth( 150 );
+		columnModel.getColumn( ClientSearchResultsTableModel.COL_CLIENT_CODE ).setPreferredWidth( 120 );
+		columnModel.getColumn( ClientSearchResultsTableModel.COL_STATUS ).setPreferredWidth( 100 );
+		columnModel.getColumn( ClientSearchResultsTableModel.COL_BUTTON ).setPreferredWidth( 80 );
 		
-		scrollPane = new JScrollPane(resultsTable);
+		scrollPane = new JScrollPane( resultsTable );
 		
-		JPanel noResultsPanel = new JPanel(new BorderLayout());
-		noResultsLabel = new JLabel("No results found", SwingConstants.CENTER);
-		noResultsLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-		noResultsLabel.setForeground(Color.GRAY);
-		noResultsPanel.add(noResultsLabel, BorderLayout.CENTER);
+		JPanel noResultsPanel = new JPanel( new BorderLayout() );
+		noResultsLabel = new JLabel( "No results found", SwingConstants.CENTER );
+		noResultsLabel.setFont( new Font( "Arial", Font.PLAIN, 16 ) );
+		noResultsLabel.setForeground( Color.GRAY );
+		noResultsPanel.add( noResultsLabel, BorderLayout.CENTER );
 		
-		resultsPanel.add(scrollPane, "table");
-		resultsPanel.add(noResultsPanel, "noResults");
+		resultsPanel.add( scrollPane, "table" );
+		resultsPanel.add( noResultsPanel, "noResults" );
 		
-		add(titleLabel, BorderLayout.NORTH);
-		add(searchPanel, BorderLayout.NORTH);
-		add(resultsPanel, BorderLayout.CENTER);
+		add( titleLabel, BorderLayout.NORTH );
+		add( searchPanel, BorderLayout.NORTH );
+		add( resultsPanel, BorderLayout.CENTER );
 	}
 	
 	public void loadAllClients()
@@ -218,46 +219,46 @@ public abstract class Pnl_SearchClients extends JPanel
 		try
 		{
 			List<Client> clients = AppController.getAllClients();
-			displayResults(clients);
+			displayResults( clients );
 		}
-		catch (TherapyAppException e)
+		catch( TherapyAppException e )
 		{
-			AppController.showBasicErrorPopup(e, "Error loading clients:");
+			AppController.showBasicErrorPopup( e, "Error loading clients:" );
 		}
 	}
 	
 	public void clearFields()
 	{
-		firstNameField.setText("");
-		lastNameField.setText("");
-		clientCodeField.setText("");
-		showInactiveCheckBox.setSelected(false);
+		firstNameField.setText( "" );
+		lastNameField.setText( "" );
+		clientCodeField.setText( "" );
+		showInactiveCheckBox.setSelected( false );
 		_clearResults();
 	}
 	
 	private void _setupClientCodeField()
 	{
-		((AbstractDocument) clientCodeField.getDocument()).setDocumentFilter(new DocumentFilter()
+		( (AbstractDocument) clientCodeField.getDocument() ).setDocumentFilter( new DocumentFilter()
 		{
 			@Override
-			public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException
+			public void insertString( FilterBypass fb, int offset, String string, AttributeSet attr ) throws BadLocationException
 			{
 				String upperString = string.toUpperCase();
-				super.insertString(fb, offset, upperString, attr);
+				super.insertString( fb, offset, upperString, attr );
 			}
 			
 			@Override
-			public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException
+			public void replace( FilterBypass fb, int offset, int length, String text, AttributeSet attrs ) throws BadLocationException
 			{
 				String upperText = text.toUpperCase();
-				super.replace(fb, offset, length, upperText, attrs);
+				super.replace( fb, offset, length, upperText, attrs );
 			}
-		});
+		} );
 	}
 	
 	private void _clearResults()
 	{
-		tableModel.setRowCount(0);
+		tableModel.setRowCount( 0 );
 	}
 	
 	private void _performSearch()
@@ -269,41 +270,41 @@ public abstract class Pnl_SearchClients extends JPanel
 		
 		try
 		{
-			List<Client> clients = AppController.searchClients(firstName, lastName, clientCode, showInactive);
+			List<Client> clients = AppController.searchClients( firstName, lastName, clientCode, showInactive );
 			
-			displayResults(clients);
+			displayResults( clients );
 		}
-		catch (TherapyAppException e)
+		catch( TherapyAppException e )
 		{
-			JOptionPane.showMessageDialog(this, "Error searching clients: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog( this, "Error searching clients: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE );
 		}
 	}
 	
-	private void displayResults(List<Client> clients)
+	private void displayResults( List<Client> clients )
 	{
 		_clearResults();
 		
-		if (clients == null || clients.isEmpty())
+		if( clients == null || clients.isEmpty() )
 		{
-			resultsCardLayout.show(resultsPanel, "noResults");
+			resultsCardLayout.show( resultsPanel, "noResults" );
 		}
 		else
 		{
-			for (Client client : clients)
+			for( Client client : clients )
 			{
 				String status = client.isInactive() ? "Inactive" : "Active";
 				
 				Object[] rowData = { client.getClientId(), // Hidden column
 						client.getClientCode(), client.getFirstName(), client.getLastName(), status, "Action" };
 				
-				tableModel.addRow(rowData);
+				tableModel.addRow( rowData );
 			}
 			
-			resultsCardLayout.show(resultsPanel, "table");
+			resultsCardLayout.show( resultsPanel, "table" );
 		}
 	}
 	
 	protected abstract String getRowLevelButtonTitle();
 	
-	protected abstract void doRowLevelAction(Integer clientId);
+	protected abstract void doRowLevelAction( Integer clientId );
 }

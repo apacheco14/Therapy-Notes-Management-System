@@ -29,6 +29,7 @@ import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.enums.LogLevel;
 import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.AppLog;
+import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.view.tablemodels.LogTableModel;
 import com.toedter.calendar.JDateChooser;
 
@@ -132,7 +133,7 @@ public class Pnl_ViewLogs extends JPanel
 		
 		// Title
 		JLabel titleLabel = new JLabel( "Application Logs", SwingConstants.CENTER );
-		titleLabel.setFont( new Font( "Arial", Font.BOLD, 24 ) );
+		titleLabel.setFont( AppFonts.getScreenTitleFont() );
 		titleLabel.setBorder( BorderFactory.createEmptyBorder( 20, 0, 10, 0 ) );
 		
 		// Filter panel

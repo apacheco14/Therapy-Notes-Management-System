@@ -9,6 +9,7 @@ import javax.swing.text.DocumentFilter;
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.Client;
+import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.util.DateFormatUtil;
 import com.alexpacheco.therapynotes.util.JavaUtils;
 import com.alexpacheco.therapynotes.view.components.Txt_EmailAddress;
@@ -45,7 +46,7 @@ public class Pnl_NewEditClient extends JPanel
 		setLayout( new BorderLayout() );
 		
 		titleLabel = new JLabel( "New Client", SwingConstants.CENTER );
-		titleLabel.setFont( new Font( "Arial", Font.BOLD, 24 ) );
+		titleLabel.setFont( AppFonts.getScreenTitleFont() );
 		titleLabel.setBorder( BorderFactory.createEmptyBorder( 20, 0, 20, 0 ) );
 		
 		JPanel formPanel = new JPanel( new GridBagLayout() );

@@ -6,6 +6,7 @@ import com.alexpacheco.therapynotes.controller.Exporter;
 import com.alexpacheco.therapynotes.controller.PinManager;
 import com.alexpacheco.therapynotes.controller.enums.Screens;
 import com.alexpacheco.therapynotes.model.entities.Note;
+import com.alexpacheco.therapynotes.util.AppIcon;
 import com.alexpacheco.therapynotes.util.AppLogger;
 import com.alexpacheco.therapynotes.view.dialogs.Dlg_AddPin;
 import com.alexpacheco.therapynotes.view.dialogs.Dlg_ChangePin;
@@ -13,6 +14,7 @@ import com.alexpacheco.therapynotes.view.screens.Pnl_About;
 import com.alexpacheco.therapynotes.view.screens.Pnl_Configuration;
 import com.alexpacheco.therapynotes.view.screens.Pnl_ExportNotes;
 import com.alexpacheco.therapynotes.view.screens.Pnl_HelpIndex;
+import com.alexpacheco.therapynotes.view.screens.Pnl_Home;
 import com.alexpacheco.therapynotes.view.screens.Pnl_NewEditClient;
 import com.alexpacheco.therapynotes.view.screens.Pnl_NewEditContact;
 import com.alexpacheco.therapynotes.view.screens.Pnl_NewEditNote;
@@ -73,6 +75,8 @@ public class MainWindow extends JFrame
 		
 		cardLayout.show( mainPanel, Screens.HOME.getPanelName() );
 		currentScreen = Screens.HOME;
+		
+		AppIcon.apply( this );
 	}
 	
 	private void _initializePanels()
@@ -87,7 +91,7 @@ public class MainWindow extends JFrame
 		searchContactPanel = new Pnl_SearchContact( cardLayout, mainPanel, newEditContactPanel );
 		preferencesPanel = new Pnl_Preferences();
 		
-		_addScreenPanel( _createPlaceholderPanel( "Notes Management System" ), Screens.HOME );
+		_addScreenPanel( new Pnl_Home(), Screens.HOME );
 		_addScreenPanel( newEditNotePanel, Screens.NEW_EDIT_NOTE );
 		_addScreenPanel( searchNotePanel, Screens.SEARCH_NOTES );
 		_addScreenPanel( new Pnl_ExportNotes(), Screens.BULK_EXPORT_NOTES );

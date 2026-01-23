@@ -30,6 +30,7 @@ import com.alexpacheco.therapynotes.controller.enums.PreferenceKey;
 import com.alexpacheco.therapynotes.controller.enums.PreferenceType;
 import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.Preference;
+import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.util.AppLogger;
 import com.alexpacheco.therapynotes.util.PreferencesUtil;
 
@@ -41,9 +42,9 @@ public class Pnl_Preferences extends JPanel
 	private static final long serialVersionUID = 1774644048730878775L;
 	
 	// Fonts
-	private static final Font TITLE_FONT = new Font( "SansSerif", Font.BOLD, 24 );
-	private static final Font SECTION_FONT = new Font( "SansSerif", Font.BOLD, 14 );
-	private static final Font SUBSECTION_FONT = new Font( "SansSerif", Font.BOLD, 12 );
+	private static final Font TITLE_FONT = AppFonts.getScreenTitleFont();
+	private static final Font SECTION_FONT = AppFonts.getHeaderFont();
+	private static final Font SUBSECTION_FONT = AppFonts.getLabelBoldFont();
 	
 	// UI Components - Default Behavior
 	private JCheckBox chkDefaultSessionFromPrevious;

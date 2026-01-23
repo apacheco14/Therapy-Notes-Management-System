@@ -10,6 +10,7 @@ import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.Client;
 import com.alexpacheco.therapynotes.model.entities.Contact;
 import com.alexpacheco.therapynotes.model.entities.Note;
+import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.util.DateFormatUtil;
 import com.alexpacheco.therapynotes.util.JavaUtils;
 import com.alexpacheco.therapynotes.view.tablemodels.ContactsTableModel;
@@ -57,7 +58,7 @@ public class Pnl_ViewClientDetails extends JPanel
 		setLayout( new BorderLayout() );
 		
 		JLabel titleLabel = new JLabel( "Client Details", SwingConstants.CENTER );
-		titleLabel.setFont( new Font( "Arial", Font.BOLD, 24 ) );
+		titleLabel.setFont( AppFonts.getScreenTitleFont() );
 		titleLabel.setBorder( BorderFactory.createEmptyBorder( 20, 0, 20, 0 ) );
 		
 		// Details panel - 3 columns layout

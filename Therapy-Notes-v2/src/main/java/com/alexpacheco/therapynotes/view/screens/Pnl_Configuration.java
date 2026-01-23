@@ -3,7 +3,6 @@ package com.alexpacheco.therapynotes.view.screens;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -34,6 +33,7 @@ import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionFactory;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionType;
+import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.util.JavaUtils;
 import com.alexpacheco.therapynotes.view.tablemodels.ConfigOptionsTableModel;
 
@@ -48,49 +48,49 @@ public class Pnl_Configuration extends JPanel
 	{
 		tableModels = new java.util.HashMap<>();
 		
-		setLayout(new BorderLayout());
+		setLayout( new BorderLayout() );
 		
-		JLabel titleLabel = new JLabel("Configure Assessment Options", SwingConstants.CENTER);
-		titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-		titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+		JLabel titleLabel = new JLabel( "Configure Assessment Options", SwingConstants.CENTER );
+		titleLabel.setFont( AppFonts.getScreenTitleFont() );
+		titleLabel.setBorder( BorderFactory.createEmptyBorder( 20, 0, 20, 0 ) );
 		
 		// Main panel with all sections
 		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+		mainPanel.setLayout( new BoxLayout( mainPanel, BoxLayout.Y_AXIS ) );
+		mainPanel.setBorder( BorderFactory.createEmptyBorder( 10, 20, 10, 20 ) );
 		
 		// Create sections
-		mainPanel.add(createSection(ConfigKey.SYMPTOMS));
-		mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		mainPanel.add( createSection( ConfigKey.SYMPTOMS ) );
+		mainPanel.add( Box.createRigidArea( new Dimension( 0, 10 ) ) );
 		
-		mainPanel.add(createSection(ConfigKey.AFFECT));
-		mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		mainPanel.add( createSection( ConfigKey.AFFECT ) );
+		mainPanel.add( Box.createRigidArea( new Dimension( 0, 10 ) ) );
 		
-		mainPanel.add(createSection(ConfigKey.EYE_CONTACT));
-		mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		mainPanel.add( createSection( ConfigKey.EYE_CONTACT ) );
+		mainPanel.add( Box.createRigidArea( new Dimension( 0, 10 ) ) );
 		
-		mainPanel.add(createSection(ConfigKey.APPEARANCE));
-		mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		mainPanel.add( createSection( ConfigKey.APPEARANCE ) );
+		mainPanel.add( Box.createRigidArea( new Dimension( 0, 10 ) ) );
 		
-		mainPanel.add(createSection(ConfigKey.SPEECH));
-		mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		mainPanel.add( createSection( ConfigKey.SPEECH ) );
+		mainPanel.add( Box.createRigidArea( new Dimension( 0, 10 ) ) );
 		
-		mainPanel.add(createSection(ConfigKey.NEXT_APPOINTMENT));
-		mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		mainPanel.add( createSection( ConfigKey.NEXT_APPOINTMENT ) );
+		mainPanel.add( Box.createRigidArea( new Dimension( 0, 10 ) ) );
 		
-		mainPanel.add(createSection(ConfigKey.COLLATERAL_CONTACT_TYPES));
-		mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		mainPanel.add( createSection( ConfigKey.COLLATERAL_CONTACT_TYPES ) );
+		mainPanel.add( Box.createRigidArea( new Dimension( 0, 10 ) ) );
 		
-		mainPanel.add(createSection(ConfigKey.REFERRAL_TYPES));
+		mainPanel.add( createSection( ConfigKey.REFERRAL_TYPES ) );
 		
 		// Wrap in scroll pane
-		JScrollPane scrollPane = new JScrollPane(mainPanel);
-		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-		scrollPane.setBorder(null);
+		JScrollPane scrollPane = new JScrollPane( mainPanel );
+		scrollPane.getVerticalScrollBar().setUnitIncrement( 16 );
+		scrollPane.setBorder( null );
 		
-		add(titleLabel, BorderLayout.NORTH);
-		add(scrollPane, BorderLayout.CENTER);
-		add(createButtonPanel(), BorderLayout.SOUTH);
+		add( titleLabel, BorderLayout.NORTH );
+		add( scrollPane, BorderLayout.CENTER );
+		add( createButtonPanel(), BorderLayout.SOUTH );
 	}
 	
 	/**
@@ -99,40 +99,40 @@ public class Pnl_Configuration extends JPanel
 	 * @param configKey The ConfigKey enum for this section
 	 * @return JPanel containing the section
 	 */
-	private JPanel createSection(ConfigKey configKey)
+	private JPanel createSection( ConfigKey configKey )
 	{
 		String sectionName = configKey.getDisplayName();
 		
-		JPanel sectionPanel = new JPanel(new BorderLayout());
-		sectionPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10),
-				BorderFactory.createTitledBorder(sectionName)));
+		JPanel sectionPanel = new JPanel( new BorderLayout() );
+		sectionPanel.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 5, 10, 5, 10 ),
+				BorderFactory.createTitledBorder( sectionName ) ) );
 		
 		// Table for options
 		ConfigOptionsTableModel tableModel = new ConfigOptionsTableModel();
-		tableModels.put(configKey, tableModel);
+		tableModels.put( configKey, tableModel );
 		
-		JTable table = new JTable(tableModel);
-		table.setRowHeight(25);
-		table.getTableHeader().setReorderingAllowed(false);
-		table.setCellSelectionEnabled(false);
-		table.setAutoCreateRowSorter(true);
+		JTable table = new JTable( tableModel );
+		table.setRowHeight( 25 );
+		table.getTableHeader().setReorderingAllowed( false );
+		table.setCellSelectionEnabled( false );
+		table.setAutoCreateRowSorter( true );
 		
 		// Set column widths
 		TableColumnModel columnModel = table.getColumnModel();
-		columnModel.getColumn(ConfigOptionsTableModel.COL_ID).setMinWidth(0);
-		columnModel.getColumn(ConfigOptionsTableModel.COL_ID).setMaxWidth(0);
-		columnModel.getColumn(ConfigOptionsTableModel.COL_ID).setWidth(0);
-		columnModel.getColumn(ConfigOptionsTableModel.COL_NAME).setPreferredWidth(50);
-		columnModel.getColumn(ConfigOptionsTableModel.COL_DESCRIPTION).setPreferredWidth(300);
+		columnModel.getColumn( ConfigOptionsTableModel.COL_ID ).setMinWidth( 0 );
+		columnModel.getColumn( ConfigOptionsTableModel.COL_ID ).setMaxWidth( 0 );
+		columnModel.getColumn( ConfigOptionsTableModel.COL_ID ).setWidth( 0 );
+		columnModel.getColumn( ConfigOptionsTableModel.COL_NAME ).setPreferredWidth( 50 );
+		columnModel.getColumn( ConfigOptionsTableModel.COL_DESCRIPTION ).setPreferredWidth( 300 );
 		
-		JScrollPane tableScrollPane = new JScrollPane(table);
-		int preferredHeight = ConfigKey.SYMPTOMS.equals(configKey) ? 450 : 150;
-		tableScrollPane.setPreferredSize(new Dimension(0, preferredHeight));
+		JScrollPane tableScrollPane = new JScrollPane( table );
+		int preferredHeight = ConfigKey.SYMPTOMS.equals( configKey ) ? 450 : 150;
+		tableScrollPane.setPreferredSize( new Dimension( 0, preferredHeight ) );
 		
-		sectionPanel.add(tableScrollPane, BorderLayout.CENTER);
+		sectionPanel.add( tableScrollPane, BorderLayout.CENTER );
 		
 		// Load existing options
-		loadOptions(configKey, tableModel);
+		loadOptions( configKey, tableModel );
 		
 		return sectionPanel;
 	}
@@ -144,21 +144,21 @@ public class Pnl_Configuration extends JPanel
 	 */
 	private JPanel createButtonPanel()
 	{
-		JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
-		panel.setBorder(BorderFactory.createEmptyBorder(5, 10, 10, 10));
+		JPanel panel = new JPanel( new FlowLayout( FlowLayout.RIGHT, 10, 10 ) );
+		panel.setBorder( BorderFactory.createEmptyBorder( 5, 10, 10, 10 ) );
 		
-		JButton btnCancel = new JButton("Cancel");
-		btnCancel.addActionListener(e -> AppController.returnHome(false));
+		JButton btnCancel = new JButton( "Cancel" );
+		btnCancel.addActionListener( e -> AppController.returnHome( false ) );
 		
-		JButton btnAddOption = new JButton("Add Option");
-		btnAddOption.addActionListener(e -> showAddOptionDialog());
+		JButton btnAddOption = new JButton( "Add Option" );
+		btnAddOption.addActionListener( e -> showAddOptionDialog() );
 		
-		JButton btnSave = new JButton("Save");
-		btnSave.addActionListener(e -> save());
+		JButton btnSave = new JButton( "Save" );
+		btnSave.addActionListener( e -> save() );
 		
-		panel.add(btnCancel);
-		panel.add(btnAddOption);
-		panel.add(btnSave);
+		panel.add( btnCancel );
+		panel.add( btnAddOption );
+		panel.add( btnSave );
 		
 		return panel;
 	}
@@ -169,15 +169,15 @@ public class Pnl_Configuration extends JPanel
 	 * @param configKey  The ConfigKey enum
 	 * @param tableModel The table model to populate
 	 */
-	private void loadOptions(ConfigKey configKey, ConfigOptionsTableModel tableModel)
+	private void loadOptions( ConfigKey configKey, ConfigOptionsTableModel tableModel )
 	{
 		try
 		{
-			tableModel.loadOptions(AppController.getConfigOptions(configKey));
+			tableModel.loadOptions( AppController.getConfigOptions( configKey ) );
 		}
-		catch (TherapyAppException e)
+		catch( TherapyAppException e )
 		{
-			AppController.showBasicErrorPopup(e, "Error loading options:");
+			AppController.showBasicErrorPopup( e, "Error loading options:" );
 		}
 	}
 	
@@ -186,134 +186,134 @@ public class Pnl_Configuration extends JPanel
 	 */
 	private void showAddOptionDialog()
 	{
-		JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Add Assessment Option", true);
-		dialog.setLayout(new BorderLayout());
-		dialog.setSize(400, 200);
-		dialog.setLocationRelativeTo(this);
+		JDialog dialog = new JDialog( (Frame) SwingUtilities.getWindowAncestor( this ), "Add Assessment Option", true );
+		dialog.setLayout( new BorderLayout() );
+		dialog.setSize( 400, 200 );
+		dialog.setLocationRelativeTo( this );
 		
 		// Form panel
-		JPanel formPanel = new JPanel(new GridBagLayout());
-		formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		JPanel formPanel = new JPanel( new GridBagLayout() );
+		formPanel.setBorder( BorderFactory.createEmptyBorder( 20, 20, 20, 20 ) );
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.insets = new Insets(5, 5, 5, 5);
+		gbc.insets = new Insets( 5, 5, 5, 5 );
 		
-		JTextField nameField = new JTextField(20);
-		JTextField descriptionField = new JTextField(20);
-		JComboBox<ConfigKey> optionTypeComboBox = new JComboBox<>(ConfigKey.values());
-		optionTypeComboBox.setSelectedIndex(-1);
-		optionTypeComboBox.setRenderer((list, value, index, isSelected, cellHasFocus) ->
+		JTextField nameField = new JTextField( 20 );
+		JTextField descriptionField = new JTextField( 20 );
+		JComboBox<ConfigKey> optionTypeComboBox = new JComboBox<>( ConfigKey.values() );
+		optionTypeComboBox.setSelectedIndex( -1 );
+		optionTypeComboBox.setRenderer( ( list, value, index, isSelected, cellHasFocus ) ->
 		{
 			JLabel label = new JLabel();
-			if (value != null)
+			if( value != null )
 			{
-				label.setText(value.getDisplayName());
+				label.setText( value.getDisplayName() );
 			}
-			if (isSelected)
+			if( isSelected )
 			{
-				label.setBackground(list.getSelectionBackground());
-				label.setForeground(list.getSelectionForeground());
-				label.setOpaque(true);
+				label.setBackground( list.getSelectionBackground() );
+				label.setForeground( list.getSelectionForeground() );
+				label.setOpaque( true );
 			}
 			return label;
-		});
+		} );
 		
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.weightx = 0.0;
-		formPanel.add(new JLabel("Name: *"), gbc);
+		formPanel.add( new JLabel( "Name: *" ), gbc );
 		
 		gbc.gridx = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.weightx = 1.0;
-		formPanel.add(nameField, gbc);
+		formPanel.add( nameField, gbc );
 		
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.weightx = 0.0;
-		formPanel.add(new JLabel("Description:"), gbc);
+		formPanel.add( new JLabel( "Description:" ), gbc );
 		
 		gbc.gridx = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.weightx = 1.0;
-		formPanel.add(descriptionField, gbc);
+		formPanel.add( descriptionField, gbc );
 		
 		gbc.gridx = 0;
 		gbc.gridy = 2;
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.weightx = 0.0;
-		formPanel.add(new JLabel("Option Type: *"), gbc);
+		formPanel.add( new JLabel( "Option Type: *" ), gbc );
 		
 		gbc.gridx = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.weightx = 1.0;
-		formPanel.add(optionTypeComboBox, gbc);
+		formPanel.add( optionTypeComboBox, gbc );
 		
 		// Button panel
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		JButton saveButton = new JButton("Save");
-		JButton cancelButton = new JButton("Cancel");
+		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
+		JButton saveButton = new JButton( "Save" );
+		JButton cancelButton = new JButton( "Cancel" );
 		
-		saveButton.addActionListener(e ->
+		saveButton.addActionListener( e ->
 		{
 			String name = nameField.getText().trim();
 			String description = descriptionField.getText().trim();
 			ConfigKey selectedConfigKey = (ConfigKey) optionTypeComboBox.getSelectedItem();
 			
-			if (JavaUtils.isNullOrEmpty(name))
+			if( JavaUtils.isNullOrEmpty( name ) )
 			{
-				JOptionPane.showMessageDialog(dialog, "Name is required.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog( dialog, "Name is required.", "Validation Error", JOptionPane.ERROR_MESSAGE );
 				return;
 			}
 			
-			if (selectedConfigKey == null)
+			if( selectedConfigKey == null )
 			{
-				JOptionPane.showMessageDialog(dialog, "Option Type is required.", "Validation Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog( dialog, "Option Type is required.", "Validation Error", JOptionPane.ERROR_MESSAGE );
 				return;
 			}
 			
 			try
 			{
-				AppController.addSingleConfigOption(selectedConfigKey, name, description);
-				ConfigOptionsTableModel tableModel = tableModels.get(selectedConfigKey);
-				if (tableModel != null)
+				AppController.addSingleConfigOption( selectedConfigKey, name, description );
+				ConfigOptionsTableModel tableModel = tableModels.get( selectedConfigKey );
+				if( tableModel != null )
 				{
-					loadOptions(selectedConfigKey, tableModel);
+					loadOptions( selectedConfigKey, tableModel );
 				}
 				dialog.dispose();
 				
-				JOptionPane.showMessageDialog(this, "Option added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog( this, "Option added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
 			}
-			catch (TherapyAppException ex)
+			catch( TherapyAppException ex )
 			{
-				AppController.showBasicErrorPopup(ex, "Error saving option:");
+				AppController.showBasicErrorPopup( ex, "Error saving option:" );
 			}
-		});
+		} );
 		
-		cancelButton.addActionListener(e -> dialog.dispose());
+		cancelButton.addActionListener( e -> dialog.dispose() );
 		
-		buttonPanel.add(cancelButton);
-		buttonPanel.add(saveButton);
+		buttonPanel.add( cancelButton );
+		buttonPanel.add( saveButton );
 		
-		dialog.add(formPanel, BorderLayout.CENTER);
-		dialog.add(buttonPanel, BorderLayout.SOUTH);
+		dialog.add( formPanel, BorderLayout.CENTER );
+		dialog.add( buttonPanel, BorderLayout.SOUTH );
 		
-		dialog.setVisible(true);
+		dialog.setVisible( true );
 	}
 	
 	private void save()
 	{
 		try
 		{
-			AppController.saveOptions(collectAllOptions());
-			JOptionPane.showMessageDialog(this, "Changes saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-			AppController.returnHome(true);
+			AppController.saveOptions( collectAllOptions() );
+			JOptionPane.showMessageDialog( this, "Changes saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
+			AppController.returnHome( true );
 		}
-		catch (TherapyAppException e)
+		catch( TherapyAppException e )
 		{
-			AppController.showBasicErrorPopup(e, "Error saving changes:");
+			AppController.showBasicErrorPopup( e, "Error saving changes:" );
 		}
 	}
 	
@@ -326,29 +326,29 @@ public class Pnl_Configuration extends JPanel
 	{
 		List<AssessmentOption> allOptions = new ArrayList<>();
 		
-		for (Map.Entry<ConfigKey, ConfigOptionsTableModel> entry : tableModels.entrySet())
+		for( Map.Entry<ConfigKey, ConfigOptionsTableModel> entry : tableModels.entrySet() )
 		{
 			ConfigKey configKey = entry.getKey();
 			ConfigOptionsTableModel tableModel = entry.getValue();
 			
 			// Find matching AssessmentOptionType
 			AssessmentOptionType matchingType = null;
-			for (AssessmentOptionType type : AssessmentOptionType.values())
+			for( AssessmentOptionType type : AssessmentOptionType.values() )
 			{
-				if (type.getDbTypeKey().equals(configKey.getKey()))
+				if( type.getDbTypeKey().equals( configKey.getKey() ) )
 				{
 					matchingType = type;
 					break;
 				}
 			}
 			
-			if (matchingType != null)
+			if( matchingType != null )
 			{
-				for (int row = 0; row < tableModel.getRowCount(); row++)
+				for( int row = 0; row < tableModel.getRowCount(); row++ )
 				{
-					AssessmentOption option = AssessmentOptionFactory.createAssessmentOption(tableModel.getIdAt(row),
-							tableModel.getNameAt(row), tableModel.getDescriptionAt(row), matchingType);
-					allOptions.add(option);
+					AssessmentOption option = AssessmentOptionFactory.createAssessmentOption( tableModel.getIdAt( row ),
+							tableModel.getNameAt( row ), tableModel.getDescriptionAt( row ), matchingType );
+					allOptions.add( option );
 				}
 			}
 		}

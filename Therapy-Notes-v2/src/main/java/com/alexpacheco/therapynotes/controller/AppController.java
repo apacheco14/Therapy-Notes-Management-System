@@ -1,5 +1,6 @@
 package com.alexpacheco.therapynotes.controller;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -45,6 +46,7 @@ import com.alexpacheco.therapynotes.view.dialogs.Dlg_PinEntry;
 public class AppController
 {
 	private static MainWindow window;
+	private static final Color BACKGROUND_COLOR = new Color( 245, 248, 250 );
 	private static List<String> icd10Codes;
 	private static NoteApi noteApi = new NoteApi();
 	private static ClientApi clientApi = new ClientApi();
@@ -80,6 +82,11 @@ public class AppController
 		AppLogger.logStartup();
 		window = new MainWindow();
 		window.setVisible( true );
+	}
+	
+	public static Color getBackgroundColor()
+	{
+		return BACKGROUND_COLOR;
 	}
 	
 	public static void showBasicErrorPopup( String message )

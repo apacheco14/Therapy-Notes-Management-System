@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Background rounded square -->
+  <rect x="4" y="4" width="120" height="120" rx="24" ry="24" fill="#4A90A4"/>
+  
+  <!-- Clipboard body -->
+  <rect x="28" y="32" width="72" height="82" rx="6" ry="6" fill="#FFFFFF"/>
+  
+  <!-- Clipboard clip at top -->
+  <rect x="44" y="24" width="40" height="16" rx="4" ry="4" fill="#3D7A8C"/>
+  <rect x="52" y="28" width="24" height="10" rx="2" ry="2" fill="#FFFFFF"/>
+  
+  <!-- Document lines (subtle) -->
+  <rect x="40" y="70" width="48" height="4" rx="2" fill="#D0E4EA"/>
+  <rect x="40" y="82" width="48" height="4" rx="2" fill="#D0E4EA"/>
+  <rect x="40" y="94" width="32" height="4" rx="2" fill="#D0E4EA"/>
+  
+  <!-- Lotus flower -->
+  <g transform="translate(64, 54)">
+    <!-- Center petal -->
+    <ellipse cx="0" cy="-8" rx="7" ry="14" fill="#6BB3A0"/>
+    
+    <!-- Left petals -->
+    <ellipse cx="-10" cy="-4" rx="6" ry="12" fill="#7FC4B0" transform="rotate(-25, -10, -4)"/>
+    <ellipse cx="-18" cy="2" rx="5" ry="10" fill="#93D4C0" transform="rotate(-50, -18, 2)"/>
+    
+    <!-- Right petals -->
+    <ellipse cx="10" cy="-4" rx="6" ry="12" fill="#7FC4B0" transform="rotate(25, 10, -4)"/>
+    <ellipse cx="18" cy="2" rx="5" ry="10" fill="#93D4C0" transform="rotate(50, 18, 2)"/>
+    
+    <!-- Center dot -->
+    <circle cx="0" cy="2" r="4" fill="#4A90A4"/>
+  </g>
+</svg>

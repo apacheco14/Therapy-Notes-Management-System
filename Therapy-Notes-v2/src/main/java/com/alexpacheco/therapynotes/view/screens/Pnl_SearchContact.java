@@ -7,6 +7,7 @@ import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.enums.Screens;
 import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.model.entities.Contact;
+import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.view.components.Cmb_ClientSelection;
 import com.alexpacheco.therapynotes.view.tablemodels.ContactSearchResultsTableModel;
 
@@ -38,7 +39,7 @@ public class Pnl_SearchContact extends JPanel
 		setLayout( new BorderLayout() );
 		
 		JLabel titleLabel = new JLabel( "Search Contacts", SwingConstants.CENTER );
-		titleLabel.setFont( new Font( "Arial", Font.BOLD, 24 ) );
+		titleLabel.setFont( AppFonts.getScreenTitleFont() );
 		titleLabel.setBorder( BorderFactory.createEmptyBorder( 20, 0, 20, 0 ) );
 		
 		// Search criteria panel

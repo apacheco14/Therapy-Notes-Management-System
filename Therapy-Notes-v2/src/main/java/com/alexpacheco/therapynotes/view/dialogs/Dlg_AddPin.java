@@ -51,7 +51,7 @@ public class Dlg_AddPin extends JDialog
 		layoutComponents();
 		setupEventHandlers();
 		
-		setSize( 400, 380 );
+		setSize( 400, 420 );
 		setResizable( false );
 		setLocationRelativeTo( parent );
 	}
