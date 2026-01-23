@@ -285,6 +285,9 @@ public class PreferencesUtil
 	 */
 	public static Preference createPreferenceFromKey( PreferenceKey key, String value )
 	{
+		if( key == null )
+			return null;
+		
 		return new Preference( key.getKey(), value, key.getType(), key.getDisplayName(), key.getDescription(), key.getDefaultValue(),
 				key.getCategory() );
 	}
