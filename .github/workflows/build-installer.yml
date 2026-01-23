@@ -73,3 +73,62 @@ jobs:
         with:
           name: windows-installer-${{ steps.version.outputs.VERSION }}
           path: Therapy-Notes-v2/dist/*.exe
+
+  build-macos:
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Extract version from tag
+        id: version
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${GITHUB_REF_NAME#v}"
+          fi
+          
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          
+          # macOS also prefers X.X.X format
+          MAC_VERSION="${VERSION%%-*}"
+          echo "MAC_VERSION=$MAC_VERSION" >> $GITHUB_OUTPUT
+          
+          echo "Building version: $VERSION (macOS: $MAC_VERSION)"
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      
+      - name: Build with Maven
+        working-directory: ./Therapy-Notes-v2
+        shell: bash
+        run: mvn clean package -DskipTests "-Drevision=${{ steps.version.outputs.VERSION }}"
+      
+      - name: Build installer with jpackage
+        working-directory: ./Therapy-Notes-v2
+        shell: bash
+        run: |
+          jpackage \
+            --input target/ \
+            --main-jar therapynotes-${{ steps.version.outputs.VERSION }}-full.jar \
+            --name "TherapyNotesManager" \
+            --app-version ${{ steps.version.outputs.MAC_VERSION }} \
+            --vendor "Alex Pacheco" \
+            --description "Note management for mental health professionals" \
+            --icon src/main/resources/icons/therapy_app_icon.icns \
+            --dest dist/ \
+            --type dmg \
+            --mac-package-name "TherapyNotesManager"
+      
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-installer-${{ steps.version.outputs.VERSION }}
+          path: Therapy-Notes-v2/dist/*.dmg
