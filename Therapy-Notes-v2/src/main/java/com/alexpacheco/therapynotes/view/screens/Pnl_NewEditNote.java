@@ -35,6 +35,7 @@ import javax.swing.text.DocumentFilter;
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.Exporter;
 import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.EntityValidator;
 import com.alexpacheco.therapynotes.model.entities.Client;
 import com.alexpacheco.therapynotes.model.entities.CollateralContact;
 import com.alexpacheco.therapynotes.model.entities.Note;
@@ -1002,18 +1003,21 @@ public class Pnl_NewEditNote extends JPanel
 	 */
 	private void saveNote()
 	{
-		Note note = collectNoteData();
-		if( _isNoteValid( note ) )
+		if( _isNoteDataValid() )
 		{
-			try
+			Note note = collectNoteData();
+			if( _isEveryRequiredFieldFilled( note ) )
 			{
-				AppController.saveNote( note );
-				JOptionPane.showMessageDialog( this, "Note saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
-				clearForm();
-			}
-			catch( TherapyAppException e )
-			{
-				AppController.showBasicErrorPopup( e, "Error saving note:" );
+				try
+				{
+					AppController.saveNote( note );
+					JOptionPane.showMessageDialog( this, "Note saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
+					clearForm();
+				}
+				catch( TherapyAppException e )
+				{
+					AppController.showBasicErrorPopup( e, "Error saving note:" );
+				}
 			}
 		}
 	}
@@ -1023,22 +1027,25 @@ public class Pnl_NewEditNote extends JPanel
 	 */
 	private void exportToDocx()
 	{
-		Note note = collectNoteData();
-		if( _isNoteValid( note ) )
+		if( _isNoteDataValid() )
 		{
-			try
+			Note note = collectNoteData();
+			if( _isEveryRequiredFieldFilled( note ) )
 			{
-				AppController.saveNote( note );
-				String outputPath = Exporter.exportToDocx( note );
-				if( !JavaUtils.isNullOrEmpty( outputPath ) )
+				try
 				{
-					JOptionPane.showMessageDialog( this, "Note exported successfully!\n" + outputPath, "Export Success",
-							JOptionPane.INFORMATION_MESSAGE );
+					AppController.saveNote( note );
+					String outputPath = Exporter.exportToDocx( note );
+					if( !JavaUtils.isNullOrEmpty( outputPath ) )
+					{
+						JOptionPane.showMessageDialog( this, "Note exported successfully!\n" + outputPath, "Export Success",
+								JOptionPane.INFORMATION_MESSAGE );
+					}
 				}
-			}
-			catch( TherapyAppException e )
-			{
-				AppController.showBasicErrorPopup( e, "Error exporting note to DOCX:" );
+				catch( TherapyAppException e )
+				{
+					AppController.showBasicErrorPopup( e, "Error exporting note to DOCX:" );
+				}
 			}
 		}
 	}
@@ -1048,33 +1055,66 @@ public class Pnl_NewEditNote extends JPanel
 	 */
 	private void exportToPdf()
 	{
-		Note note = collectNoteData();
-		if( _isNoteValid( note ) )
+		if( _isNoteDataValid() )
 		{
-			try
+			Note note = collectNoteData();
+			if( _isEveryRequiredFieldFilled( note ) )
 			{
-				AppController.saveNote( note );
-				String outputPath = Exporter.exportToPdf( note );
-				if( !JavaUtils.isNullOrEmpty( outputPath ) )
+				try
 				{
-					JOptionPane.showMessageDialog( this, "Note exported successfully!\n" + outputPath, "Export Success",
-							JOptionPane.INFORMATION_MESSAGE );
+					AppController.saveNote( note );
+					String outputPath = Exporter.exportToPdf( note );
+					if( !JavaUtils.isNullOrEmpty( outputPath ) )
+					{
+						JOptionPane.showMessageDialog( this, "Note exported successfully!\n" + outputPath, "Export Success",
+								JOptionPane.INFORMATION_MESSAGE );
+					}
 				}
-			}
-			catch( TherapyAppException e )
-			{
-				AppController.showBasicErrorPopup( e, "Error exporting note to PDF:" );
+				catch( TherapyAppException e )
+				{
+					AppController.showBasicErrorPopup( e, "Error exporting note to PDF:" );
+				}
 			}
 		}
 	}
 	
-	private boolean _isNoteValid( Note note )
+	private boolean _isNoteDataValid()
 	{
 		Date chosenDate = dateAppointment.getDate();
 		if( chosenDate != null && ( chosenDate.after( DateFormatUtil.toDate( LocalDateTime.now().plusYears( 1 ) ) )
 				|| chosenDate.before( DateFormatUtil.toDate( LocalDateTime.now().minusYears( 50 ) ) ) ) )
 		{
-			JOptionPane.showMessageDialog( this, "Appointment date is invalid.", "Validation Error", JOptionPane.ERROR_MESSAGE );
+			AppController.showValidationErrorPopup( "Appointment date is invalid." );
+			return false;
+		}
+		
+		String timestamp = txtCertificationTimestamp.getText();
+		if( !JavaUtils.isNullOrEmpty( timestamp ) )
+		{
+			try
+			{
+				LocalDateTime.parse( timestamp, TIMESTAMP_FORMATTER );
+			}
+			catch( Exception e )
+			{
+				AppController
+						.showValidationErrorPopup( "Timestamp is not parseable.\nTimestamp must be in the format: " + TIMESTAMP_PATTERN );
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	private boolean _isEveryRequiredFieldFilled( Note note )
+	{
+		try
+		{
+			EntityValidator.validateNote( note );
+		}
+		catch( TherapyAppException e )
+		{
+			AppController.showValidationErrorPopup( e.getMessage() );
 			return false;
 		}
 		
@@ -1228,9 +1268,7 @@ public class Pnl_NewEditNote extends JPanel
 		}
 		catch( Exception e )
 		{
-			String warning = "Timestamp is not parseable and will not be saved.\nTimestamp must be in the format: " + TIMESTAMP_PATTERN;
-			AppLogger.warning( warning );
-			AppController.showValidationErrorPopup( warning );
+			AppLogger.warning( "Timestamp on Note [" + note.getNoteId() + "] is not parseable and will not be saved." );
 		}
 		
 		return note;
