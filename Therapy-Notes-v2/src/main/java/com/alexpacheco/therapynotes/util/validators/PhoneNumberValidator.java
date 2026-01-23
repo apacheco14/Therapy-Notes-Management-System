@@ -1,17 +1,15 @@
 package com.alexpacheco.therapynotes.util.validators;
 
-import com.alexpacheco.therapynotes.util.JavaUtils;
-
 public class PhoneNumberValidator
 {
-	public static boolean isValidUSPhone(String input)
+	public static boolean isValidUSPhone( String input )
 	{
-		if (JavaUtils.isNullOrEmpty(input))
+		if( input == null || input.isEmpty() )
 		{
 			return true;
 		}
 		
-		String digits = input.replaceAll("\\D", "");
-		return digits.length() == 10 || (digits.length() == 11 && digits.startsWith("1"));
+		String digits = input.replaceAll( "\\D", "" );
+		return digits.length() == 10 || ( digits.length() == 11 && digits.startsWith( "1" ) );
 	}
 }

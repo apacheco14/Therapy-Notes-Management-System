@@ -1,16 +1,14 @@
 package com.alexpacheco.therapynotes.util.validators;
 
-import com.alexpacheco.therapynotes.util.JavaUtils;
-
 public class EmailValidator
 {
-	public static boolean isValidEmailAddress(String input)
+	public static boolean isValidEmailAddress( String input )
 	{
-		if (JavaUtils.isNullOrEmpty(input))
+		if( input == null || input.isEmpty() )
 		{
 			return true;
 		}
 		
-		return input.matches("^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,}$");
+		return input.matches( "^[\\w]([\\w.-]*[\\w])?@[\\w]([\\w.-]*[\\w])?\\.[A-Za-z]{2,}$" );
 	}
 }

@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import com.alexpacheco.therapynotes.util.AppFonts;
+import com.alexpacheco.therapynotes.util.validators.EmailValidator;
 
 import java.awt.*;
 
@@ -198,7 +199,7 @@ public class Pnl_SetupPracticeInfo extends AbstractSetupStepPanel
 	
 	private boolean isValidEmail( String email )
 	{
-		return email.matches( "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$" );
+		return EmailValidator.isValidEmailAddress( email );
 	}
 	
 	@Override
