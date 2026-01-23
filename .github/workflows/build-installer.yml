@@ -41,6 +41,7 @@ jobs:
       
       - name: Build with Maven
         working-directory: ./Therapy-Notes-v2
+        shell: bash
         run: mvn clean package "-Drevision=${{ steps.version.outputs.VERSION }}"
       
       - name: Build installer with jpackage
@@ -49,7 +50,7 @@ jobs:
         run: |
           jpackage `
             --input target/ `
-            --main-jar yourapp-${{ steps.version.outputs.VERSION }}-full.jar `
+            --main-jar therapynotes-${{ steps.version.outputs.VERSION }}-full.jar `
             --name "TherapyNotesManager" `
             --app-version ${{ steps.version.outputs.VERSION }} `
             --vendor "Alex Pacheco" `
