@@ -128,6 +128,8 @@ This application is designed to support mental health practitioners in practice 
 
 **Version:** 1.0.0
 
+**UUID:** 7cae61c8-89b4-4703-9c7c-b1ae04a99143
+
 **Last Updated:** January 2026
 
 **Maintainer:** Alex Pacheco
