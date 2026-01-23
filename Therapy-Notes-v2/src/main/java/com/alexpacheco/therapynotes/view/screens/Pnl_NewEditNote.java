@@ -47,6 +47,7 @@ import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentO
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.EyeContactAssessmentOption;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.NextApptAssessmentOption;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.SpeechAssessmentOption;
+import com.alexpacheco.therapynotes.util.AppLogger;
 import com.alexpacheco.therapynotes.util.DateFormatUtil;
 import com.alexpacheco.therapynotes.util.JavaUtils;
 import com.alexpacheco.therapynotes.util.PreferencesUtil;
@@ -94,7 +95,7 @@ public class Pnl_NewEditNote extends JPanel
 	private JTextField txtCollateralContactsNotes;
 	private JTextField txtNextAppointmentNotes;
 	private JCheckBox chkCertification;
-	private JLabel lblCertificationTimestamp;
+	private JTextField txtCertificationTimestamp;
 	private LocalDateTime certificationTimestamp;
 	
 	// Header panel components
@@ -109,7 +110,8 @@ public class Pnl_NewEditNote extends JPanel
 	private JButton btnCancel;
 	
 	// Date formatter for certification timestamp
-	private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern( "MM/dd/yyyy hh:mm:ss a" );
+	private static final String TIMESTAMP_PATTERN = "MM/dd/yyyy hh:mm:ss a";
+	private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern( TIMESTAMP_PATTERN );
 	
 	private Integer noteId;
 	
@@ -180,10 +182,12 @@ public class Pnl_NewEditNote extends JPanel
 		loadAdministrativeOptions();
 		
 		chkCertification = new JCheckBox();
-		lblCertificationTimestamp = new JLabel();
-		lblCertificationTimestamp.setFont( lblCertificationTimestamp.getFont().deriveFont( Font.ITALIC ) );
-		lblCertificationTimestamp.setForeground( new Color( 0, 100, 0 ) );
-		lblCertificationTimestamp.setVisible( false );
+		txtCertificationTimestamp = new JTextField( 20 );
+		txtCertificationTimestamp.setFont( txtCertificationTimestamp.getFont().deriveFont( Font.ITALIC ) );
+		txtCertificationTimestamp.setForeground( new Color( 0, 100, 0 ) );
+		txtCertificationTimestamp.setVisible( false );
+		txtCertificationTimestamp.setBorder( null );
+		txtCertificationTimestamp.setOpaque( false );
 		
 		// Action buttons
 		btnSave = new JButton( "Save" );
@@ -689,7 +693,7 @@ public class Pnl_NewEditNote extends JPanel
 		
 		panel.add( chkCertification );
 		panel.add( new JLabel( "I certify that this information is accurate to the best of my knowledge." ) );
-		panel.add( lblCertificationTimestamp );
+		panel.add( txtCertificationTimestamp );
 		
 		return panel;
 	}
@@ -799,14 +803,17 @@ public class Pnl_NewEditNote extends JPanel
 			if( chkCertification.isSelected() )
 			{
 				certificationTimestamp = LocalDateTime.now();
-				lblCertificationTimestamp.setText( "Certified on: " + certificationTimestamp.format( TIMESTAMP_FORMATTER ) );
-				lblCertificationTimestamp.setVisible( true );
+				txtCertificationTimestamp.setText( certificationTimestamp.format( TIMESTAMP_FORMATTER ) );
+				txtCertificationTimestamp.setVisible( true );
 			}
 			else
 			{
 				certificationTimestamp = null;
-				lblCertificationTimestamp.setVisible( false );
+				txtCertificationTimestamp.setText( "" );
+				txtCertificationTimestamp.setVisible( false );
 			}
+			this.repaint();
+			this.revalidate();
 		} );
 		
 		// Save button listener
@@ -877,8 +884,8 @@ public class Pnl_NewEditNote extends JPanel
 		{
 			chkCertification.setSelected( true );
 			certificationTimestamp = note.getCertifiedDate();
-			lblCertificationTimestamp.setText( "Certified on: " + certificationTimestamp.format( TIMESTAMP_FORMATTER ) );
-			lblCertificationTimestamp.setVisible( true );
+			txtCertificationTimestamp.setText( certificationTimestamp.format( TIMESTAMP_FORMATTER ) );
+			txtCertificationTimestamp.setVisible( true );
 		}
 	}
 	
@@ -1215,7 +1222,16 @@ public class Pnl_NewEditNote extends JPanel
 		}
 		
 		// Certification
-		note.setCertifiedDate( certificationTimestamp );
+		try
+		{
+			note.setCertifiedDate( LocalDateTime.parse( txtCertificationTimestamp.getText(), TIMESTAMP_FORMATTER ) );
+		}
+		catch( Exception e )
+		{
+			String warning = "Timestamp is not parseable and will not be saved.\nTimestamp must be in the format: " + TIMESTAMP_PATTERN;
+			AppLogger.warning( warning );
+			AppController.showValidationErrorPopup( warning );
+		}
 		
 		return note;
 	}
@@ -1298,7 +1314,7 @@ public class Pnl_NewEditNote extends JPanel
 		// Certification
 		chkCertification.setSelected( false );
 		certificationTimestamp = null;
-		lblCertificationTimestamp.setVisible( false );
+		txtCertificationTimestamp.setVisible( false );
 	}
 	
 	// Getters for Save and Cancel buttons to allow external action binding
