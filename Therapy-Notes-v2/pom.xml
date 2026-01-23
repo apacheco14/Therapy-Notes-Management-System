@@ -2,8 +2,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.alexpacheco</groupId>
 	<artifactId>therapynotes</artifactId>
-	<version>1.0.0-beta</version>
+	<version>${revision}</version>
 	<properties>
+        <revision>1.0.0-SNAPSHOT</revision>  <!-- Default for local builds -->
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
