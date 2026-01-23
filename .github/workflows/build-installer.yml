@@ -41,7 +41,7 @@ jobs:
       
       - name: Build with Maven
         working-directory: ./Therapy-Notes-v2
-        run: mvn clean package -Drevision=${{ steps.version.outputs.VERSION }}
+        run: mvn clean package "-Drevision=${{ steps.version.outputs.VERSION }}"
       
       - name: Build installer with jpackage
         working-directory: ./Therapy-Notes-v2
