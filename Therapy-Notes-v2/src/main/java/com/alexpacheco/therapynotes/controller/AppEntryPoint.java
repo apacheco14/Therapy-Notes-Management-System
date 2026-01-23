@@ -7,6 +7,7 @@ import javax.swing.UIManager;
 import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
 import com.alexpacheco.therapynotes.install.SetupConfigurationManager;
 import com.alexpacheco.therapynotes.install.SetupWizardDialog;
+import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.util.AppLogger;
 
 public class AppEntryPoint
@@ -21,6 +22,8 @@ public class AppEntryPoint
 			AppLogger.info( "DB configured at: " + SetupConfigurationManager.loadConfiguration().getDatabasePath() );
 			
 			_initializeDefaultPreferences();
+			
+			AppFonts.setUIFonts();
 			
 			AppController.launchMainWindow();
 		} );

@@ -2,6 +2,7 @@ package com.alexpacheco.therapynotes.util;
 
 import java.awt.Font;
 import javax.swing.JComponent;
+import javax.swing.UIManager;
 import javax.swing.text.JTextComponent;
 
 /**
@@ -32,6 +33,25 @@ public final class AppFonts
 	private AppFonts()
 	{
 		throw new UnsupportedOperationException( "Utility class cannot be instantiated" );
+	}
+	
+	/**
+	 * Set standard fonts across UI
+	 */
+	public static void setUIFonts()
+	{
+		UIManager.put( "Button.font", getLabelFont() );
+		UIManager.put( "Label.font", getLabelFont() );
+		UIManager.put( "TextField.font", getTextFieldFont() );
+		UIManager.put( "TextArea.font", getTextFieldFont() );
+		UIManager.put( "CheckBox.font", getLabelFont() );
+		UIManager.put( "RadioButton.font", getLabelFont() );
+		UIManager.put( "ComboBox.font", getLabelFont() );
+		UIManager.put( "Menu.font", getLabelFont() );
+		UIManager.put( "MenuItem.font", getLabelFont() );
+		UIManager.put( "Table.font", getLabelFont() );
+		UIManager.put( "TableHeader.font", getTextFieldFont() );
+		UIManager.put( "TitledBorder.font", getLabelFont() );
 	}
 	
 	/**
