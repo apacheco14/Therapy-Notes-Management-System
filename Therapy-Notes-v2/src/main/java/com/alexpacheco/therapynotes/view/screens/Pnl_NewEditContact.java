@@ -2,7 +2,6 @@ package com.alexpacheco.therapynotes.view.screens;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -17,9 +16,10 @@ import javax.swing.SwingConstants;
 
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.EntityValidator;
 import com.alexpacheco.therapynotes.model.entities.Contact;
 import com.alexpacheco.therapynotes.util.AppFonts;
-import com.alexpacheco.therapynotes.util.JavaUtils;
+import com.alexpacheco.therapynotes.util.PreferencesUtil;
 import com.alexpacheco.therapynotes.view.components.Cmb_ClientSelection;
 import com.alexpacheco.therapynotes.view.components.Txt_EmailAddress;
 import com.alexpacheco.therapynotes.view.components.Txt_PhoneNumber;
@@ -39,6 +39,8 @@ public class Pnl_NewEditContact extends JPanel
 	private ValidatedTextField phone2Field;
 	private ValidatedTextField phone3Field;
 	private JLabel titleLabel;
+	private JLabel firstNameLabel;
+	private JLabel lastNameLabel;
 	
 	private boolean isEditMode = false;
 	private Integer contactId = null;
@@ -68,16 +70,20 @@ public class Pnl_NewEditContact extends JPanel
 		phone2Field = new Txt_PhoneNumber();
 		phone3Field = new Txt_PhoneNumber();
 		
+		firstNameLabel = new JLabel();
+		lastNameLabel = new JLabel();
+		refreshLabelsText();
+		
 		// Column 0
 		gbc.gridx = 0;
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.weightx = 0.0;
 		
 		gbc.gridy = 0;
-		formPanel.add( new JLabel( "First Name:" ), gbc );
+		formPanel.add( firstNameLabel, gbc );
 		
 		gbc.gridy = 1;
-		formPanel.add( new JLabel( "Associated Client:" ), gbc );
+		formPanel.add( new JLabel( "Associated Client: *" ), gbc );
 		
 		gbc.gridy = 2;
 		formPanel.add( new JLabel( "Email 1:" ), gbc );
@@ -114,7 +120,7 @@ public class Pnl_NewEditContact extends JPanel
 		gbc.weightx = 0.0;
 		
 		gbc.gridy = 0;
-		formPanel.add( new JLabel( "Last Name:" ), gbc );
+		formPanel.add( lastNameLabel, gbc );
 		
 		gbc.gridy = 1;
 		formPanel.add( new JLabel( "Emergency Contact:" ), gbc );
@@ -243,59 +249,27 @@ public class Pnl_NewEditContact extends JPanel
 	
 	private void saveContact()
 	{
-		String firstName = firstNameField.getText().trim();
-		String lastName = lastNameField.getText().trim();
-		
-		if( JavaUtils.isNullOrEmpty( firstName ) && JavaUtils.isNullOrEmpty( lastName ) )
+		if( !_isContactDataValid() )
 		{
-			AppController.showValidationErrorPopup( "At least one of First Name or Last Name is required." );
 			return;
 		}
 		
-		if( linkedClientComboBox.getSelectedClientId() == null )
+		Contact contact = _collectContactData();
+		if( !_isEveryRequiredFieldFilled( contact ) )
 		{
-			AppController.showValidationErrorPopup( "Associated client is required." );
-			return;
-		}
-		
-		if( !phone1Field.isInputValid() || !phone2Field.isInputValid() || !phone3Field.isInputValid() )
-		{
-			AppController.showValidationErrorPopup( "Phone number is invalid." );
-			return;
-		}
-		
-		if( !email1Field.isInputValid() || !email2Field.isInputValid() || !email3Field.isInputValid() )
-		{
-			AppController.showValidationErrorPopup( "Email address is invalid." );
 			return;
 		}
 		
 		try
 		{
-			Contact c = new Contact();
 			if( isEditMode )
 			{
-				c.setContactId( contactId );
-			}
-			c.setFirstName( firstName );
-			c.setLastName( lastName );
-			c.setLinkedClientId( linkedClientComboBox.getSelectedClientId() );
-			c.setEmergencyContact( emergencyContactCheckBox.isSelected() );
-			c.setEmail1( email1Field.getText().trim() );
-			c.setEmail2( email2Field.getText().trim() );
-			c.setEmail3( email3Field.getText().trim() );
-			c.setPhone1( phone1Field.getText().trim() );
-			c.setPhone2( phone2Field.getText().trim() );
-			c.setPhone3( phone3Field.getText().trim() );
-			
-			if( isEditMode )
-			{
-				AppController.updateContact( c );
+				AppController.updateContact( contact );
 				JOptionPane.showMessageDialog( this, "Contact updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
 			}
 			else
 			{
-				AppController.createContact( c );
+				AppController.createContact( contact );
 				JOptionPane.showMessageDialog( this, "Contact saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
 			}
 			
@@ -306,6 +280,58 @@ public class Pnl_NewEditContact extends JPanel
 		{
 			AppController.showBasicErrorPopup( e, "Error saving contact:" );
 		}
+	}
+	
+	private Contact _collectContactData()
+	{
+		Contact c = new Contact();
+		if( isEditMode )
+		{
+			c.setContactId( contactId );
+		}
+		c.setFirstName( firstNameField.getText().trim() );
+		c.setLastName( lastNameField.getText().trim() );
+		c.setLinkedClientId( linkedClientComboBox.getSelectedClientId() );
+		c.setEmergencyContact( emergencyContactCheckBox.isSelected() );
+		c.setEmail1( email1Field.getText().trim() );
+		c.setEmail2( email2Field.getText().trim() );
+		c.setEmail3( email3Field.getText().trim() );
+		c.setPhone1( phone1Field.getText().trim() );
+		c.setPhone2( phone2Field.getText().trim() );
+		c.setPhone3( phone3Field.getText().trim() );
+		return c;
+	}
+	
+	private boolean _isContactDataValid()
+	{
+		if( !phone1Field.isInputValid() || !phone2Field.isInputValid() || !phone3Field.isInputValid() )
+		{
+			AppController.showValidationErrorPopup( "Phone number is invalid." );
+			return false;
+		}
+		
+		if( !email1Field.isInputValid() || !email2Field.isInputValid() || !email3Field.isInputValid() )
+		{
+			AppController.showValidationErrorPopup( "Email address is invalid." );
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private boolean _isEveryRequiredFieldFilled( Contact contact )
+	{
+		try
+		{
+			EntityValidator.validateContact( contact );
+		}
+		catch( TherapyAppException e )
+		{
+			AppController.showValidationErrorPopup( e.getMessage() );
+			return false;
+		}
+		
+		return true;
 	}
 	
 	private void cancel()
@@ -333,5 +359,13 @@ public class Pnl_NewEditContact extends JPanel
 		phone1Field.setText( "" );
 		phone2Field.setText( "" );
 		phone3Field.setText( "" );
+	}
+	
+	public void refreshLabelsText()
+	{
+		firstNameLabel.setText( "First Name:" + ( PreferencesUtil.isContactFirstNameRequired() ? " *" : "" ) );
+		lastNameLabel.setText( "Last Name:" + ( PreferencesUtil.isContactLastNameRequired() ? " *" : "" ) );
+		this.repaint();
+		this.revalidate();
 	}
 }

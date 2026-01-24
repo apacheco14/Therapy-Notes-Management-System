@@ -214,16 +214,14 @@ public class Pnl_Preferences extends JPanel
 		panel.add( chkDefaultDiagnosisFromPrevious, gbc );
 		
 		gbc.gridy++;
+		panel.add( chkDefaultVirtual, gbc );
+		
+		gbc.gridy++;
 		gbc.gridwidth = 1;
 		panel.add( new JLabel( "Default appointment date:" ), gbc );
 		
 		gbc.gridx = 1;
 		panel.add( cboDefaultAppointmentDate, gbc );
-		
-		gbc.gridx = 0;
-		gbc.gridy++;
-		gbc.gridwidth = 2;
-		panel.add( chkDefaultVirtual, gbc );
 		
 		// Push everything to the left
 		gbc.gridx = 2;
@@ -286,11 +284,11 @@ public class Pnl_Preferences extends JPanel
 		panel.add( chkRequiredNoteDiagnosis, gbc );
 		
 		gbc.gridy++;
-		gbc.insets = new Insets( 2, 15, 2, 0 );
-		panel.add( chkRequiredNoteNarrative, gbc );
+		panel.add( chkRequiredNoteSymptoms, gbc );
 		
 		gbc.gridy++;
-		panel.add( chkRequiredNoteAffect, gbc );
+		gbc.insets = new Insets( 2, 15, 2, 0 );
+		panel.add( chkRequiredNoteNarrative, gbc );
 		
 		gbc.gridy++;
 		panel.add( chkRequiredNoteAppearance, gbc );
@@ -299,19 +297,19 @@ public class Pnl_Preferences extends JPanel
 		panel.add( chkRequiredNoteSpeech, gbc );
 		
 		gbc.gridy++;
+		panel.add( chkRequiredNoteAffect, gbc );
+		
+		gbc.gridy++;
 		panel.add( chkRequiredNoteEyeContact, gbc );
-		
-		gbc.gridy++;
-		panel.add( chkRequiredNoteNextAppointment, gbc );
-		
-		gbc.gridy++;
-		panel.add( chkRequiredNoteCollateralContacts, gbc );
 		
 		gbc.gridy++;
 		panel.add( chkRequiredNoteReferrals, gbc );
 		
 		gbc.gridy++;
-		panel.add( chkRequiredNoteSymptoms, gbc );
+		panel.add( chkRequiredNoteCollateralContacts, gbc );
+		
+		gbc.gridy++;
+		panel.add( chkRequiredNoteNextAppointment, gbc );
 		
 		return panel;
 	}

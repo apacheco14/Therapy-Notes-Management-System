@@ -48,6 +48,7 @@ import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentO
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.EyeContactAssessmentOption;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.NextApptAssessmentOption;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.SpeechAssessmentOption;
+import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.util.AppLogger;
 import com.alexpacheco.therapynotes.util.DateFormatUtil;
 import com.alexpacheco.therapynotes.util.JavaUtils;
@@ -115,6 +116,17 @@ public class Pnl_NewEditNote extends JPanel
 	private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern( TIMESTAMP_PATTERN );
 	
 	private Integer noteId;
+	
+	// Labels
+	private JLabel lblDiagnosis;
+	private JLabel lblAppearance;
+	private JLabel lblSpeech;
+	private JLabel lblAffect;
+	private JLabel lblEyeContact;
+	private JLabel lblCollateralContacts;
+	private JLabel lblReferrals;
+	private JLabel lblNextAppt;
+	private Dimension rowLabelPreferredDimension = new Dimension( 130, 20 );
 	
 	/**
 	 * Constructs a new Pnl_NewEditNote panel for creating a new progress note.
@@ -195,6 +207,17 @@ public class Pnl_NewEditNote extends JPanel
 		btnExportDocx = new JButton( "Export to DOCX" );
 		btnExportPdf = new JButton( "Export to PDF" );
 		btnCancel = new JButton( "Cancel" );
+		
+		// Labels
+		lblDiagnosis = new JLabel();
+		lblAppearance = new JLabel();
+		lblSpeech = new JLabel();
+		lblAffect = new JLabel();
+		lblEyeContact = new JLabel();
+		lblReferrals = new JLabel();
+		lblCollateralContacts = new JLabel();
+		lblNextAppt = new JLabel();
+		refreshLabelsText();
 	}
 	
 	/**
@@ -399,7 +422,7 @@ public class Pnl_NewEditNote extends JPanel
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.weightx = 0.0;
-		panel.add( new JLabel( "Client:" ), gbc );
+		panel.add( new JLabel( "Client: *" ), gbc );
 		gbc.gridx = 1;
 		gbc.weightx = 1.0;
 		panel.add( cmbClient, gbc );
@@ -416,7 +439,7 @@ public class Pnl_NewEditNote extends JPanel
 		gbc.gridx = 0;
 		gbc.gridy = 2;
 		gbc.weightx = 0.0;
-		panel.add( new JLabel( "Diagnosis:" ), gbc );
+		panel.add( lblDiagnosis, gbc );
 		gbc.gridx = 1;
 		gbc.weightx = 1.0;
 		panel.add( cmbDiagnosis, gbc );
@@ -474,7 +497,7 @@ public class Pnl_NewEditNote extends JPanel
 	private JPanel createSymptomsSection()
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
-		panel.setBorder( createSectionBorder( "Clinical Symptoms" ) );
+		panel.setBorder( createSectionBorder( "Clinical Symptoms" + ( PreferencesUtil.isNoteSymptomsRequired() ? " *" : "" ) ) );
 		
 		// Header label
 		JLabel headerLabel = new JLabel( "Clinical symptoms present in the past week that demonstrate medical necessity:" );
@@ -518,7 +541,7 @@ public class Pnl_NewEditNote extends JPanel
 	private JPanel createNarrativeSection()
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
-		panel.setBorder( createSectionBorder( "Narrative" ) );
+		panel.setBorder( createSectionBorder( "Narrative" + ( PreferencesUtil.isNoteNarrativeRequired() ? " *" : "" ) ) );
 		
 		JScrollPane scrollPane = new JScrollPane( txtNarrative );
 		scrollPane.setPreferredSize( new Dimension( 0, 200 ) );
@@ -537,10 +560,10 @@ public class Pnl_NewEditNote extends JPanel
 		panel.setBorder( createSectionBorder( "Mental Status" ) );
 		
 		// Create rows for each mental status type
-		panel.add( createMentalStatusRow( "Appearance", AssessmentOptionType.APPEARANCE ) );
-		panel.add( createMentalStatusRow( "Speech", AssessmentOptionType.SPEECH ) );
-		panel.add( createMentalStatusRow( "Affect", AssessmentOptionType.AFFECT ) );
-		panel.add( createMentalStatusRow( "Eye Contact", AssessmentOptionType.EYE_CONTACT ) );
+		panel.add( createMentalStatusRow( lblAppearance, AssessmentOptionType.APPEARANCE ) );
+		panel.add( createMentalStatusRow( lblSpeech, AssessmentOptionType.SPEECH ) );
+		panel.add( createMentalStatusRow( lblAffect, AssessmentOptionType.AFFECT ) );
+		panel.add( createMentalStatusRow( lblEyeContact, AssessmentOptionType.EYE_CONTACT ) );
 		
 		return panel;
 	}
@@ -548,7 +571,7 @@ public class Pnl_NewEditNote extends JPanel
 	/**
 	 * Creates a single row for the Mental Status section.
 	 */
-	private JPanel createMentalStatusRow( String labelText, AssessmentOptionType type )
+	private JPanel createMentalStatusRow( JLabel label, AssessmentOptionType type )
 	{
 		JPanel rowPanel = new JPanel( new GridBagLayout() );
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -559,9 +582,8 @@ public class Pnl_NewEditNote extends JPanel
 		// Label
 		gbc.gridx = 0;
 		gbc.weightx = 0.0;
-		JLabel label = new JLabel( labelText + ":" );
-		label.setPreferredSize( new Dimension( 80, 20 ) );
-		label.setFont( label.getFont().deriveFont( Font.BOLD ) );
+		label.setPreferredSize( rowLabelPreferredDimension );
+		label.setFont( AppFonts.getLabelBoldFont() );
 		rowPanel.add( label, gbc );
 		
 		// Radio buttons
@@ -573,6 +595,7 @@ public class Pnl_NewEditNote extends JPanel
 			{
 				gbc.gridx = col++;
 				gbc.weightx = 0.0;
+				radioButton.setPreferredSize( new Dimension( 100, 20 ) );
 				rowPanel.add( radioButton, gbc );
 			}
 		}
@@ -596,13 +619,13 @@ public class Pnl_NewEditNote extends JPanel
 		panel.setBorder( createSectionBorder( "Post-Session Administrative" ) );
 		
 		// Referrals row
-		panel.add( createAdminCheckboxRow( "Referrals", referralCheckboxes, txtReferralsNotes ) );
+		panel.add( createAdminCheckboxRow( lblReferrals, referralCheckboxes, txtReferralsNotes ) );
 		
 		// Collateral Contacts row
-		panel.add( createAdminCheckboxRow( "Collateral Contacts", collateralContactCheckboxes, txtCollateralContactsNotes ) );
+		panel.add( createAdminCheckboxRow( lblCollateralContacts, collateralContactCheckboxes, txtCollateralContactsNotes ) );
 		
 		// Next Appointment row
-		panel.add( createAdminRadioRow( "Next Appointment", nextAppointmentRadioButtons, txtNextAppointmentNotes ) );
+		panel.add( createAdminRadioRow( lblNextAppt, nextAppointmentRadioButtons, txtNextAppointmentNotes ) );
 		
 		// Certification section
 		panel.add( createCertificationPanel() );
@@ -613,7 +636,7 @@ public class Pnl_NewEditNote extends JPanel
 	/**
 	 * Creates an administrative row with checkboxes.
 	 */
-	private JPanel createAdminCheckboxRow( String labelText, List<AssessmentOptionCheckBox> checkboxes, JTextField commentsField )
+	private JPanel createAdminCheckboxRow( JLabel label, List<AssessmentOptionCheckBox> checkboxes, JTextField commentsField )
 	{
 		JPanel rowPanel = new JPanel( new GridBagLayout() );
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -624,9 +647,8 @@ public class Pnl_NewEditNote extends JPanel
 		// Label
 		gbc.gridx = 0;
 		gbc.weightx = 0.0;
-		JLabel label = new JLabel( labelText + ":" );
-		label.setPreferredSize( new Dimension( 120, 20 ) );
-		label.setFont( label.getFont().deriveFont( Font.BOLD ) );
+		label.setPreferredSize( rowLabelPreferredDimension );
+		label.setFont( AppFonts.getLabelBoldFont() );
 		rowPanel.add( label, gbc );
 		
 		// Checkboxes
@@ -635,6 +657,7 @@ public class Pnl_NewEditNote extends JPanel
 		{
 			gbc.gridx = col++;
 			gbc.weightx = 0.0;
+			checkbox.setPreferredSize( new Dimension( 100, 20 ) );
 			rowPanel.add( checkbox, gbc );
 		}
 		
@@ -650,7 +673,7 @@ public class Pnl_NewEditNote extends JPanel
 	/**
 	 * Creates an administrative row with radio buttons.
 	 */
-	private JPanel createAdminRadioRow( String labelText, List<AssessmentOptionRadioButton> radioButtons, JTextField commentsField )
+	private JPanel createAdminRadioRow( JLabel label, List<AssessmentOptionRadioButton> radioButtons, JTextField commentsField )
 	{
 		JPanel rowPanel = new JPanel( new GridBagLayout() );
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -661,9 +684,8 @@ public class Pnl_NewEditNote extends JPanel
 		// Label
 		gbc.gridx = 0;
 		gbc.weightx = 0.0;
-		JLabel label = new JLabel( labelText + ":" );
-		label.setPreferredSize( new Dimension( 120, 20 ) );
-		label.setFont( label.getFont().deriveFont( Font.BOLD ) );
+		label.setPreferredSize( rowLabelPreferredDimension );
+		label.setFont( AppFonts.getLabelBoldFont() );
 		rowPanel.add( label, gbc );
 		
 		// Radio buttons
@@ -672,6 +694,7 @@ public class Pnl_NewEditNote extends JPanel
 		{
 			gbc.gridx = col++;
 			gbc.weightx = 0.0;
+			radioButton.setPreferredSize( new Dimension( 100, 20 ) );
 			rowPanel.add( radioButton, gbc );
 		}
 		
@@ -1390,5 +1413,19 @@ public class Pnl_NewEditNote extends JPanel
 			clearForm();
 			AppController.returnHome( true );
 		}
+	}
+	
+	public void refreshLabelsText()
+	{
+		lblDiagnosis.setText( "Diagnosis:" + ( PreferencesUtil.isNoteDiagnosisRequired() ? " *" : "" ) );
+		lblAppearance.setText( "Appearance:" + ( PreferencesUtil.isNoteAppearanceRequired() ? " *" : "" ) );
+		lblSpeech.setText( "Speech:" + ( PreferencesUtil.isNoteSpeechRequired() ? " *" : "" ) );
+		lblAffect.setText( "Affect:" + ( PreferencesUtil.isNoteAffectRequired() ? " *" : "" ) );
+		lblEyeContact.setText( "Eye Contact:" + ( PreferencesUtil.isNoteEyeContactRequired() ? " *" : "" ) );
+		lblReferrals.setText( "Referrals:" + ( PreferencesUtil.isNoteReferralsRequired() ? " *" : "" ) );
+		lblCollateralContacts.setText( "Collateral Contacts:" + ( PreferencesUtil.isNoteCollateralContactsRequired() ? " *" : "" ) );
+		lblNextAppt.setText( "Next Appointment:" + ( PreferencesUtil.isNoteNextAppointmentRequired() ? " *" : "" ) );
+		this.repaint();
+		this.revalidate();
 	}
 }

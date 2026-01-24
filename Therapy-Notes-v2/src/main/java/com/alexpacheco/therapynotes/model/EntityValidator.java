@@ -104,5 +104,8 @@ public class EntityValidator
 		
 		if( JavaUtils.isNullOrEmpty( contact.getLastName() ) && PreferencesUtil.isContactLastNameRequired() )
 			throw new MissingRequiredElementException( "Last name is required." );
+		
+		if( contact.getLinkedClientId() == null )
+			throw new MissingRequiredElementException( "Associated client is required." );
 	}
 }

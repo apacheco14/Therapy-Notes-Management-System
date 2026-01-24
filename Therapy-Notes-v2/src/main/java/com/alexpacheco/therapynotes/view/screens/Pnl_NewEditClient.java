@@ -8,10 +8,11 @@ import javax.swing.text.DocumentFilter;
 
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.model.EntityValidator;
 import com.alexpacheco.therapynotes.model.entities.Client;
 import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.util.DateFormatUtil;
-import com.alexpacheco.therapynotes.util.JavaUtils;
+import com.alexpacheco.therapynotes.util.PreferencesUtil;
 import com.alexpacheco.therapynotes.view.components.Txt_EmailAddress;
 import com.alexpacheco.therapynotes.view.components.Txt_PhoneNumber;
 import com.alexpacheco.therapynotes.view.components.ValidatedTextField;
@@ -37,6 +38,9 @@ public class Pnl_NewEditClient extends JPanel
 	private ValidatedTextField phone3Field;
 	private JTextArea txtClientNotes;
 	private JLabel titleLabel;
+	private JLabel firstNameLabel;
+	private JLabel lastNameLabel;
+	private JLabel dateOfBirthLabel;
 	
 	private boolean isEditMode = false;
 	private Integer clientId = null;
@@ -76,16 +80,21 @@ public class Pnl_NewEditClient extends JPanel
 		txtClientNotes.setWrapStyleWord( true );
 		txtClientNotes.setFont( new Font( "Arial", Font.PLAIN, 12 ) );
 		
+		firstNameLabel = new JLabel();
+		lastNameLabel = new JLabel();
+		dateOfBirthLabel = new JLabel();
+		refreshLabelsText();
+		
 		// Column 0
 		gbc.gridx = 0;
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.weightx = 0.0;
 		
 		gbc.gridy = 0;
-		formPanel.add( new JLabel( "First Name:" ), gbc );
+		formPanel.add( firstNameLabel, gbc );
 		
 		gbc.gridy = 1;
-		formPanel.add( new JLabel( "Client Code:" ), gbc );
+		formPanel.add( new JLabel( "Client Code: *" ), gbc );
 		
 		gbc.gridy = 2;
 		formPanel.add( new JLabel( "Email 1:" ), gbc );
@@ -126,10 +135,10 @@ public class Pnl_NewEditClient extends JPanel
 		gbc.weightx = 0.0;
 		
 		gbc.gridy = 0;
-		formPanel.add( new JLabel( "Last Name:" ), gbc );
+		formPanel.add( lastNameLabel, gbc );
 		
 		gbc.gridy = 1;
-		formPanel.add( new JLabel( "Date of Birth:" ), gbc );
+		formPanel.add( dateOfBirthLabel, gbc );
 		
 		gbc.gridy = 2;
 		formPanel.add( new JLabel( "Phone 1:" ), gbc );
@@ -170,6 +179,9 @@ public class Pnl_NewEditClient extends JPanel
 		gbc.gridwidth = 3;
 		gbc.gridy = 5;
 		JScrollPane scrollPane = new JScrollPane( txtClientNotes );
+		Dimension textAreaSize = txtClientNotes.getPreferredSize();
+		scrollPane.setPreferredSize( textAreaSize );
+		scrollPane.setMinimumSize( new Dimension( textAreaSize.width, textAreaSize.height + 5 ) );
 		formPanel.add( scrollPane, gbc );
 		
 		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER, 10, 10 ) );
@@ -295,28 +307,16 @@ public class Pnl_NewEditClient extends JPanel
 			return;
 		}
 		
+		Client client = _collectClientData();
+		if( !_isEveryRequiredFieldFilled( client ) )
+		{
+			return;
+		}
+		
 		try
 		{
-			Client client = new Client();
-			client.setFirstName( firstNameField.getText().trim() );
-			client.setLastName( lastNameField.getText().trim() );
-			client.setClientCode( clientCodeField.getText().trim() );
-			if( dateOfBirthChooser.getDate() != null )
-			{
-				client.setDateOfBirth( dateOfBirthChooser.getDate() );
-			}
-			client.setInactive( inactiveCheckBox.isSelected() );
-			client.setEmail1( email1Field.getText().trim() );
-			client.setEmail2( email2Field.getText().trim() );
-			client.setEmail3( email3Field.getText().trim() );
-			client.setPhone1( phone1Field.getText().trim() );
-			client.setPhone2( phone2Field.getText().trim() );
-			client.setPhone3( phone3Field.getText().trim() );
-			client.setClientNotes( txtClientNotes.getText() );
-			
 			if( isEditMode )
 			{
-				client.setClientId( clientId );
 				AppController.updateClient( client );
 				JOptionPane.showMessageDialog( this, "Client updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
 				clearForm();
@@ -337,20 +337,33 @@ public class Pnl_NewEditClient extends JPanel
 		}
 	}
 	
+	private Client _collectClientData()
+	{
+		Client client = new Client();
+		if( isEditMode )
+		{
+			client.setClientId( clientId );
+		}
+		client.setFirstName( firstNameField.getText().trim() );
+		client.setLastName( lastNameField.getText().trim() );
+		client.setClientCode( clientCodeField.getText().trim() );
+		if( dateOfBirthChooser.getDate() != null )
+		{
+			client.setDateOfBirth( dateOfBirthChooser.getDate() );
+		}
+		client.setInactive( inactiveCheckBox.isSelected() );
+		client.setEmail1( email1Field.getText().trim() );
+		client.setEmail2( email2Field.getText().trim() );
+		client.setEmail3( email3Field.getText().trim() );
+		client.setPhone1( phone1Field.getText().trim() );
+		client.setPhone2( phone2Field.getText().trim() );
+		client.setPhone3( phone3Field.getText().trim() );
+		client.setClientNotes( txtClientNotes.getText() );
+		return client;
+	}
+	
 	private boolean _isDataValid()
 	{
-		if( JavaUtils.isNullOrEmpty( firstNameField.getText() ) && JavaUtils.isNullOrEmpty( lastNameField.getText() ) )
-		{
-			AppController.showValidationErrorPopup( "At least one of First Name or Last Name is required." );
-			return false;
-		}
-		
-		if( JavaUtils.isNullOrEmpty( clientCodeField.getText() ) )
-		{
-			AppController.showValidationErrorPopup( "Client Code is required." );
-			return false;
-		}
-		
 		Date chosenDate = dateOfBirthChooser.getDate();
 		if( chosenDate != null && ( chosenDate.after( new java.util.Date() )
 				|| chosenDate.before( DateFormatUtil.toDate( LocalDateTime.now().minusYears( 100 ) ) ) ) )
@@ -386,6 +399,21 @@ public class Pnl_NewEditClient extends JPanel
 		return true;
 	}
 	
+	private boolean _isEveryRequiredFieldFilled( Client client )
+	{
+		try
+		{
+			EntityValidator.validateClient( client );
+		}
+		catch( TherapyAppException e )
+		{
+			AppController.showValidationErrorPopup( e.getMessage() );
+			return false;
+		}
+		
+		return true;
+	}
+	
 	private void cancel()
 	{
 		int result = JOptionPane.showConfirmDialog( this, "Are you sure you want to cancel? Any unsaved changes will be lost.",
@@ -413,5 +441,14 @@ public class Pnl_NewEditClient extends JPanel
 		phone2Field.setText( "" );
 		phone3Field.setText( "" );
 		txtClientNotes.setText( "" );
+	}
+	
+	public void refreshLabelsText()
+	{
+		firstNameLabel.setText( "First Name:" + ( PreferencesUtil.isClientFirstNameRequired() ? " *" : "" ) );
+		lastNameLabel.setText( "Last Name:" + ( PreferencesUtil.isClientLastNameRequired() ? " *" : "" ) );
+		dateOfBirthLabel.setText( "Date of Birth:" + ( PreferencesUtil.isClientDOBRequired() ? " *" : "" ) );
+		this.repaint();
+		this.revalidate();
 	}
 }

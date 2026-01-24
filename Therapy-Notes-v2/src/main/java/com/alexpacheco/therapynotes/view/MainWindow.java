@@ -301,12 +301,15 @@ public class MainWindow extends JFrame
 				break;
 			case NEW_EDIT_NOTE:
 				newEditNotePanel.clearForm();
+				newEditNotePanel.refreshLabelsText();
 				break;
 			case NEW_EDIT_CLIENT:
 				newEditClientPanel.clearForm();
+				newEditClientPanel.refreshLabelsText();
 				break;
 			case NEW_EDIT_CONTACT:
 				newEditContactPanel.clearForm();
+				newEditContactPanel.refreshLabelsText();
 				break;
 			default:
 				break;
