@@ -46,6 +46,8 @@ import com.alexpacheco.therapynotes.view.dialogs.Dlg_PinEntry;
 public class AppController
 {
 	private static MainWindow window;
+	private static final Color TITLE_COLOR = new Color( 74, 144, 164 ); // Matches icon color #4A90A4
+	private static final Color SUBTITLE_COLOR = new Color( 100, 116, 129 );
 	private static final Color BACKGROUND_COLOR = new Color( 245, 248, 250 );
 	private static List<String> icd10Codes;
 	private static NoteApi noteApi = new NoteApi();
@@ -82,6 +84,16 @@ public class AppController
 		AppLogger.logStartup();
 		window = new MainWindow();
 		window.setVisible( true );
+	}
+	
+	public static Color getTitleColor()
+	{
+		return TITLE_COLOR;
+	}
+	
+	public static Color getSubtitleColor()
+	{
+		return SUBTITLE_COLOR;
 	}
 	
 	public static Color getBackgroundColor()

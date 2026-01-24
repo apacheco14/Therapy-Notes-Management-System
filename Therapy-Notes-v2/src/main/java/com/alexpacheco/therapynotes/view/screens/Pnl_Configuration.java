@@ -6,14 +6,17 @@ import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -21,11 +24,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.Scrollable;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.table.TableColumnModel;
 
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.enums.ConfigKey;
@@ -35,112 +39,161 @@ import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentO
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionType;
 import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.util.JavaUtils;
-import com.alexpacheco.therapynotes.view.tablemodels.ConfigOptionsTableModel;
+import com.alexpacheco.therapynotes.view.components.Pnl_ConfigurationOption;
+import com.alexpacheco.therapynotes.view.components.Pnl_ConfigurationCategory;
 
-public class Pnl_Configuration extends JPanel
+/**
+ * Configuration panel for managing assessment options using a tabbed interface. Options are organized into three tabs: Symptoms, Mental
+ * Status, and Post-Session Admin.
+ */
+public class Pnl_Configuration extends JPanel implements Pnl_ConfigurationOption.ConfigurationOptionListener
 {
-	private static final long serialVersionUID = 3497512709852662129L;
+	private static final long serialVersionUID = 1L;
 	
-	// Map to store table models by ConfigKey for refreshing after add
-	private Map<ConfigKey, ConfigOptionsTableModel> tableModels;
+	// Tab indices
+	private static final int TAB_SYMPTOMS = 0;
+	private static final int TAB_MENTAL_STATUS = 1;
+	private static final int TAB_POST_SESSION_ADMIN = 2;
+	
+	// Number of columns for the symptoms grid
+	private static final int SYMPTOMS_COLUMN_COUNT = 4;
+	
+	// Tab category mappings
+	private static final ConfigKey[] SYMPTOMS_CATEGORIES = { ConfigKey.SYMPTOMS };
+	private static final ConfigKey[] MENTAL_STATUS_CATEGORIES = { ConfigKey.APPEARANCE, ConfigKey.SPEECH, ConfigKey.AFFECT,
+			ConfigKey.EYE_CONTACT };
+	private static final ConfigKey[] POST_SESSION_ADMIN_CATEGORIES = { ConfigKey.REFERRAL_TYPES, ConfigKey.COLLATERAL_CONTACT_TYPES,
+			ConfigKey.NEXT_APPOINTMENT };
+	
+	private JTabbedPane tabbedPane;
+	
+	// Scroll panes for each tab (to reset scroll position)
+	private JScrollPane symptomsScrollPane;
+	private JScrollPane mentalStatusScrollPane;
+	private JScrollPane postSessionAdminScrollPane;
+	
+	// Category panels mapped by ConfigKey
+	private Map<ConfigKey, Pnl_ConfigurationCategory> categoryPanels;
+	
+	// For symptoms tab, we have multiple column panels sharing the same data
+	private List<Pnl_ConfigurationCategory> symptomColumnPanels;
+	
+	// In-memory storage of options (for holding changes until save)
+	private Map<ConfigKey, List<AssessmentOption>> optionsData;
+	
+	// Track next temporary ID for new options (negative to distinguish from DB IDs)
+	private int nextTempId = -1;
 	
 	public Pnl_Configuration()
 	{
-		tableModels = new java.util.HashMap<>();
+		categoryPanels = new HashMap<>();
+		symptomColumnPanels = new ArrayList<>();
+		optionsData = new EnumMap<>( ConfigKey.class );
 		
+		initializeUI();
+		loadAllOptions();
+	}
+	
+	private void initializeUI()
+	{
 		setLayout( new BorderLayout() );
+		setBackground( AppController.getBackgroundColor() );
 		
+		// Title
 		JLabel titleLabel = new JLabel( "Configure Assessment Options", SwingConstants.CENTER );
 		titleLabel.setFont( AppFonts.getScreenTitleFont() );
+		titleLabel.setForeground( AppController.getTitleColor() );
 		titleLabel.setBorder( BorderFactory.createEmptyBorder( 20, 0, 20, 0 ) );
 		
-		// Main panel with all sections
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout( new BoxLayout( mainPanel, BoxLayout.Y_AXIS ) );
-		mainPanel.setBorder( BorderFactory.createEmptyBorder( 10, 20, 10, 20 ) );
-		
-		// Create sections
-		mainPanel.add( createSection( ConfigKey.SYMPTOMS ) );
-		mainPanel.add( Box.createRigidArea( new Dimension( 0, 10 ) ) );
-		
-		mainPanel.add( createSection( ConfigKey.AFFECT ) );
-		mainPanel.add( Box.createRigidArea( new Dimension( 0, 10 ) ) );
-		
-		mainPanel.add( createSection( ConfigKey.EYE_CONTACT ) );
-		mainPanel.add( Box.createRigidArea( new Dimension( 0, 10 ) ) );
-		
-		mainPanel.add( createSection( ConfigKey.APPEARANCE ) );
-		mainPanel.add( Box.createRigidArea( new Dimension( 0, 10 ) ) );
-		
-		mainPanel.add( createSection( ConfigKey.SPEECH ) );
-		mainPanel.add( Box.createRigidArea( new Dimension( 0, 10 ) ) );
-		
-		mainPanel.add( createSection( ConfigKey.NEXT_APPOINTMENT ) );
-		mainPanel.add( Box.createRigidArea( new Dimension( 0, 10 ) ) );
-		
-		mainPanel.add( createSection( ConfigKey.COLLATERAL_CONTACT_TYPES ) );
-		mainPanel.add( Box.createRigidArea( new Dimension( 0, 10 ) ) );
-		
-		mainPanel.add( createSection( ConfigKey.REFERRAL_TYPES ) );
-		
-		// Wrap in scroll pane
-		JScrollPane scrollPane = new JScrollPane( mainPanel );
-		scrollPane.getVerticalScrollBar().setUnitIncrement( 16 );
-		scrollPane.setBorder( null );
+		// Tabbed pane with larger font
+		tabbedPane = new JTabbedPane();
+		tabbedPane.setFont( AppFonts.getTextFieldFont() );
+		tabbedPane.addTab( "Clinical Symptoms", createSymptomsTab() );
+		tabbedPane.addTab( "Mental Status", createMentalStatusTab() );
+		tabbedPane.addTab( "Post-Session Admin", createPostSessionAdminTab() );
+		tabbedPane.setBackground( AppController.getBackgroundColor() );
 		
 		add( titleLabel, BorderLayout.NORTH );
-		add( scrollPane, BorderLayout.CENTER );
+		add( tabbedPane, BorderLayout.CENTER );
 		add( createButtonPanel(), BorderLayout.SOUTH );
 	}
 	
 	/**
-	 * Create a configuration section with a table
-	 * 
-	 * @param configKey The ConfigKey enum for this section
-	 * @return JPanel containing the section
+	 * Creates the Symptoms tab with a 4-column grid layout. All columns share the same symptoms data, distributed evenly.
 	 */
-	private JPanel createSection( ConfigKey configKey )
+	private JScrollPane createSymptomsTab()
 	{
-		String sectionName = configKey.getDisplayName();
+		ScrollablePanel contentPanel = new ScrollablePanel( new GridLayout( 1, SYMPTOMS_COLUMN_COUNT, 10, 0 ) );
 		
-		JPanel sectionPanel = new JPanel( new BorderLayout() );
-		sectionPanel.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 5, 10, 5, 10 ),
-				BorderFactory.createTitledBorder( sectionName ) ) );
+		// Create 4 column panels for symptoms
+		// First column gets the header, others are headerless
+		for( int i = 0; i < SYMPTOMS_COLUMN_COUNT; i++ )
+		{
+			String headerText = ( i == 0 ) ? "Symptoms" : " "; // Non-breaking space for alignment
+			Pnl_ConfigurationCategory columnPanel = new Pnl_ConfigurationCategory( headerText, this );
+			symptomColumnPanels.add( columnPanel );
+			contentPanel.add( columnPanel );
+		}
 		
-		// Table for options
-		ConfigOptionsTableModel tableModel = new ConfigOptionsTableModel();
-		tableModels.put( configKey, tableModel );
+		symptomsScrollPane = new JScrollPane( contentPanel );
+		symptomsScrollPane.getVerticalScrollBar().setUnitIncrement( 16 );
+		symptomsScrollPane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
+		symptomsScrollPane.setBorder( null );
+		symptomsScrollPane.getViewport().setBackground( AppController.getBackgroundColor() );
 		
-		JTable table = new JTable( tableModel );
-		table.setRowHeight( 25 );
-		table.getTableHeader().setReorderingAllowed( false );
-		table.setCellSelectionEnabled( false );
-		table.setAutoCreateRowSorter( true );
-		
-		// Set column widths
-		TableColumnModel columnModel = table.getColumnModel();
-		columnModel.getColumn( ConfigOptionsTableModel.COL_ID ).setMinWidth( 0 );
-		columnModel.getColumn( ConfigOptionsTableModel.COL_ID ).setMaxWidth( 0 );
-		columnModel.getColumn( ConfigOptionsTableModel.COL_ID ).setWidth( 0 );
-		columnModel.getColumn( ConfigOptionsTableModel.COL_NAME ).setPreferredWidth( 50 );
-		columnModel.getColumn( ConfigOptionsTableModel.COL_DESCRIPTION ).setPreferredWidth( 300 );
-		
-		JScrollPane tableScrollPane = new JScrollPane( table );
-		int preferredHeight = ConfigKey.SYMPTOMS.equals( configKey ) ? 450 : 150;
-		tableScrollPane.setPreferredSize( new Dimension( 0, preferredHeight ) );
-		
-		sectionPanel.add( tableScrollPane, BorderLayout.CENTER );
-		
-		// Load existing options
-		loadOptions( configKey, tableModel );
-		
-		return sectionPanel;
+		return symptomsScrollPane;
 	}
 	
 	/**
-	 * Creates the button panel with Cancel and Add Option buttons.
-	 * 
-	 * @return JPanel containing the buttons
+	 * Creates the Mental Status tab with 4 columns: Appearance, Speech, Affect, Eye Contact
+	 */
+	private JScrollPane createMentalStatusTab()
+	{
+		ScrollablePanel contentPanel = new ScrollablePanel( new GridLayout( 1, MENTAL_STATUS_CATEGORIES.length, 10, 0 ) );
+		
+		for( ConfigKey configKey : MENTAL_STATUS_CATEGORIES )
+		{
+			Pnl_ConfigurationCategory categoryPanel = new Pnl_ConfigurationCategory( configKey.getDisplayName(), this );
+			categoryPanels.put( configKey, categoryPanel );
+			contentPanel.add( categoryPanel );
+		}
+		
+		mentalStatusScrollPane = new JScrollPane( contentPanel );
+		mentalStatusScrollPane.getVerticalScrollBar().setUnitIncrement( 16 );
+		mentalStatusScrollPane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
+		mentalStatusScrollPane.setBorder( null );
+		mentalStatusScrollPane.getViewport().setBackground( AppController.getBackgroundColor() );
+		
+		return mentalStatusScrollPane;
+	}
+	
+	/**
+	 * Creates the Post-Session Admin tab with 3 columns: Referrals, Collateral Contacts, Next Appointment
+	 */
+	private JScrollPane createPostSessionAdminTab()
+	{
+		ScrollablePanel contentPanel = new ScrollablePanel( new GridLayout( 1, POST_SESSION_ADMIN_CATEGORIES.length + 1, 10, 0 ) );
+		
+		for( ConfigKey configKey : POST_SESSION_ADMIN_CATEGORIES )
+		{
+			Pnl_ConfigurationCategory categoryPanel = new Pnl_ConfigurationCategory( configKey.getDisplayName(), this );
+			categoryPanels.put( configKey, categoryPanel );
+			contentPanel.add( categoryPanel );
+		}
+		Pnl_ConfigurationCategory blankCategoryPanel = new Pnl_ConfigurationCategory();
+		contentPanel.add( blankCategoryPanel );
+		
+		postSessionAdminScrollPane = new JScrollPane( contentPanel );
+		postSessionAdminScrollPane.getVerticalScrollBar().setUnitIncrement( 16 );
+		postSessionAdminScrollPane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
+		postSessionAdminScrollPane.setBorder( null );
+		postSessionAdminScrollPane.getViewport().setBackground( AppController.getBackgroundColor() );
+		
+		return postSessionAdminScrollPane;
+	}
+	
+	/**
+	 * Creates the button panel with Cancel, Add Option, and Save buttons.
 	 */
 	private JPanel createButtonPanel()
 	{
@@ -164,32 +217,139 @@ public class Pnl_Configuration extends JPanel
 	}
 	
 	/**
-	 * Load existing options for a configuration section
-	 * 
-	 * @param configKey  The ConfigKey enum
-	 * @param tableModel The table model to populate
+	 * Loads all options from the database into memory and populates the UI.
 	 */
-	private void loadOptions( ConfigKey configKey, ConfigOptionsTableModel tableModel )
+	private void loadAllOptions()
 	{
-		try
+		// Load all config keys
+		for( ConfigKey configKey : ConfigKey.values() )
 		{
-			tableModel.loadOptions( AppController.getConfigOptions( configKey ) );
+			try
+			{
+				List<AssessmentOption> options = AppController.getConfigOptions( configKey );
+				optionsData.put( configKey, new ArrayList<>( options ) );
+			}
+			catch( TherapyAppException e )
+			{
+				AppController.showBasicErrorPopup( e, "Error loading options:" );
+				optionsData.put( configKey, new ArrayList<>() );
+			}
 		}
-		catch( TherapyAppException e )
+		
+		// Populate UI
+		refreshAllUI();
+		
+		// Reset scroll positions to top after layout is complete
+		SwingUtilities.invokeLater( () -> resetScrollPositions() );
+	}
+	
+	/**
+	 * Resets all scroll panes to scroll to the top.
+	 */
+	private void resetScrollPositions()
+	{
+		if( symptomsScrollPane != null )
 		{
-			AppController.showBasicErrorPopup( e, "Error loading options:" );
+			symptomsScrollPane.getVerticalScrollBar().setValue( 0 );
+		}
+		if( mentalStatusScrollPane != null )
+		{
+			mentalStatusScrollPane.getVerticalScrollBar().setValue( 0 );
+		}
+		if( postSessionAdminScrollPane != null )
+		{
+			postSessionAdminScrollPane.getVerticalScrollBar().setValue( 0 );
 		}
 	}
 	
 	/**
-	 * Show dialog to add a new option
+	 * Refreshes all UI components from the in-memory data.
+	 */
+	private void refreshAllUI()
+	{
+		// Refresh symptoms (distributed across columns)
+		refreshSymptomsUI();
+		
+		// Refresh other categories
+		for( ConfigKey configKey : MENTAL_STATUS_CATEGORIES )
+		{
+			refreshCategoryUI( configKey );
+		}
+		
+		for( ConfigKey configKey : POST_SESSION_ADMIN_CATEGORIES )
+		{
+			refreshCategoryUI( configKey );
+		}
+	}
+	
+	/**
+	 * Refreshes the symptoms tab by distributing options across the 4 columns.
+	 */
+	private void refreshSymptomsUI()
+	{
+		List<AssessmentOption> symptoms = optionsData.get( ConfigKey.SYMPTOMS );
+		if( symptoms == null )
+		{
+			symptoms = new ArrayList<>();
+		}
+		
+		// Distribute symptoms across columns
+		int totalItems = symptoms.size();
+		int itemsPerColumn = (int) Math.ceil( (double) totalItems / SYMPTOMS_COLUMN_COUNT );
+		
+		for( int col = 0; col < SYMPTOMS_COLUMN_COUNT; col++ )
+		{
+			int startIndex = col * itemsPerColumn;
+			int endIndex = Math.min( startIndex + itemsPerColumn, totalItems );
+			
+			List<AssessmentOption> columnItems = new ArrayList<>();
+			if( startIndex < totalItems )
+			{
+				columnItems = symptoms.subList( startIndex, endIndex );
+			}
+			
+			symptomColumnPanels.get( col ).loadOptions( new ArrayList<>( columnItems ) );
+		}
+	}
+	
+	/**
+	 * Refreshes a single category panel from in-memory data.
+	 */
+	private void refreshCategoryUI( ConfigKey configKey )
+	{
+		Pnl_ConfigurationCategory panel = categoryPanels.get( configKey );
+		if( panel != null )
+		{
+			List<AssessmentOption> options = optionsData.get( configKey );
+			panel.loadOptions( options != null ? new ArrayList<>( options ) : new ArrayList<>() );
+		}
+	}
+	
+	/**
+	 * Shows the Add Option dialog scoped to the current tab's categories.
 	 */
 	private void showAddOptionDialog()
 	{
-		JDialog dialog = new JDialog( (Frame) SwingUtilities.getWindowAncestor( this ), "Add Assessment Option", true );
+		showOptionDialog( null );
+	}
+	
+	/**
+	 * Shows the option dialog for adding or editing.
+	 * 
+	 * @param existingOption The option to edit, or null for adding new
+	 */
+	private void showOptionDialog( AssessmentOption existingOption )
+	{
+		boolean isEdit = existingOption != null;
+		String dialogTitle = isEdit ? "Edit Assessment Option" : "Add Assessment Option";
+		
+		JDialog dialog = new JDialog( (Frame) SwingUtilities.getWindowAncestor( this ), dialogTitle, true );
 		dialog.setLayout( new BorderLayout() );
 		dialog.setSize( 400, 200 );
 		dialog.setLocationRelativeTo( this );
+		
+		// Get categories for current tab
+		ConfigKey[] availableCategories = getCategoriesForCurrentTab();
 		
 		// Form panel
 		JPanel formPanel = new JPanel( new GridBagLayout() );
@@ -200,8 +360,9 @@ public class Pnl_Configuration extends JPanel
 		
 		JTextField nameField = new JTextField( 20 );
 		JTextField descriptionField = new JTextField( 20 );
-		JComboBox<ConfigKey> optionTypeComboBox = new JComboBox<>( ConfigKey.values() );
-		optionTypeComboBox.setSelectedIndex( -1 );
+		JComboBox<ConfigKey> optionTypeComboBox = new JComboBox<>( availableCategories );
+		
+		// Set up combo box renderer
 		optionTypeComboBox.setRenderer( ( list, value, index, isSelected, cellHasFocus ) ->
 		{
 			JLabel label = new JLabel();
@@ -218,6 +379,27 @@ public class Pnl_Configuration extends JPanel
 			return label;
 		} );
 		
+		// Pre-populate for edit mode
+		if( isEdit )
+		{
+			nameField.setText( existingOption.getName() );
+			nameField.setEnabled( false );
+			descriptionField.setText( existingOption.getDescription() );
+			
+			// Find and select the matching ConfigKey
+			ConfigKey matchingKey = findConfigKeyForOption( existingOption );
+			if( matchingKey != null )
+			{
+				optionTypeComboBox.setSelectedItem( matchingKey );
+			}
+			optionTypeComboBox.setEnabled( false );
+		}
+		else
+		{
+			optionTypeComboBox.setSelectedIndex( 0 );
+		}
+		
+		// Layout form fields
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.EAST;
@@ -253,7 +435,7 @@ public class Pnl_Configuration extends JPanel
 		
 		// Button panel
 		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
-		JButton saveButton = new JButton( "Save" );
+		JButton saveButton = new JButton( isEdit ? "Update" : "Save" );
 		JButton cancelButton = new JButton( "Cancel" );
 		
 		saveButton.addActionListener( e ->
@@ -274,22 +456,18 @@ public class Pnl_Configuration extends JPanel
 				return;
 			}
 			
-			try
+			if( isEdit )
 			{
-				AppController.addSingleConfigOption( selectedConfigKey, name, description );
-				ConfigOptionsTableModel tableModel = tableModels.get( selectedConfigKey );
-				if( tableModel != null )
-				{
-					loadOptions( selectedConfigKey, tableModel );
-				}
-				dialog.dispose();
-				
-				JOptionPane.showMessageDialog( this, "Option added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
+				// Update existing option in memory
+				updateOptionInMemory( existingOption, name, description );
 			}
-			catch( TherapyAppException ex )
+			else
 			{
-				AppController.showBasicErrorPopup( ex, "Error saving option:" );
+				// Add new option to memory
+				addOptionToMemory( selectedConfigKey, name, description );
 			}
+			
+			dialog.dispose();
 		} );
 		
 		cancelButton.addActionListener( e -> dialog.dispose() );
@@ -303,11 +481,172 @@ public class Pnl_Configuration extends JPanel
 		dialog.setVisible( true );
 	}
 	
+	/**
+	 * Gets the categories available for the currently selected tab.
+	 */
+	private ConfigKey[] getCategoriesForCurrentTab()
+	{
+		int selectedTab = tabbedPane.getSelectedIndex();
+		
+		switch( selectedTab )
+		{
+			case TAB_SYMPTOMS:
+				return SYMPTOMS_CATEGORIES;
+			case TAB_MENTAL_STATUS:
+				return MENTAL_STATUS_CATEGORIES;
+			case TAB_POST_SESSION_ADMIN:
+				return POST_SESSION_ADMIN_CATEGORIES;
+			default:
+				return ConfigKey.values();
+		}
+	}
+	
+	/**
+	 * Finds the ConfigKey that matches the given option's type.
+	 */
+	private ConfigKey findConfigKeyForOption( AssessmentOption option )
+	{
+		AssessmentOptionType optionType = option.getOptionType();
+		if( optionType == null )
+		{
+			return null;
+		}
+		
+		for( ConfigKey configKey : ConfigKey.values() )
+		{
+			if( configKey.getKey().equals( optionType.getDbTypeKey() ) )
+			{
+				return configKey;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Adds a new option to in-memory storage and refreshes the UI.
+	 */
+	private void addOptionToMemory( ConfigKey configKey, String name, String description )
+	{
+		// Find matching AssessmentOptionType
+		AssessmentOptionType matchingType = findAssessmentOptionType( configKey );
+		
+		if( matchingType != null )
+		{
+			AssessmentOption newOption = AssessmentOptionFactory.createAssessmentOption( nextTempId--, name, description, matchingType );
+			
+			List<AssessmentOption> options = optionsData.get( configKey );
+			if( options == null )
+			{
+				options = new ArrayList<>();
+				optionsData.put( configKey, options );
+			}
+			options.add( newOption );
+			
+			// Refresh appropriate UI
+			if( configKey == ConfigKey.SYMPTOMS )
+			{
+				refreshSymptomsUI();
+			}
+			else
+			{
+				refreshCategoryUI( configKey );
+			}
+		}
+	}
+	
+	/**
+	 * Updates an existing option in memory and refreshes the UI.
+	 */
+	private void updateOptionInMemory( AssessmentOption existingOption, String newName, String newDescription )
+	{
+		ConfigKey configKey = findConfigKeyForOption( existingOption );
+		if( configKey == null )
+		{
+			return;
+		}
+		
+		List<AssessmentOption> options = optionsData.get( configKey );
+		if( options == null )
+		{
+			return;
+		}
+		
+		// Find and update the option
+		for( int i = 0; i < options.size(); i++ )
+		{
+			AssessmentOption opt = options.get( i );
+			if( opt.getId() == existingOption.getId() )
+			{
+				AssessmentOption updatedOption = AssessmentOptionFactory.createAssessmentOption( opt.getId(), newName, newDescription,
+						opt.getOptionType() );
+				options.set( i, updatedOption );
+				break;
+			}
+		}
+		
+		// Refresh appropriate UI
+		if( configKey == ConfigKey.SYMPTOMS )
+		{
+			refreshSymptomsUI();
+		}
+		else
+		{
+			refreshCategoryUI( configKey );
+		}
+	}
+	
+	/**
+	 * Removes an option from memory and refreshes the UI.
+	 */
+	private void removeOptionFromMemory( AssessmentOption option )
+	{
+		ConfigKey configKey = findConfigKeyForOption( option );
+		if( configKey == null )
+		{
+			return;
+		}
+		
+		List<AssessmentOption> options = optionsData.get( configKey );
+		if( options != null )
+		{
+			options.removeIf( opt -> opt.getId() == option.getId() );
+		}
+		
+		// Refresh appropriate UI
+		if( configKey == ConfigKey.SYMPTOMS )
+		{
+			refreshSymptomsUI();
+		}
+		else
+		{
+			refreshCategoryUI( configKey );
+		}
+	}
+	
+	/**
+	 * Finds the AssessmentOptionType matching a ConfigKey.
+	 */
+	private AssessmentOptionType findAssessmentOptionType( ConfigKey configKey )
+	{
+		for( AssessmentOptionType type : AssessmentOptionType.values() )
+		{
+			if( type.getDbTypeKey().equals( configKey.getKey() ) )
+			{
+				return type;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Saves all options to the database.
+	 */
 	private void save()
 	{
 		try
 		{
-			AppController.saveOptions( collectAllOptions() );
+			List<AssessmentOption> allOptions = collectAllOptions();
+			AppController.saveOptions( allOptions );
 			JOptionPane.showMessageDialog( this, "Changes saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
 			AppController.returnHome( true );
 		}
@@ -318,41 +657,93 @@ public class Pnl_Configuration extends JPanel
 	}
 	
 	/**
-	 * Collects all options from all configuration tables into a list of AssessmentOption objects.
-	 * 
-	 * @return List of AssessmentOption objects from all tables
+	 * Collects all options from in-memory storage.
 	 */
 	private List<AssessmentOption> collectAllOptions()
 	{
 		List<AssessmentOption> allOptions = new ArrayList<>();
 		
-		for( Map.Entry<ConfigKey, ConfigOptionsTableModel> entry : tableModels.entrySet() )
+		for( Map.Entry<ConfigKey, List<AssessmentOption>> entry : optionsData.entrySet() )
 		{
-			ConfigKey configKey = entry.getKey();
-			ConfigOptionsTableModel tableModel = entry.getValue();
-			
-			// Find matching AssessmentOptionType
-			AssessmentOptionType matchingType = null;
-			for( AssessmentOptionType type : AssessmentOptionType.values() )
+			List<AssessmentOption> options = entry.getValue();
+			if( options != null )
 			{
-				if( type.getDbTypeKey().equals( configKey.getKey() ) )
-				{
-					matchingType = type;
-					break;
-				}
-			}
-			
-			if( matchingType != null )
-			{
-				for( int row = 0; row < tableModel.getRowCount(); row++ )
-				{
-					AssessmentOption option = AssessmentOptionFactory.createAssessmentOption( tableModel.getIdAt( row ),
-							tableModel.getNameAt( row ), tableModel.getDescriptionAt( row ), matchingType );
-					allOptions.add( option );
-				}
+				allOptions.addAll( options );
 			}
 		}
 		
 		return allOptions;
+	}
+	
+	// ============ ConfigurationOptionListener Implementation ============
+	
+	@Override
+	public void onEditRequested( AssessmentOption option )
+	{
+		showOptionDialog( option );
+	}
+	
+	@Override
+	public void onDeleteRequested( AssessmentOption option )
+	{
+		int result = JOptionPane.showConfirmDialog( this, "Are you sure you want to delete \"" + option.getName() + "\"?", "Confirm Delete",
+				JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE );
+		
+		if( result == JOptionPane.YES_OPTION )
+		{
+			// TODO implement delete
+			// removeOptionFromMemory( option );
+		}
+	}
+	
+	// ============ Inner Classes ============
+	
+	/**
+	 * A JPanel that implements Scrollable to track the viewport width. This ensures the panel shrinks when the viewport shrinks, preventing
+	 * horizontal overflow.
+	 */
+	private static class ScrollablePanel extends JPanel implements Scrollable
+	{
+		private static final long serialVersionUID = 1L;
+		
+		public ScrollablePanel( LayoutManager layout )
+		{
+			super( layout );
+			setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) );
+			setOpaque( true );
+			setBackground( AppController.getBackgroundColor() );
+		}
+		
+		@Override
+		public Dimension getPreferredScrollableViewportSize()
+		{
+			return getPreferredSize();
+		}
+		
+		@Override
+		public int getScrollableUnitIncrement( Rectangle visibleRect, int orientation, int direction )
+		{
+			return 16;
+		}
+		
+		@Override
+		public int getScrollableBlockIncrement( Rectangle visibleRect, int orientation, int direction )
+		{
+			return orientation == SwingConstants.VERTICAL ? visibleRect.height : visibleRect.width;
+		}
+		
+		@Override
+		public boolean getScrollableTracksViewportWidth()
+		{
+			// Always match viewport width - this is the key to preventing horizontal overflow
+			return true;
+		}
+		
+		@Override
+		public boolean getScrollableTracksViewportHeight()
+		{
+			// Don't track height - allow vertical scrolling
+			return false;
+		}
 	}
 }

@@ -1,7 +1,6 @@
 package com.alexpacheco.therapynotes.view.screens;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -27,9 +26,6 @@ public class Pnl_Home extends JPanel
 	private static final long serialVersionUID = -6573309009119411416L;
 	private static final String APP_TITLE = "Notes Management System";
 	private static final String APP_SUBTITLE = "Welcome back";
-	
-	private static final Color TITLE_COLOR = new Color( 74, 144, 164 ); // Matches icon color #4A90A4
-	private static final Color SUBTITLE_COLOR = new Color( 100, 116, 129 );
 	
 	private static final int ICON_SIZE = 256;
 	
@@ -77,7 +73,7 @@ public class Pnl_Home extends JPanel
 		// Title
 		lblTitle = new JLabel( APP_TITLE );
 		lblTitle.setFont( AppFonts.getScreenTitleFont() );
-		lblTitle.setForeground( TITLE_COLOR );
+		lblTitle.setForeground( AppController.getTitleColor() );
 		lblTitle.setAlignmentX( CENTER_ALIGNMENT );
 		headerPanel.add( lblTitle );
 		
@@ -89,7 +85,7 @@ public class Pnl_Home extends JPanel
 		else
 			lblSubtitle = new JLabel( APP_SUBTITLE );
 		lblSubtitle.setFont( AppFonts.createFont( Font.PLAIN, 14 ) );
-		lblSubtitle.setForeground( SUBTITLE_COLOR );
+		lblSubtitle.setForeground( AppController.getSubtitleColor() );
 		lblSubtitle.setAlignmentX( CENTER_ALIGNMENT );
 		headerPanel.add( lblSubtitle );
 		
