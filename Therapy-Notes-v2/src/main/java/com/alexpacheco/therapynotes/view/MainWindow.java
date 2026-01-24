@@ -8,6 +8,7 @@ import com.alexpacheco.therapynotes.controller.enums.Screens;
 import com.alexpacheco.therapynotes.model.entities.Note;
 import com.alexpacheco.therapynotes.util.AppIcon;
 import com.alexpacheco.therapynotes.util.AppLogger;
+import com.alexpacheco.therapynotes.view.components.HyperlinkMenuItem;
 import com.alexpacheco.therapynotes.view.dialogs.Dlg_AddPin;
 import com.alexpacheco.therapynotes.view.dialogs.Dlg_ChangePin;
 import com.alexpacheco.therapynotes.view.screens.Pnl_About;
@@ -199,6 +200,8 @@ public class MainWindow extends JFrame
 		JMenu helpMenu = new JMenu( "Help" );
 		JMenuItem aboutItem = new JMenuItem( "About" );
 		JMenuItem helpIndexItem = new JMenuItem( "Help Index" );
+		HyperlinkMenuItem reportIssueItem = new HyperlinkMenuItem( "Report a Bug",
+				"https://docs.google.com/forms/d/e/1FAIpQLSdXW5jCOQXG69NJPjNk5XZR8733EGtSRZGC7-vey6LHGzoQNA/viewform?usp=dialog" );
 		JMenuItem viewLogsItem = new JMenuItem( "View Logs" );
 		JMenuItem exportLogsItem = new JMenuItem( "Export Logs" );
 		
@@ -240,6 +243,7 @@ public class MainWindow extends JFrame
 		
 		helpMenu.add( aboutItem );
 		helpMenu.add( helpIndexItem );
+		helpMenu.add( reportIssueItem );
 		helpMenu.addSeparator();
 		helpMenu.add( viewLogsItem );
 		helpMenu.add( exportLogsItem );
