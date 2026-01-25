@@ -39,13 +39,13 @@ public abstract class Pnl_NewEditScreen extends JPanel
 		
 		// Main Panel
 		mainContentPanel = new ScrollablePanel();
-		mainContentPanel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) );
 		
 		mainScrollPane = new JScrollPane( mainContentPanel );
 		mainScrollPane.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED );
 		mainScrollPane.setHorizontalScrollBarPolicy( JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED );
 		mainScrollPane.getVerticalScrollBar().setUnitIncrement( 16 );
 		mainScrollPane.getHorizontalScrollBar().setUnitIncrement( 16 );
+		mainScrollPane.setBorder( BorderFactory.createEmptyBorder( 0, 0, 0, 0 ) );
 		mainScrollPane.getViewport().setBackground( AppController.getBackgroundColor() );
 		
 		initMainPanelComponents();
@@ -53,7 +53,9 @@ public abstract class Pnl_NewEditScreen extends JPanel
 		
 		// Footer Panel
 		footerPanel = new JPanel( new FlowLayout( FlowLayout.RIGHT, 10, 10 ) );
-		footerPanel.setBorder( BorderFactory.createEmptyBorder( 5, 10, 10, 10 ) );
+		footerPanel.setBorder(
+				BorderFactory.createCompoundBorder( BorderFactory.createMatteBorder( 1, 0, 0, 0, AppController.getSubtitleColor() ),
+						BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) ) );
 		
 		saveButton = new JButton( "Save" );
 		saveButton.addActionListener( e -> onClickSave() );
