@@ -22,7 +22,7 @@ import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-public class Pnl_NewEditClient extends JPanel
+public class Pnl_NewEditClient extends Pnl_NewEditScreen
 {
 	private static final long serialVersionUID = -4521789456123789456L;
 	private JTextField firstNameField;
@@ -42,199 +42,44 @@ public class Pnl_NewEditClient extends JPanel
 	private JLabel lastNameLabel;
 	private JLabel dateOfBirthLabel;
 	
-	private boolean isEditMode = false;
-	private Integer clientId = null;
-	
 	public Pnl_NewEditClient()
 	{
-		setLayout( new BorderLayout() );
-		
-		titleLabel = new JLabel( "New Client", SwingConstants.CENTER );
-		titleLabel.setFont( AppFonts.getScreenTitleFont() );
-		titleLabel.setBorder( BorderFactory.createEmptyBorder( 20, 0, 20, 0 ) );
-		
-		JPanel formPanel = new JPanel( new GridBagLayout() );
-		formPanel.setBorder( BorderFactory.createEmptyBorder( 20, 50, 20, 50 ) );
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.insets = new Insets( 5, 5, 5, 5 );
-		
-		firstNameField = new JTextField( 50 );
-		lastNameField = new JTextField( 50 );
-		clientCodeField = new JTextField( 10 );
-		setupClientCodeField();
-		dateOfBirthChooser = new JDateChooser();
-		dateOfBirthChooser.setDateFormatString( "MM/dd/yyyy" );
-		dateOfBirthChooser.setPreferredSize( new Dimension( 150, 25 ) );
-		dateOfBirthChooser.setMinSelectableDate( DateFormatUtil.toDate( LocalDateTime.now().minusYears( 100 ) ) );
-		dateOfBirthChooser.setMaxSelectableDate( new java.util.Date() );
-		inactiveCheckBox = new JCheckBox();
-		email1Field = new Txt_EmailAddress();
-		email2Field = new Txt_EmailAddress();
-		email3Field = new Txt_EmailAddress();
-		phone1Field = new Txt_PhoneNumber();
-		phone2Field = new Txt_PhoneNumber();
-		phone3Field = new Txt_PhoneNumber();
-		txtClientNotes = new JTextArea( 5, 50 );
-		txtClientNotes.setLineWrap( true );
-		txtClientNotes.setWrapStyleWord( true );
-		txtClientNotes.setFont( new Font( "Arial", Font.PLAIN, 12 ) );
-		
-		firstNameLabel = new JLabel();
-		lastNameLabel = new JLabel();
-		dateOfBirthLabel = new JLabel();
-		refreshLabelsText();
-		
-		// Column 0
-		gbc.gridx = 0;
-		gbc.anchor = GridBagConstraints.EAST;
-		gbc.weightx = 0.0;
-		
-		gbc.gridy = 0;
-		formPanel.add( firstNameLabel, gbc );
-		
-		gbc.gridy = 1;
-		formPanel.add( new JLabel( "Client Code: *" ), gbc );
-		
-		gbc.gridy = 2;
-		formPanel.add( new JLabel( "Email 1:" ), gbc );
-		
-		gbc.gridy = 3;
-		formPanel.add( new JLabel( "Email 2:" ), gbc );
-		
-		gbc.gridy = 4;
-		formPanel.add( new JLabel( "Email 3:" ), gbc );
-		
-		gbc.gridy = 5;
-		gbc.anchor = GridBagConstraints.NORTHEAST;
-		formPanel.add( new JLabel( "Notes:" ), gbc );
-		
-		// Column 1
-		gbc.gridx = 1;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.weightx = 1.0;
-		
-		gbc.gridy = 0;
-		formPanel.add( firstNameField, gbc );
-		
-		gbc.gridy = 1;
-		formPanel.add( clientCodeField, gbc );
-		
-		gbc.gridy = 2;
-		formPanel.add( email1Field, gbc );
-		
-		gbc.gridy = 3;
-		formPanel.add( email2Field, gbc );
-		
-		gbc.gridy = 4;
-		formPanel.add( email3Field, gbc );
-		
-		// Column 2
-		gbc.gridx = 2;
-		gbc.anchor = GridBagConstraints.EAST;
-		gbc.weightx = 0.0;
-		
-		gbc.gridy = 0;
-		formPanel.add( lastNameLabel, gbc );
-		
-		gbc.gridy = 1;
-		formPanel.add( dateOfBirthLabel, gbc );
-		
-		gbc.gridy = 2;
-		formPanel.add( new JLabel( "Phone 1:" ), gbc );
-		
-		gbc.gridy = 3;
-		formPanel.add( new JLabel( "Phone 2:" ), gbc );
-		
-		gbc.gridy = 4;
-		formPanel.add( new JLabel( "Phone 3:" ), gbc );
-		
-		// Column 3
-		gbc.gridx = 3;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.weightx = 1.0;
-		
-		gbc.gridy = 0;
-		formPanel.add( lastNameField, gbc );
-		
-		gbc.gridy = 1;
-		// Create a panel to hold both date of birth and inactive checkbox
-		JPanel dobInactivePanel = new JPanel( new FlowLayout( FlowLayout.LEFT, 10, 0 ) );
-		dobInactivePanel.add( dateOfBirthChooser );
-		dobInactivePanel.add( new JLabel( "Inactive:" ) );
-		dobInactivePanel.add( inactiveCheckBox );
-		formPanel.add( dobInactivePanel, gbc );
-		
-		gbc.gridy = 2;
-		formPanel.add( phone1Field, gbc );
-		
-		gbc.gridy = 3;
-		formPanel.add( phone2Field, gbc );
-		
-		gbc.gridy = 4;
-		formPanel.add( phone3Field, gbc );
-		
-		gbc.gridx = 1;
-		gbc.anchor = GridBagConstraints.CENTER;
-		gbc.gridwidth = 3;
-		gbc.gridy = 5;
-		JScrollPane scrollPane = new JScrollPane( txtClientNotes );
-		Dimension textAreaSize = txtClientNotes.getPreferredSize();
-		scrollPane.setPreferredSize( textAreaSize );
-		scrollPane.setMinimumSize( new Dimension( textAreaSize.width, textAreaSize.height + 5 ) );
-		formPanel.add( scrollPane, gbc );
-		
-		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER, 10, 10 ) );
-		buttonPanel.setBorder( BorderFactory.createEmptyBorder( 10, 0, 20, 0 ) );
-		
-		JButton saveButton = new JButton( "Save" );
-		JButton cancelButton = new JButton( "Cancel" );
-		
-		saveButton.addActionListener( e -> saveClient() );
-		cancelButton.addActionListener( e -> cancel() );
-		
-		buttonPanel.add( cancelButton );
-		buttonPanel.add( saveButton );
-		
-		add( titleLabel, BorderLayout.NORTH );
-		add( formPanel, BorderLayout.CENTER );
-		add( buttonPanel, BorderLayout.SOUTH );
-		
-		clearForm();
+		super();
 	}
 	
-	/**
-	 * Set the panel to edit mode and load the client data
-	 * 
-	 * @param clientId The ID of the client to edit
-	 */
-	public void setEditMode( Integer clientId )
+	@Override
+	public void clearForm()
 	{
-		this.isEditMode = true;
-		this.clientId = clientId;
-		this.titleLabel.setText( "Edit Client" );
-		this.clientCodeField.setEnabled( false );
-		
-		loadClientData( clientId );
+		firstNameField.setText( "" );
+		lastNameField.setText( "" );
+		clientCodeField.setText( "" );
+		dateOfBirthChooser.setDate( null );
+		inactiveCheckBox.setSelected( false );
+		email1Field.setText( "" );
+		email2Field.setText( "" );
+		email3Field.setText( "" );
+		phone1Field.setText( "" );
+		phone2Field.setText( "" );
+		phone3Field.setText( "" );
+		txtClientNotes.setText( "" );
 	}
 	
-	/**
-	 * Set the panel to create mode (default)
-	 */
-	public void setCreateMode()
+	@Override
+	public void refreshLabelsText()
 	{
-		this.isEditMode = false;
-		this.clientId = null;
-		this.titleLabel.setText( "New Client" );
-		this.clientCodeField.setEnabled( true );
-		clearForm();
+		firstNameLabel.setText( "First Name:" + ( PreferencesUtil.isClientFirstNameRequired() ? " *" : "" ) );
+		lastNameLabel.setText( "Last Name:" + ( PreferencesUtil.isClientLastNameRequired() ? " *" : "" ) );
+		dateOfBirthLabel.setText( "Date of Birth:" + ( PreferencesUtil.isClientDOBRequired() ? " *" : "" ) );
+		this.repaint();
+		this.revalidate();
 	}
 	
-	private void loadClientData( Integer clientId )
+	@Override
+	protected void loadEntityData( Integer entityId )
 	{
 		try
 		{
-			Client client = AppController.getClientById( clientId );
+			Client client = AppController.getClientById( entityId );
 			
 			if( client != null )
 			{
@@ -271,98 +116,22 @@ public class Pnl_NewEditClient extends JPanel
 		}
 	}
 	
-	private void setupClientCodeField()
+	@Override
+	protected void doNewSave( Object entity ) throws TherapyAppException
 	{
-		( (AbstractDocument) clientCodeField.getDocument() ).setDocumentFilter( new DocumentFilter()
-		{
-			@Override
-			public void insertString( FilterBypass fb, int offset, String string, AttributeSet attr ) throws BadLocationException
-			{
-				String upperString = string.toUpperCase();
-				if( fb.getDocument().getLength() + upperString.length() <= 10 )
-				{
-					super.insertString( fb, offset, upperString, attr );
-				}
-			}
-			
-			@Override
-			public void replace( FilterBypass fb, int offset, int length, String text, AttributeSet attrs ) throws BadLocationException
-			{
-				String upperText = text.toUpperCase();
-				int currentLength = fb.getDocument().getLength();
-				int newLength = currentLength - length + upperText.length();
-				
-				if( newLength <= 10 )
-				{
-					super.replace( fb, offset, length, upperText, attrs );
-				}
-			}
-		} );
+		AppController.createClient( (Client) entity );
+		JOptionPane.showMessageDialog( this, "Client created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
 	}
 	
-	private void saveClient()
+	@Override
+	protected void doEditSave( Object entity ) throws TherapyAppException
 	{
-		if( !_isDataValid() )
-		{
-			return;
-		}
-		
-		Client client = _collectClientData();
-		if( !_isEveryRequiredFieldFilled( client ) )
-		{
-			return;
-		}
-		
-		try
-		{
-			if( isEditMode )
-			{
-				AppController.updateClient( client );
-				JOptionPane.showMessageDialog( this, "Client updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
-				clearForm();
-				setCreateMode();
-				AppController.returnHome( true );
-			}
-			else
-			{
-				AppController.createClient( client );
-				JOptionPane.showMessageDialog( this, "Client created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
-				clearForm();
-				setCreateMode();
-			}
-		}
-		catch( TherapyAppException e )
-		{
-			AppController.showBasicErrorPopup( e, "Error saving client:" );
-		}
+		AppController.updateClient( (Client) entity );
+		JOptionPane.showMessageDialog( this, "Client updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
 	}
 	
-	private Client _collectClientData()
-	{
-		Client client = new Client();
-		if( isEditMode )
-		{
-			client.setClientId( clientId );
-		}
-		client.setFirstName( firstNameField.getText().trim() );
-		client.setLastName( lastNameField.getText().trim() );
-		client.setClientCode( clientCodeField.getText().trim() );
-		if( dateOfBirthChooser.getDate() != null )
-		{
-			client.setDateOfBirth( dateOfBirthChooser.getDate() );
-		}
-		client.setInactive( inactiveCheckBox.isSelected() );
-		client.setEmail1( email1Field.getText().trim() );
-		client.setEmail2( email2Field.getText().trim() );
-		client.setEmail3( email3Field.getText().trim() );
-		client.setPhone1( phone1Field.getText().trim() );
-		client.setPhone2( phone2Field.getText().trim() );
-		client.setPhone3( phone3Field.getText().trim() );
-		client.setClientNotes( txtClientNotes.getText() );
-		return client;
-	}
-	
-	private boolean _isDataValid()
+	@Override
+	protected boolean isDataValid()
 	{
 		Date chosenDate = dateOfBirthChooser.getDate();
 		if( chosenDate != null && ( chosenDate.after( new java.util.Date() )
@@ -399,11 +168,12 @@ public class Pnl_NewEditClient extends JPanel
 		return true;
 	}
 	
-	private boolean _isEveryRequiredFieldFilled( Client client )
+	@Override
+	protected boolean isEveryRequiredFieldFilled( Object entity )
 	{
 		try
 		{
-			EntityValidator.validateClient( client );
+			EntityValidator.validateClient( (Client) entity );
 		}
 		catch( TherapyAppException e )
 		{
@@ -414,41 +184,243 @@ public class Pnl_NewEditClient extends JPanel
 		return true;
 	}
 	
-	private void cancel()
+	@Override
+	protected Object collectEntityData()
 	{
-		int result = JOptionPane.showConfirmDialog( this, "Are you sure you want to cancel? Any unsaved changes will be lost.",
-				"Cancel Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE );
-		
-		if( result == JOptionPane.YES_OPTION )
+		Client client = new Client();
+		if( isEditMode )
 		{
-			clearForm();
-			setCreateMode();
-			AppController.returnHome( true );
+			client.setClientId( entityId );
+		}
+		client.setFirstName( firstNameField.getText().trim() );
+		client.setLastName( lastNameField.getText().trim() );
+		client.setClientCode( clientCodeField.getText().trim() );
+		if( dateOfBirthChooser.getDate() != null )
+		{
+			client.setDateOfBirth( dateOfBirthChooser.getDate() );
+		}
+		client.setInactive( inactiveCheckBox.isSelected() );
+		client.setEmail1( email1Field.getText().trim() );
+		client.setEmail2( email2Field.getText().trim() );
+		client.setEmail3( email3Field.getText().trim() );
+		client.setPhone1( phone1Field.getText().trim() );
+		client.setPhone2( phone2Field.getText().trim() );
+		client.setPhone3( phone3Field.getText().trim() );
+		client.setClientNotes( txtClientNotes.getText() );
+		return client;
+	}
+	
+	@Override
+	protected void showSaveError( TherapyAppException e )
+	{
+		AppController.showBasicErrorPopup( e, "Error saving client:" );
+	}
+	
+	@Override
+	protected void toggleTitleLabel()
+	{
+		if( isEditMode )
+		{
+			titleLabel.setText( "Edit Client" );
+		}
+		else
+		{
+			titleLabel.setText( "New Client" );
 		}
 	}
 	
-	public void clearForm()
+	@Override
+	protected void initHeaderPanelComponents()
 	{
-		firstNameField.setText( "" );
-		lastNameField.setText( "" );
-		clientCodeField.setText( "" );
-		dateOfBirthChooser.setDate( null );
-		inactiveCheckBox.setSelected( false );
-		email1Field.setText( "" );
-		email2Field.setText( "" );
-		email3Field.setText( "" );
-		phone1Field.setText( "" );
-		phone2Field.setText( "" );
-		phone3Field.setText( "" );
-		txtClientNotes.setText( "" );
+		titleLabel = new JLabel( "New Client", SwingConstants.CENTER );
+		titleLabel.setFont( AppFonts.getScreenTitleFont() );
+		titleLabel.setForeground( AppController.getTitleColor() );
+		titleLabel.setBorder( BorderFactory.createEmptyBorder( 20, 0, 20, 0 ) );
+		headerPanel.add( titleLabel );
 	}
 	
-	public void refreshLabelsText()
+	@Override
+	protected void initMainPanelComponents()
 	{
-		firstNameLabel.setText( "First Name:" + ( PreferencesUtil.isClientFirstNameRequired() ? " *" : "" ) );
-		lastNameLabel.setText( "Last Name:" + ( PreferencesUtil.isClientLastNameRequired() ? " *" : "" ) );
-		dateOfBirthLabel.setText( "Date of Birth:" + ( PreferencesUtil.isClientDOBRequired() ? " *" : "" ) );
-		this.repaint();
-		this.revalidate();
+		mainContentPanel.setLayout( new GridBagLayout() );
+		mainContentPanel.setBorder( BorderFactory.createEmptyBorder( 20, 50, 20, 50 ) );
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets( 5, 5, 5, 5 );
+		
+		firstNameField = new JTextField( 50 );
+		lastNameField = new JTextField( 50 );
+		clientCodeField = new JTextField( 10 );
+		setupClientCodeField();
+		dateOfBirthChooser = new JDateChooser();
+		dateOfBirthChooser.setFont( AppFonts.getTextFieldFont() );
+		dateOfBirthChooser.setDateFormatString( "MM/dd/yyyy" );
+		dateOfBirthChooser.setPreferredSize( new Dimension( 150, 25 ) );
+		dateOfBirthChooser.setMinSelectableDate( DateFormatUtil.toDate( LocalDateTime.now().minusYears( 100 ) ) );
+		dateOfBirthChooser.setMaxSelectableDate( new java.util.Date() );
+		inactiveCheckBox = new JCheckBox();
+		inactiveCheckBox.setBackground( AppController.getBackgroundColor() );
+		email1Field = new Txt_EmailAddress();
+		email2Field = new Txt_EmailAddress();
+		email3Field = new Txt_EmailAddress();
+		phone1Field = new Txt_PhoneNumber();
+		phone2Field = new Txt_PhoneNumber();
+		phone3Field = new Txt_PhoneNumber();
+		txtClientNotes = new JTextArea( 5, 50 );
+		txtClientNotes.setLineWrap( true );
+		txtClientNotes.setWrapStyleWord( true );
+		txtClientNotes.setFont( AppFonts.getTextFieldFont() );
+		
+		firstNameLabel = new JLabel();
+		lastNameLabel = new JLabel();
+		dateOfBirthLabel = new JLabel();
+		refreshLabelsText();
+		
+		// Column 0
+		gbc.gridx = 0;
+		gbc.anchor = GridBagConstraints.EAST;
+		gbc.weightx = 0.0;
+		
+		gbc.gridy = 0;
+		mainContentPanel.add( firstNameLabel, gbc );
+		
+		gbc.gridy = 1;
+		mainContentPanel.add( new JLabel( "Client Code: *" ), gbc );
+		
+		gbc.gridy = 2;
+		mainContentPanel.add( new JLabel( "Email 1:" ), gbc );
+		
+		gbc.gridy = 3;
+		mainContentPanel.add( new JLabel( "Email 2:" ), gbc );
+		
+		gbc.gridy = 4;
+		mainContentPanel.add( new JLabel( "Email 3:" ), gbc );
+		
+		gbc.gridy = 5;
+		gbc.anchor = GridBagConstraints.NORTHEAST;
+		mainContentPanel.add( new JLabel( "Notes:" ), gbc );
+		
+		// Column 1
+		gbc.gridx = 1;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.weightx = 1.0;
+		
+		gbc.gridy = 0;
+		mainContentPanel.add( firstNameField, gbc );
+		
+		gbc.gridy = 1;
+		mainContentPanel.add( clientCodeField, gbc );
+		
+		gbc.gridy = 2;
+		mainContentPanel.add( email1Field, gbc );
+		
+		gbc.gridy = 3;
+		mainContentPanel.add( email2Field, gbc );
+		
+		gbc.gridy = 4;
+		mainContentPanel.add( email3Field, gbc );
+		
+		// Column 2
+		gbc.gridx = 2;
+		gbc.anchor = GridBagConstraints.EAST;
+		gbc.weightx = 0.0;
+		
+		gbc.gridy = 0;
+		mainContentPanel.add( lastNameLabel, gbc );
+		
+		gbc.gridy = 1;
+		mainContentPanel.add( dateOfBirthLabel, gbc );
+		
+		gbc.gridy = 2;
+		mainContentPanel.add( new JLabel( "Phone 1:" ), gbc );
+		
+		gbc.gridy = 3;
+		mainContentPanel.add( new JLabel( "Phone 2:" ), gbc );
+		
+		gbc.gridy = 4;
+		mainContentPanel.add( new JLabel( "Phone 3:" ), gbc );
+		
+		// Column 3
+		gbc.gridx = 3;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.weightx = 1.0;
+		
+		gbc.gridy = 0;
+		mainContentPanel.add( lastNameField, gbc );
+		
+		gbc.gridy = 1;
+		// Create a panel to hold both date of birth and inactive checkbox
+		JPanel dobInactivePanel = new JPanel( new FlowLayout( FlowLayout.LEFT, 10, 0 ) );
+		dobInactivePanel.add( dateOfBirthChooser );
+		dobInactivePanel.add( new JLabel( "Inactive:" ) );
+		dobInactivePanel.add( inactiveCheckBox );
+		dobInactivePanel.setBackground( AppController.getBackgroundColor() );
+		mainContentPanel.add( dobInactivePanel, gbc );
+		
+		gbc.gridy = 2;
+		mainContentPanel.add( phone1Field, gbc );
+		
+		gbc.gridy = 3;
+		mainContentPanel.add( phone2Field, gbc );
+		
+		gbc.gridy = 4;
+		mainContentPanel.add( phone3Field, gbc );
+		
+		gbc.gridx = 1;
+		gbc.anchor = GridBagConstraints.CENTER;
+		gbc.gridwidth = 3;
+		gbc.gridy = 5;
+		JScrollPane scrollPane = new JScrollPane( txtClientNotes );
+		Dimension textAreaSize = txtClientNotes.getPreferredSize();
+		scrollPane.setPreferredSize( textAreaSize );
+		scrollPane.setMinimumSize( new Dimension( textAreaSize.width, textAreaSize.height + 5 ) );
+		mainContentPanel.add( scrollPane, gbc );
+	}
+	
+	private void setupClientCodeField()
+	{
+		( (AbstractDocument) clientCodeField.getDocument() ).setDocumentFilter( new DocumentFilter()
+		{
+			@Override
+			public void insertString( FilterBypass fb, int offset, String string, AttributeSet attr ) throws BadLocationException
+			{
+				String upperString = string.toUpperCase();
+				if( fb.getDocument().getLength() + upperString.length() <= 10 )
+				{
+					super.insertString( fb, offset, upperString, attr );
+				}
+			}
+			
+			@Override
+			public void replace( FilterBypass fb, int offset, int length, String text, AttributeSet attrs ) throws BadLocationException
+			{
+				String upperText = text.toUpperCase();
+				int currentLength = fb.getDocument().getLength();
+				int newLength = currentLength - length + upperText.length();
+				
+				if( newLength <= 10 )
+				{
+					super.replace( fb, offset, length, upperText, attrs );
+				}
+			}
+		} );
+	}
+	
+	@Override
+	protected void initFooterComponents()
+	{
+		
+	}
+	
+	@Override
+	protected void disableUneditableFields()
+	{
+		clientCodeField.setEnabled( false );
+	}
+	
+	@Override
+	protected void enableUneditableFields()
+	{
+		clientCodeField.setEnabled( true );
 	}
 }

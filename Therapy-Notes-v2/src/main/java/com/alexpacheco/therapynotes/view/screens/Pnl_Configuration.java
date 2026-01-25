@@ -1,15 +1,12 @@
 package com.alexpacheco.therapynotes.view.screens;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.LayoutManager;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -26,7 +23,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import javax.swing.Scrollable;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -40,6 +36,7 @@ import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentO
 import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.util.JavaUtils;
 import com.alexpacheco.therapynotes.view.components.Pnl_ConfigurationOption;
+import com.alexpacheco.therapynotes.view.components.ScrollablePanel;
 import com.alexpacheco.therapynotes.view.components.Pnl_ConfigurationCategory;
 
 /**
@@ -693,57 +690,6 @@ public class Pnl_Configuration extends JPanel implements Pnl_ConfigurationOption
 		{
 			// TODO implement delete
 			// removeOptionFromMemory( option );
-		}
-	}
-	
-	// ============ Inner Classes ============
-	
-	/**
-	 * A JPanel that implements Scrollable to track the viewport width. This ensures the panel shrinks when the viewport shrinks, preventing
-	 * horizontal overflow.
-	 */
-	private static class ScrollablePanel extends JPanel implements Scrollable
-	{
-		private static final long serialVersionUID = 1L;
-		
-		public ScrollablePanel( LayoutManager layout )
-		{
-			super( layout );
-			setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) );
-			setOpaque( true );
-			setBackground( AppController.getBackgroundColor() );
-		}
-		
-		@Override
-		public Dimension getPreferredScrollableViewportSize()
-		{
-			return getPreferredSize();
-		}
-		
-		@Override
-		public int getScrollableUnitIncrement( Rectangle visibleRect, int orientation, int direction )
-		{
-			return 16;
-		}
-		
-		@Override
-		public int getScrollableBlockIncrement( Rectangle visibleRect, int orientation, int direction )
-		{
-			return orientation == SwingConstants.VERTICAL ? visibleRect.height : visibleRect.width;
-		}
-		
-		@Override
-		public boolean getScrollableTracksViewportWidth()
-		{
-			// Always match viewport width - this is the key to preventing horizontal overflow
-			return true;
-		}
-		
-		@Override
-		public boolean getScrollableTracksViewportHeight()
-		{
-			// Don't track height - allow vertical scrolling
-			return false;
 		}
 	}
 }
