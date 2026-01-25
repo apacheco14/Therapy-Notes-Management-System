@@ -542,7 +542,7 @@ public class Pnl_ViewClientDetails extends JPanel
 		{
 			if( isPushed && noteId != null )
 			{
-				AppController.openNote( noteId );
+				AppController.editNote( noteId );
 			}
 			isPushed = false;
 			return noteId;

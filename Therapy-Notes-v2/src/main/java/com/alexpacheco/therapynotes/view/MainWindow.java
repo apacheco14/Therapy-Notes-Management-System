@@ -5,7 +5,6 @@ import javax.swing.*;
 import com.alexpacheco.therapynotes.controller.Exporter;
 import com.alexpacheco.therapynotes.controller.PinManager;
 import com.alexpacheco.therapynotes.controller.enums.Screens;
-import com.alexpacheco.therapynotes.model.entities.Note;
 import com.alexpacheco.therapynotes.util.AppIcon;
 import com.alexpacheco.therapynotes.util.AppLogger;
 import com.alexpacheco.therapynotes.view.components.HyperlinkMenuItem;
@@ -348,9 +347,9 @@ public class MainWindow extends JFrame
 		settingsMenu.repaint();
 	}
 	
-	public void openNote( Note note )
+	public void editNote( Integer noteId )
 	{
 		_changeScreen( Screens.NEW_EDIT_NOTE );
-		newEditNotePanel.loadNote( note );
+		newEditNotePanel.setEditMode( noteId );
 	}
 }

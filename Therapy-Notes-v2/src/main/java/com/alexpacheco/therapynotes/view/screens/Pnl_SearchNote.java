@@ -177,7 +177,7 @@ public class Pnl_SearchNote extends JPanel
 				button.addActionListener( e ->
 				{
 					Integer noteId = (Integer) tableModel.getNoteIdAt( currentRow );
-					AppController.openNote( noteId );
+					AppController.editNote( noteId );
 					fireEditingStopped();
 				} );
 				return button;

@@ -471,23 +471,8 @@ public class AppController
 		} );
 	}
 	
-	public static void openNote( Integer noteId )
+	public static void editNote( Integer noteId )
 	{
-		try
-		{
-			Note note = AppController.getNote( noteId );
-			if( note != null )
-			{
-				window.openNote( note );
-			}
-			else
-			{
-				JOptionPane.showMessageDialog( window, "Note not found.", "Error", JOptionPane.ERROR_MESSAGE );
-			}
-		}
-		catch( TherapyAppException e )
-		{
-			AppController.showBasicErrorPopup( e, "Error loading note:" );
-		}
+		window.editNote( noteId );
 	}
 }

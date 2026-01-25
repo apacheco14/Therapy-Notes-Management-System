@@ -227,176 +227,6 @@ public class Pnl_NewEditNote extends Pnl_NewEditScreen
 	}
 	
 	/**
-	 * Loads an existing note for editing.
-	 * 
-	 * @param note The note to load
-	 */
-	public void loadNote( Note note )
-	{
-		if( note == null )
-		{
-			return;
-		}
-		
-		entityId = note.getNoteId();
-		
-		// Session Info
-		if( note.getClient() != null )
-		{
-			selectClientById( note.getClient().getClientId() );
-		}
-		if( note.getApptDateTime() != null )
-		{
-			dateAppointment.setDate( DateFormatUtil.toDate( note.getApptDateTime() ) );
-			lblHeaderAppointmentDate.setText( DateFormatUtil.toSimpleString( DateFormatUtil.toDate( note.getApptDateTime() ) ) );
-		}
-		cmbDiagnosis.setDiagnosis( note.getDiagnosis() );
-		txtSessionNumber.setText( note.getSessionNumber() != null ? String.valueOf( note.getSessionNumber() ) : "" );
-		txtLengthOfSession.setText( note.getSessionLength() );
-		txtAppointmentComment.setText( note.getApptComment() );
-		chkVirtual.setSelected( note.isVirtualAppt() );
-		
-		// Clinical Symptoms
-		List<Symptom> symptoms = note.getSymptoms();
-		if( symptoms != null )
-		{
-			List<Integer> selectedSymptomIds = symptoms.stream().map( Symptom::getSymptomId ).toList();
-			for( AssessmentOptionCheckBox checkbox : symptomCheckboxes )
-			{
-				checkbox.setSelected( selectedSymptomIds.contains( checkbox.getAssessmentOptionId() ) );
-			}
-		}
-		
-		// Narrative
-		txtNarrative.setText( note.getNarrative() );
-		
-		// Mental Status
-		loadMentalStatusFromNote( note );
-		
-		// Administrative
-		loadAdministrativeFromNote( note );
-		
-		// Certification
-		if( note.getCertifiedDate() != null )
-		{
-			chkCertification.setSelected( true );
-			certificationTimestamp = note.getCertifiedDate();
-			txtCertificationTimestamp.setText( certificationTimestamp.format( TIMESTAMP_FORMATTER ) );
-			txtCertificationTimestamp.setVisible( true );
-		}
-		
-		isEditMode = true;
-	}
-	
-	/**
-	 * Selects a client in the dropdown by ID.
-	 */
-	private void selectClientById( Integer clientId )
-	{
-		if( clientId == null )
-		{
-			cmbClient.setSelectedIndex( -1 );
-			lblHeaderClientName.setText( "" );
-			return;
-		}
-		
-		cmbClient.selectByClientId( clientId );
-		lblHeaderClientName.setText( (String) cmbClient.getSelectedItem() );
-	}
-	
-	/**
-	 * Loads mental status selections from a note.
-	 */
-	private void loadMentalStatusFromNote( Note note )
-	{
-		// Appearance
-		if( note.getAppearance() != null )
-		{
-			selectRadioButton( mentalStatusRadioButtons.get( AssessmentOptionType.APPEARANCE ), note.getAppearance().getId() );
-		}
-		mentalStatusNoteFields.get( AssessmentOptionType.APPEARANCE ).setText( note.getAppearanceComment() );
-		
-		// Speech
-		if( note.getSpeech() != null )
-		{
-			selectRadioButton( mentalStatusRadioButtons.get( AssessmentOptionType.SPEECH ), note.getSpeech().getId() );
-		}
-		mentalStatusNoteFields.get( AssessmentOptionType.SPEECH ).setText( note.getSpeechComment() );
-		
-		// Affect
-		if( note.getAffect() != null )
-		{
-			selectRadioButton( mentalStatusRadioButtons.get( AssessmentOptionType.AFFECT ), note.getAffect().getId() );
-		}
-		mentalStatusNoteFields.get( AssessmentOptionType.AFFECT ).setText( note.getAffectComment() );
-		
-		// Eye Contact
-		if( note.getEyeContact() != null )
-		{
-			selectRadioButton( mentalStatusRadioButtons.get( AssessmentOptionType.EYE_CONTACT ), note.getEyeContact().getId() );
-		}
-		mentalStatusNoteFields.get( AssessmentOptionType.EYE_CONTACT ).setText( note.getEyeContactComment() );
-	}
-	
-	/**
-	 * Loads administrative selections from a note.
-	 */
-	private void loadAdministrativeFromNote( Note note )
-	{
-		// Referrals
-		List<Referral> referrals = note.getReferrals();
-		if( referrals != null )
-		{
-			List<Integer> referralTypeIds = referrals.stream().map( Referral::getReferralTypeId ).toList();
-			for( AssessmentOptionCheckBox checkbox : referralCheckboxes )
-			{
-				checkbox.setSelected( referralTypeIds.contains( checkbox.getAssessmentOptionId() ) );
-			}
-			txtReferralsNotes.setText( note.getReferralComment() );
-		}
-		
-		// Collateral Contacts
-		List<CollateralContact> collateralContacts = note.getCollateralContacts();
-		if( collateralContacts != null )
-		{
-			List<Integer> collateralContactTypeIds = collateralContacts.stream().map( CollateralContact::getCollateralContactTypeId )
-					.toList();
-			for( AssessmentOptionCheckBox checkbox : collateralContactCheckboxes )
-			{
-				checkbox.setSelected( collateralContactTypeIds.contains( checkbox.getAssessmentOptionId() ) );
-			}
-			txtCollateralContactsNotes.setText( note.getCollateralContactComment() );
-		}
-		
-		// Next Appointment
-		if( note.getNextAppt() != null )
-		{
-			selectRadioButton( nextAppointmentRadioButtons, note.getNextAppt().getId() );
-		}
-		txtNextAppointmentNotes.setText( note.getNextApptComment() );
-	}
-	
-	/**
-	 * Selects a radio button by option ID.
-	 */
-	private void selectRadioButton( List<AssessmentOptionRadioButton> radioButtons, Integer optionId )
-	{
-		if( radioButtons == null || optionId == null )
-		{
-			return;
-		}
-		
-		for( AssessmentOptionRadioButton radioButton : radioButtons )
-		{
-			if( radioButton.getAssessmentOptionId().equals( optionId ) )
-			{
-				radioButton.setSelected( true );
-				return;
-			}
-		}
-	}
-	
-	/**
 	 * Exports the note to a DOCX file.
 	 */
 	private void exportToDocx()
@@ -1172,7 +1002,185 @@ public class Pnl_NewEditNote extends Pnl_NewEditScreen
 	@Override
 	protected void loadEntityData( Integer entityId )
 	{
+		try
+		{
+			Note note = AppController.getNote( entityId );
+			if( note != null )
+			{
+				displayNoteData( note );
+			}
+			else
+			{
+				JOptionPane.showMessageDialog( this, "Note not found.", "Error", JOptionPane.ERROR_MESSAGE );
+				setCreateMode();
+			}
+		}
+		catch( TherapyAppException e )
+		{
+			AppController.showBasicErrorPopup( e, "Error loading note data:" );
+			setCreateMode();
+		}
+	}
+	
+	/**
+	 * Loads an existing note for editing.
+	 * 
+	 * @param note The note to load
+	 */
+	private void displayNoteData( Note note )
+	{
+		// Session Info
+		if( note.getClient() != null )
+		{
+			selectClientById( note.getClient().getClientId() );
+		}
+		if( note.getApptDateTime() != null )
+		{
+			dateAppointment.setDate( DateFormatUtil.toDate( note.getApptDateTime() ) );
+			lblHeaderAppointmentDate.setText( DateFormatUtil.toSimpleString( DateFormatUtil.toDate( note.getApptDateTime() ) ) );
+		}
+		cmbDiagnosis.setDiagnosis( note.getDiagnosis() );
+		txtSessionNumber.setText( note.getSessionNumber() != null ? String.valueOf( note.getSessionNumber() ) : "" );
+		txtLengthOfSession.setText( note.getSessionLength() );
+		txtAppointmentComment.setText( note.getApptComment() );
+		chkVirtual.setSelected( note.isVirtualAppt() );
 		
+		// Clinical Symptoms
+		List<Symptom> symptoms = note.getSymptoms();
+		if( symptoms != null )
+		{
+			List<Integer> selectedSymptomIds = symptoms.stream().map( Symptom::getSymptomId ).toList();
+			for( AssessmentOptionCheckBox checkbox : symptomCheckboxes )
+			{
+				checkbox.setSelected( selectedSymptomIds.contains( checkbox.getAssessmentOptionId() ) );
+			}
+		}
+		
+		// Narrative
+		txtNarrative.setText( note.getNarrative() );
+		
+		// Mental Status
+		loadMentalStatusFromNote( note );
+		
+		// Administrative
+		loadAdministrativeFromNote( note );
+		
+		// Certification
+		if( note.getCertifiedDate() != null )
+		{
+			chkCertification.setSelected( true );
+			certificationTimestamp = note.getCertifiedDate();
+			txtCertificationTimestamp.setText( certificationTimestamp.format( TIMESTAMP_FORMATTER ) );
+			txtCertificationTimestamp.setVisible( true );
+		}
+	}
+	
+	/**
+	 * Selects a client in the dropdown by ID.
+	 */
+	private void selectClientById( Integer clientId )
+	{
+		if( clientId == null )
+		{
+			cmbClient.setSelectedIndex( -1 );
+			lblHeaderClientName.setText( "" );
+			return;
+		}
+		
+		cmbClient.selectByClientId( clientId );
+		lblHeaderClientName.setText( (String) cmbClient.getSelectedItem() );
+	}
+	
+	/**
+	 * Loads mental status selections from a note.
+	 */
+	private void loadMentalStatusFromNote( Note note )
+	{
+		// Appearance
+		if( note.getAppearance() != null )
+		{
+			selectRadioButton( mentalStatusRadioButtons.get( AssessmentOptionType.APPEARANCE ), note.getAppearance().getId() );
+		}
+		mentalStatusNoteFields.get( AssessmentOptionType.APPEARANCE ).setText( note.getAppearanceComment() );
+		
+		// Speech
+		if( note.getSpeech() != null )
+		{
+			selectRadioButton( mentalStatusRadioButtons.get( AssessmentOptionType.SPEECH ), note.getSpeech().getId() );
+		}
+		mentalStatusNoteFields.get( AssessmentOptionType.SPEECH ).setText( note.getSpeechComment() );
+		
+		// Affect
+		if( note.getAffect() != null )
+		{
+			selectRadioButton( mentalStatusRadioButtons.get( AssessmentOptionType.AFFECT ), note.getAffect().getId() );
+		}
+		mentalStatusNoteFields.get( AssessmentOptionType.AFFECT ).setText( note.getAffectComment() );
+		
+		// Eye Contact
+		if( note.getEyeContact() != null )
+		{
+			selectRadioButton( mentalStatusRadioButtons.get( AssessmentOptionType.EYE_CONTACT ), note.getEyeContact().getId() );
+		}
+		mentalStatusNoteFields.get( AssessmentOptionType.EYE_CONTACT ).setText( note.getEyeContactComment() );
+	}
+	
+	/**
+	 * Loads administrative selections from a note.
+	 */
+	private void loadAdministrativeFromNote( Note note )
+	{
+		// Referrals
+		List<Referral> referrals = note.getReferrals();
+		if( referrals != null )
+		{
+			List<Integer> referralTypeIds = referrals.stream().map( Referral::getReferralTypeId ).toList();
+			for( AssessmentOptionCheckBox checkbox : referralCheckboxes )
+			{
+				checkbox.setSelected( referralTypeIds.contains( checkbox.getAssessmentOptionId() ) );
+			}
+			txtReferralsNotes.setText( note.getReferralComment() );
+		}
+		
+		// Collateral Contacts
+		List<CollateralContact> collateralContacts = note.getCollateralContacts();
+		if( collateralContacts != null )
+		{
+			List<Integer> collateralContactTypeIds = collateralContacts.stream().map( CollateralContact::getCollateralContactTypeId )
+					.toList();
+			for( AssessmentOptionCheckBox checkbox : collateralContactCheckboxes )
+			{
+				checkbox.setSelected( collateralContactTypeIds.contains( checkbox.getAssessmentOptionId() ) );
+			}
+			txtCollateralContactsNotes.setText( note.getCollateralContactComment() );
+		}
+		
+		// Next Appointment
+		if( note.getNextAppt() != null )
+		{
+			selectRadioButton( nextAppointmentRadioButtons, note.getNextAppt().getId() );
+		}
+		txtNextAppointmentNotes.setText( note.getNextApptComment() );
+	}
+	
+	/**
+	 * Selects a radio button by option ID.
+	 */
+	private void selectRadioButton( List<AssessmentOptionRadioButton> radioButtons, Integer optionId )
+	{
+		if( radioButtons == null || optionId == null )
+		{
+			return;
+		}
+		
+		for( AssessmentOptionRadioButton radioButton : radioButtons )
+		{
+			if( radioButton.getAssessmentOptionId().equals( optionId ) )
+			{
+				radioButton.setSelected( true );
+				return;
+			}
+		}
 	}
 	
 	@Override
