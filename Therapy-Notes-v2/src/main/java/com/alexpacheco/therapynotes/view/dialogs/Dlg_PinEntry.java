@@ -3,7 +3,9 @@ package com.alexpacheco.therapynotes.view.dialogs;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.PinManager;
+import com.alexpacheco.therapynotes.util.AppFonts;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -60,29 +62,30 @@ public class Dlg_PinEntry extends JDialog
 	private void initializeComponents()
 	{
 		txtPin = new JPasswordField( 20 );
-		txtPin.setFont( new Font( Font.MONOSPACED, Font.PLAIN, 16 ) );
+		txtPin.setFont( AppFonts.getHeaderFont().deriveFont( Font.PLAIN ) );
 		txtPin.setHorizontalAlignment( JTextField.CENTER );
 		
 		btnUnlock = new JButton( "Unlock" );
 		btnUnlock.setPreferredSize( new Dimension( 100, 35 ) );
-		btnUnlock.setFont( btnUnlock.getFont().deriveFont( Font.BOLD ) );
+		btnUnlock.setFont( AppFonts.getTextFieldBoldFont() );
 		
 		btnExit = new JButton( "Exit" );
 		btnExit.setPreferredSize( new Dimension( 100, 35 ) );
 		
 		lblMessage = new JLabel( " " );
 		lblMessage.setHorizontalAlignment( SwingConstants.CENTER );
-		lblMessage.setFont( lblMessage.getFont().deriveFont( 12f ) );
+		lblMessage.setFont( AppFonts.getLabelFont() );
 		lblMessage.setVisible( false );
 		
 		lblHint = new JLabel( " " );
 		lblHint.setHorizontalAlignment( SwingConstants.CENTER );
-		lblHint.setFont( lblHint.getFont().deriveFont( Font.ITALIC, 11f ) );
+		lblHint.setFont( AppFonts.getLabelFont().deriveFont( Font.ITALIC ) );
 		lblHint.setForeground( new Color( 100, 100, 100 ) );
 		lblHint.setVisible( false );
 		
 		chkShowPin = new JCheckBox( "Show PIN" );
-		chkShowPin.setFont( chkShowPin.getFont().deriveFont( 11f ) );
+		chkShowPin.setFont( AppFonts.getLabelFont() );
+		chkShowPin.setBackground( AppController.getBackgroundColor() );
 		
 		// Lockout panel (hidden by default)
 		lockoutPanel = new JPanel( new BorderLayout( 10, 10 ) );
@@ -94,7 +97,7 @@ public class Dlg_PinEntry extends JDialog
 		lockoutIcon.setFont( lockoutIcon.getFont().deriveFont( 24f ) );
 		
 		lblLockoutTime = new JLabel( "Account locked. Please wait..." );
-		lblLockoutTime.setFont( lblLockoutTime.getFont().deriveFont( 12f ) );
+		lblLockoutTime.setFont( AppFonts.getLabelFont() );
 		
 		lockoutPanel.add( lockoutIcon, BorderLayout.WEST );
 		lockoutPanel.add( lblLockoutTime, BorderLayout.CENTER );
@@ -105,20 +108,21 @@ public class Dlg_PinEntry extends JDialog
 	private void layoutComponents()
 	{
 		setLayout( new BorderLayout() );
+		setBackground( AppController.getBackgroundColor() );
 		
 		// --- Header Section ---
 		JPanel headerPanel = new JPanel( new BorderLayout() );
-		headerPanel.setBackground( new Color( 41, 98, 255 ) );
+		headerPanel.setBackground( AppController.getTitleColor() );
 		headerPanel.setBorder( new EmptyBorder( 20, 20, 20, 20 ) );
 		
 		JLabel lblTitle = new JLabel( "Notes Management System" );
-		lblTitle.setFont( lblTitle.getFont().deriveFont( Font.BOLD, 18f ) );
+		lblTitle.setFont( AppFonts.getHeaderFont() );
 		lblTitle.setForeground( Color.WHITE );
 		lblTitle.setHorizontalAlignment( SwingConstants.CENTER );
 		
 		JLabel lblSubtitle = new JLabel( "Enter your PIN to continue" );
-		lblSubtitle.setFont( lblSubtitle.getFont().deriveFont( 12f ) );
-		lblSubtitle.setForeground( new Color( 200, 220, 255 ) );
+		lblSubtitle.setFont( AppFonts.getLabelFont() );
+		lblSubtitle.setForeground( Color.WHITE );
 		lblSubtitle.setHorizontalAlignment( SwingConstants.CENTER );
 		
 		headerPanel.add( lblTitle, BorderLayout.CENTER );
@@ -128,6 +132,7 @@ public class Dlg_PinEntry extends JDialog
 		// --- Content Section ---
 		JPanel contentPanel = new JPanel( new GridBagLayout() );
 		contentPanel.setBorder( new EmptyBorder( 15, 30, 15, 30 ) );
+		contentPanel.setBackground( AppController.getBackgroundColor() );
 		GridBagConstraints gbc = new GridBagConstraints();
 		
 		// Default constraints
@@ -171,6 +176,7 @@ public class Dlg_PinEntry extends JDialog
 		// Buttons
 		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER, 15, 0 ) );
 		buttonPanel.setBorder( new EmptyBorder( 0, 0, 20, 0 ) );
+		buttonPanel.setBackground( AppController.getBackgroundColor() );
 		buttonPanel.add( btnExit );
 		buttonPanel.add( btnUnlock );
 		add( buttonPanel, BorderLayout.SOUTH );
@@ -257,7 +263,7 @@ public class Dlg_PinEntry extends JDialog
 		// Disable UI during verification
 		setInputEnabled( false );
 		lblMessage.setText( "Verifying..." );
-		lblMessage.setForeground( Color.GRAY );
+		lblMessage.setForeground( Color.DARK_GRAY );
 		
 		// Use SwingWorker for potentially slow PBKDF2 operation
 		SwingWorker<PinManager.VerificationResult, Void> worker = new SwingWorker<PinManager.VerificationResult, Void>()
@@ -328,7 +334,7 @@ public class Dlg_PinEntry extends JDialog
 	private void showMessage( String message, boolean isError )
 	{
 		lblMessage.setText( message );
-		lblMessage.setForeground( isError ? new Color( 244, 67, 54 ) : Color.GRAY );
+		lblMessage.setForeground( isError ? new Color( 244, 67, 54 ) : Color.DARK_GRAY );
 		lblMessage.setVisible( true );
 	}
 	

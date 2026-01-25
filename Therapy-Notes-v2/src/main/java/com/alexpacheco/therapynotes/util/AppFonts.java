@@ -54,6 +54,7 @@ public final class AppFonts
 		UIManager.put( "Table.font", getLabelFont() );
 		UIManager.put( "TableHeader.font", getTextFieldFont() );
 		UIManager.put( "TitledBorder.font", getLabelFont() );
+		UIManager.put( "PasswordField.font", getTextFieldFont() );
 	}
 	
 	/**

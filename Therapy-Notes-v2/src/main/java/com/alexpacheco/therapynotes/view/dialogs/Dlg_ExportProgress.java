@@ -2,7 +2,6 @@ package com.alexpacheco.therapynotes.view.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Frame;
 
 import javax.swing.BorderFactory;
@@ -11,6 +10,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
+
+import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.util.AppFonts;
 
 /**
  * A dialog that displays export progress with a progress bar and status message.
@@ -27,9 +29,9 @@ public class Dlg_ExportProgress extends JDialog
 	 * 
 	 * @param parent The parent frame
 	 */
-	public Dlg_ExportProgress(Frame parent)
+	public Dlg_ExportProgress( Frame parent )
 	{
-		super(parent, "Exporting Notes", true);
+		super( parent, "Exporting Notes", true );
 		initializeComponents();
 		layoutComponents();
 		configureDialog();
@@ -40,15 +42,16 @@ public class Dlg_ExportProgress extends JDialog
 	 */
 	private void initializeComponents()
 	{
-		progressBar = new JProgressBar(0, 100);
-		progressBar.setStringPainted(true);
-		progressBar.setPreferredSize(new Dimension(350, 25));
+		progressBar = new JProgressBar( 0, 100 );
+		progressBar.setStringPainted( true );
+		progressBar.setPreferredSize( new Dimension( 350, 25 ) );
+		progressBar.setBackground( AppController.getBackgroundColor() );
 		
-		statusLabel = new JLabel("Preparing export...", SwingConstants.CENTER);
-		statusLabel.setFont(statusLabel.getFont().deriveFont(Font.PLAIN, 12f));
+		statusLabel = new JLabel( "Preparing export...", SwingConstants.CENTER );
+		statusLabel.setFont( AppFonts.getLabelFont() );
 		
-		countLabel = new JLabel(" ", SwingConstants.CENTER);
-		countLabel.setFont(countLabel.getFont().deriveFont(Font.BOLD, 14f));
+		countLabel = new JLabel( " ", SwingConstants.CENTER );
+		countLabel.setFont( AppFonts.getTextFieldBoldFont() );
 	}
 	
 	/**
@@ -56,17 +59,19 @@ public class Dlg_ExportProgress extends JDialog
 	 */
 	private void layoutComponents()
 	{
-		JPanel contentPanel = new JPanel(new BorderLayout(10, 10));
-		contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+		JPanel contentPanel = new JPanel( new BorderLayout( 10, 10 ) );
+		contentPanel.setBorder( BorderFactory.createEmptyBorder( 20, 30, 20, 30 ) );
+		contentPanel.setBackground( AppController.getBackgroundColor() );
 		
-		JPanel centerPanel = new JPanel(new BorderLayout(5, 10));
-		centerPanel.add(countLabel, BorderLayout.NORTH);
-		centerPanel.add(progressBar, BorderLayout.CENTER);
-		centerPanel.add(statusLabel, BorderLayout.SOUTH);
+		JPanel centerPanel = new JPanel( new BorderLayout( 5, 10 ) );
+		centerPanel.setBackground( AppController.getBackgroundColor() );
+		centerPanel.add( countLabel, BorderLayout.NORTH );
+		centerPanel.add( progressBar, BorderLayout.CENTER );
+		centerPanel.add( statusLabel, BorderLayout.SOUTH );
 		
-		contentPanel.add(centerPanel, BorderLayout.CENTER);
+		contentPanel.add( centerPanel, BorderLayout.CENTER );
 		
-		setContentPane(contentPanel);
+		setContentPane( contentPanel );
 	}
 	
 	/**
@@ -74,10 +79,10 @@ public class Dlg_ExportProgress extends JDialog
 	 */
 	private void configureDialog()
 	{
-		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		setResizable(false);
+		setDefaultCloseOperation( JDialog.DO_NOTHING_ON_CLOSE );
+		setResizable( false );
 		pack();
-		setLocationRelativeTo(getParent());
+		setLocationRelativeTo( getParent() );
 	}
 	
 	/**
@@ -86,12 +91,12 @@ public class Dlg_ExportProgress extends JDialog
 	 * @param current The current item number (1-based)
 	 * @param total   The total number of items
 	 */
-	public void setProgress(int current, int total)
+	public void setProgress( int current, int total )
 	{
-		int percentage = (int) ((current / (double) total) * 100);
-		progressBar.setValue(percentage);
-		countLabel.setText("Exporting note " + current + " of " + total);
-		setStatus("Exporting notes...");
+		int percentage = (int) ( ( current / (double) total ) * 100 );
+		progressBar.setValue( percentage );
+		countLabel.setText( "Exporting note " + current + " of " + total );
+		setStatus( "Exporting notes..." );
 	}
 	
 	/**
@@ -99,9 +104,9 @@ public class Dlg_ExportProgress extends JDialog
 	 * 
 	 * @param message The status message to display
 	 */
-	public void setStatus(String message)
+	public void setStatus( String message )
 	{
-		statusLabel.setText(message);
+		statusLabel.setText( message );
 	}
 	
 	/**
@@ -109,16 +114,16 @@ public class Dlg_ExportProgress extends JDialog
 	 * 
 	 * @param indeterminate true for indeterminate mode, false for determinate
 	 */
-	public void setIndeterminate(boolean indeterminate)
+	public void setIndeterminate( boolean indeterminate )
 	{
-		progressBar.setIndeterminate(indeterminate);
-		if (indeterminate)
+		progressBar.setIndeterminate( indeterminate );
+		if( indeterminate )
 		{
-			progressBar.setStringPainted(false);
+			progressBar.setStringPainted( false );
 		}
 		else
 		{
-			progressBar.setStringPainted(true);
+			progressBar.setStringPainted( true );
 		}
 	}
 }

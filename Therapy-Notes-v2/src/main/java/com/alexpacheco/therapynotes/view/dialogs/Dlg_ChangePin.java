@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.Frame;
 import java.util.Arrays;
 
@@ -25,6 +24,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.PinManager;
+import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.util.AppLogger;
 
 /**
@@ -92,10 +92,12 @@ public class Dlg_ChangePin extends JDialog
 	private void layoutComponents()
 	{
 		setLayout( new BorderLayout() );
+		setBackground( AppController.getBackgroundColor() );
 		
 		JPanel contentPanel = new JPanel();
 		contentPanel.setLayout( new BoxLayout( contentPanel, BoxLayout.Y_AXIS ) );
 		contentPanel.setBorder( new EmptyBorder( 20, 30, 10, 30 ) );
+		contentPanel.setBackground( AppController.getBackgroundColor() );
 		
 		// Current PIN
 		contentPanel.add( createFieldPanel( "Current PIN", txtCurrentPin ) );
@@ -114,6 +116,7 @@ public class Dlg_ChangePin extends JDialog
 		
 		// Strength indicator
 		JPanel strengthPanel = new JPanel( new FlowLayout( FlowLayout.LEFT, 0, 0 ) );
+		strengthPanel.setBackground( AppController.getBackgroundColor() );
 		strengthPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
 		strengthPanel.add( strengthBar );
 		strengthPanel.add( Box.createHorizontalStrut( 10 ) );
@@ -137,11 +140,14 @@ public class Dlg_ChangePin extends JDialog
 		// Buttons
 		JPanel buttonPanel = new JPanel( new BorderLayout() );
 		buttonPanel.setBorder( new EmptyBorder( 15, 30, 20, 30 ) );
+		buttonPanel.setBackground( AppController.getBackgroundColor() );
 		
 		JPanel leftButtons = new JPanel( new FlowLayout( FlowLayout.LEFT, 0, 0 ) );
+		leftButtons.setBackground( AppController.getBackgroundColor() );
 		leftButtons.add( btnRemovePin );
 		
 		JPanel rightButtons = new JPanel( new FlowLayout( FlowLayout.RIGHT, 10, 0 ) );
+		rightButtons.setBackground( AppController.getBackgroundColor() );
 		rightButtons.add( btnCancel );
 		rightButtons.add( btnChange );
 		
@@ -156,9 +162,10 @@ public class Dlg_ChangePin extends JDialog
 		JPanel panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.Y_AXIS ) );
 		panel.setAlignmentX( Component.LEFT_ALIGNMENT );
+		panel.setBackground( AppController.getBackgroundColor() );
 		
 		JLabel lbl = new JLabel( label );
-		lbl.setFont( lbl.getFont().deriveFont( Font.BOLD, 12f ) );
+		lbl.setFont( AppFonts.getLabelBoldFont() );
 		lbl.setAlignmentX( Component.LEFT_ALIGNMENT );
 		
 		field.setAlignmentX( Component.LEFT_ALIGNMENT );
@@ -259,14 +266,14 @@ public class Dlg_ChangePin extends JDialog
 			// Validate new PIN
 			if( newPin.length < 4 )
 			{
-				showError( "New PIN must be at least 4 characters." );
+				AppController.showBasicErrorPopup( "New PIN must be at least 4 characters." );
 				txtNewPin.requestFocus();
 				return;
 			}
 			
 			if( !Arrays.equals( newPin, confirmPin ) )
 			{
-				showError( "New PINs do not match." );
+				AppController.showBasicErrorPopup( "New PINs do not match." );
 				txtConfirmPin.requestFocus();
 				return;
 			}
@@ -283,7 +290,7 @@ public class Dlg_ChangePin extends JDialog
 			}
 			else
 			{
-				showError( "Current PIN is incorrect." );
+				AppController.showBasicErrorPopup( "Current PIN is incorrect." );
 				txtCurrentPin.requestFocus();
 				txtCurrentPin.selectAll();
 			}
@@ -324,7 +331,7 @@ public class Dlg_ChangePin extends JDialog
 			}
 			else
 			{
-				showError( "Current PIN is incorrect." );
+				AppController.showBasicErrorPopup( "Current PIN is incorrect." );
 				txtCurrentPin.requestFocus();
 				txtCurrentPin.selectAll();
 			}
@@ -334,11 +341,6 @@ public class Dlg_ChangePin extends JDialog
 			Arrays.fill( currentPin, '\0' );
 			AppController.updateMenu();
 		}
-	}
-	
-	private void showError( String message )
-	{
-		JOptionPane.showMessageDialog( this, message, "Error", JOptionPane.ERROR_MESSAGE );
 	}
 	
 	public boolean isPinChanged()

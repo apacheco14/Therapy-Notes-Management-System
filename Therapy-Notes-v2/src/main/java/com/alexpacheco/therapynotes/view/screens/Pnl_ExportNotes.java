@@ -105,7 +105,9 @@ public class Pnl_ExportNotes extends JPanel
 	{
 		// Export format
 		rbFormatPdf = new JRadioButton( "PDF" );
+		rbFormatPdf.setBackground( AppController.getBackgroundColor() );
 		rbFormatDocx = new JRadioButton( "Word Document (DOCX)" );
+		rbFormatDocx.setBackground( AppController.getBackgroundColor() );
 		rbFormatPdf.setSelected( true );
 		
 		ButtonGroup formatGroup = new ButtonGroup();
@@ -114,8 +116,11 @@ public class Pnl_ExportNotes extends JPanel
 		
 		// Note selection
 		rbSelectAll = new JRadioButton( "All Notes" );
+		rbSelectAll.setBackground( AppController.getBackgroundColor() );
 		rbSelectByClient = new JRadioButton( "Notes for Specific Client" );
+		rbSelectByClient.setBackground( AppController.getBackgroundColor() );
 		rbSelectByDateRange = new JRadioButton( "Notes Within Date Range" );
+		rbSelectByDateRange.setBackground( AppController.getBackgroundColor() );
 		rbSelectAll.setSelected( true );
 		
 		ButtonGroup selectionGroup = new ButtonGroup();
@@ -157,8 +162,8 @@ public class Pnl_ExportNotes extends JPanel
 		btnInsertClientCode.setToolTipText( "Insert {client_code} at cursor position" );
 		
 		lblPatternPreview = new JLabel();
-		lblPatternPreview.setFont( lblPatternPreview.getFont().deriveFont( Font.ITALIC ) );
-		lblPatternPreview.setForeground( Color.GRAY );
+		lblPatternPreview.setFont( AppFonts.getLabelFont().deriveFont( Font.ITALIC ) );
+		lblPatternPreview.setForeground( Color.DARK_GRAY );
 		updatePatternPreview();
 		
 		// Action buttons
@@ -187,28 +192,34 @@ public class Pnl_ExportNotes extends JPanel
 	private void layoutComponents()
 	{
 		setLayout( new BorderLayout() );
+		setBackground( AppController.getBackgroundColor() );
 		
 		// Title
 		JLabel titleLabel = new JLabel( "Export Notes", SwingConstants.CENTER );
 		titleLabel.setFont( AppFonts.getScreenTitleFont() );
+		titleLabel.setForeground( AppController.getTitleColor() );
 		titleLabel.setBorder( BorderFactory.createEmptyBorder( 20, 0, 20, 0 ) );
 		add( titleLabel, BorderLayout.NORTH );
 		
 		// Main content panel
 		JPanel contentPanel = new JPanel();
+		contentPanel.setBackground( AppController.getBackgroundColor() );
 		contentPanel.setLayout( new BoxLayout( contentPanel, BoxLayout.Y_AXIS ) );
 		contentPanel.setBorder( BorderFactory.createEmptyBorder( 10, 50, 10, 50 ) );
 		
 		// Export Format Section
 		JPanel formatPanel = createTitledPanel( "Export Format" );
-		formatPanel.setLayout( new FlowLayout( FlowLayout.LEFT, 20, 5 ) );
+		formatPanel.setBackground( AppController.getBackgroundColor() );
+		formatPanel.setLayout( new FlowLayout( FlowLayout.LEFT, 10, 5 ) );
 		formatPanel.add( rbFormatPdf );
+		formatPanel.add( Box.createHorizontalStrut( 10 ) );
 		formatPanel.add( rbFormatDocx );
 		contentPanel.add( formatPanel );
 		contentPanel.add( Box.createVerticalStrut( 10 ) );
 		
 		// Note Selection Section
 		JPanel selectionPanel = createTitledPanel( "Select Notes to Export" );
+		selectionPanel.setBackground( AppController.getBackgroundColor() );
 		selectionPanel.setLayout( new GridBagLayout() );
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.WEST;
@@ -237,6 +248,7 @@ public class Pnl_ExportNotes extends JPanel
 		selectionPanel.add( rbSelectByDateRange, gbc );
 		
 		JPanel dateRangePanel = new JPanel( new FlowLayout( FlowLayout.LEFT, 5, 0 ) );
+		dateRangePanel.setBackground( AppController.getBackgroundColor() );
 		dateRangePanel.add( new JLabel( "From:" ) );
 		dateRangePanel.add( startDateChooser );
 		dateRangePanel.add( Box.createHorizontalStrut( 10 ) );
@@ -252,6 +264,7 @@ public class Pnl_ExportNotes extends JPanel
 		
 		// Output Folder Section
 		JPanel folderPanel = createTitledPanel( "Output Folder" );
+		folderPanel.setBackground( AppController.getBackgroundColor() );
 		folderPanel.setLayout( new GridBagLayout() );
 		gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.WEST;
@@ -273,19 +286,22 @@ public class Pnl_ExportNotes extends JPanel
 		
 		// File Naming Section
 		JPanel namingPanel = createTitledPanel( "File Naming Convention" );
+		namingPanel.setBackground( AppController.getBackgroundColor() );
 		namingPanel.setLayout( new GridBagLayout() );
 		gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets( 5, 10, 5, 10 );
+		gbc.insets = new Insets( 5, 5, 5, 10 );
 		
 		// Pattern input row
 		gbc.gridx = 0;
 		gbc.gridy = 0;
+		gbc.insets = new Insets( 5, 10, 5, 10 );
 		namingPanel.add( new JLabel( "Pattern:" ), gbc );
 		
 		gbc.gridx = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
+		gbc.insets = new Insets( 5, 5, 5, 10 );
 		namingPanel.add( txtFileNamePattern, gbc );
 		
 		// Variable buttons row
@@ -296,6 +312,7 @@ public class Pnl_ExportNotes extends JPanel
 		gbc.weightx = 0;
 		
 		JPanel variableButtonsPanel = new JPanel( new FlowLayout( FlowLayout.LEFT, 5, 0 ) );
+		variableButtonsPanel.setBackground( AppController.getBackgroundColor() );
 		variableButtonsPanel.add( new JLabel( "Insert Variable:" ) );
 		variableButtonsPanel.add( btnInsertNoteId );
 		variableButtonsPanel.add( btnInsertApptDate );
@@ -305,6 +322,7 @@ public class Pnl_ExportNotes extends JPanel
 		// Preview row
 		gbc.gridy = 2;
 		JPanel previewPanel = new JPanel( new FlowLayout( FlowLayout.LEFT, 5, 0 ) );
+		previewPanel.setBackground( AppController.getBackgroundColor() );
 		previewPanel.add( new JLabel( "Preview:" ) );
 		previewPanel.add( lblPatternPreview );
 		namingPanel.add( previewPanel, gbc );
@@ -315,7 +333,7 @@ public class Pnl_ExportNotes extends JPanel
 		JLabel helpLabel = new JLabel( "<html><small>Use {note_id}, {appt_date}, {client_code} as placeholders. "
 				+ "Add any text between or around them. Do not include the file extension.<br>"
 				+ "Example: \"Note {note_id} on {appt_date} for {client_code}\" → \"Note 42 on 2000-01-01 for JD123.pdf\"</small></html>" );
-		helpLabel.setForeground( Color.GRAY );
+		helpLabel.setForeground( Color.DARK_GRAY );
 		namingPanel.add( helpLabel, gbc );
 		
 		contentPanel.add( namingPanel );
@@ -325,6 +343,7 @@ public class Pnl_ExportNotes extends JPanel
 		// Button panel
 		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.RIGHT, 10, 10 ) );
 		buttonPanel.setBorder( BorderFactory.createEmptyBorder( 0, 50, 20, 50 ) );
+		buttonPanel.setBackground( AppController.getBackgroundColor() );
 		buttonPanel.add( btnCancel );
 		buttonPanel.add( btnExport );
 		add( buttonPanel, BorderLayout.SOUTH );
@@ -336,6 +355,7 @@ public class Pnl_ExportNotes extends JPanel
 	private JPanel createTitledPanel( String title )
 	{
 		JPanel panel = new JPanel();
+		panel.setBackground( AppController.getBackgroundColor() );
 		TitledBorder border = BorderFactory.createTitledBorder( BorderFactory.createEtchedBorder(), title );
 		border.setTitleFont( border.getTitleFont().deriveFont( Font.BOLD ) );
 		panel.setBorder( border );

@@ -93,31 +93,31 @@ public class Pnl_Preferences extends JPanel
 	private void initComponents()
 	{
 		// Default Behavior components
-		chkDefaultSessionFromPrevious = new JCheckBox( "Default session number from previous note" );
-		chkDefaultDiagnosisFromPrevious = new JCheckBox( "Default diagnosis from previous note" );
+		chkDefaultSessionFromPrevious = createCheckBox( "Default session number from previous note" );
+		chkDefaultDiagnosisFromPrevious = createCheckBox( "Default diagnosis from previous note" );
 		cboDefaultAppointmentDate = new JComboBox<>( new String[] { "Today", "None" } );
-		chkDefaultVirtual = new JCheckBox( "Default to virtual/telehealth session" );
+		chkDefaultVirtual = createCheckBox( "Default to virtual/telehealth session" );
 		
 		// Required Fields: Note components
-		chkRequiredNoteDiagnosis = new JCheckBox( "Diagnosis" );
-		chkRequiredNoteNarrative = new JCheckBox( "Narrative" );
-		chkRequiredNoteAffect = new JCheckBox( "Affect" );
-		chkRequiredNoteAppearance = new JCheckBox( "Appearance" );
-		chkRequiredNoteSpeech = new JCheckBox( "Speech" );
-		chkRequiredNoteEyeContact = new JCheckBox( "Eye Contact" );
-		chkRequiredNoteNextAppointment = new JCheckBox( "Next Appointment" );
-		chkRequiredNoteCollateralContacts = new JCheckBox( "Collateral Contacts" );
-		chkRequiredNoteReferrals = new JCheckBox( "Referrals" );
-		chkRequiredNoteSymptoms = new JCheckBox( "Symptoms" );
+		chkRequiredNoteDiagnosis = createCheckBox( "Diagnosis" );
+		chkRequiredNoteNarrative = createCheckBox( "Narrative" );
+		chkRequiredNoteAffect = createCheckBox( "Affect" );
+		chkRequiredNoteAppearance = createCheckBox( "Appearance" );
+		chkRequiredNoteSpeech = createCheckBox( "Speech" );
+		chkRequiredNoteEyeContact = createCheckBox( "Eye Contact" );
+		chkRequiredNoteNextAppointment = createCheckBox( "Next Appointment" );
+		chkRequiredNoteCollateralContacts = createCheckBox( "Collateral Contacts" );
+		chkRequiredNoteReferrals = createCheckBox( "Referrals" );
+		chkRequiredNoteSymptoms = createCheckBox( "Symptoms" );
 		
 		// Required Fields: Client components
-		chkRequiredClientFirstName = new JCheckBox( "First Name" );
-		chkRequiredClientLastName = new JCheckBox( "Last Name" );
-		chkRequiredClientDOB = new JCheckBox( "Date of Birth" );
+		chkRequiredClientFirstName = createCheckBox( "First Name" );
+		chkRequiredClientLastName = createCheckBox( "Last Name" );
+		chkRequiredClientDOB = createCheckBox( "Date of Birth" );
 		
 		// Required Fields: Contact components
-		chkRequiredContactFirstName = new JCheckBox( "First Name" );
-		chkRequiredContactLastName = new JCheckBox( "Last Name" );
+		chkRequiredContactFirstName = createCheckBox( "First Name" );
+		chkRequiredContactLastName = createCheckBox( "Last Name" );
 		
 		// Buttons
 		btnSave = new JButton( "Save" );
@@ -130,20 +130,31 @@ public class Pnl_Preferences extends JPanel
 		btnResetToDefaults.addActionListener( e -> resetToDefaults() );
 	}
 	
+	private JCheckBox createCheckBox( String text )
+	{
+		JCheckBox checkbox = new JCheckBox( text );
+		checkbox.setBackground( AppController.getBackgroundColor() );
+		return checkbox;
+	}
+	
 	private void layoutComponents()
 	{
 		setLayout( new BorderLayout( 10, 10 ) );
 		setBorder( BorderFactory.createEmptyBorder( 15, 20, 15, 20 ) );
+		setBackground( AppController.getBackgroundColor() );
 		
 		// Header panel with title
 		JPanel headerPanel = new JPanel( new FlowLayout( FlowLayout.CENTER, 0, 0 ) );
+		headerPanel.setBackground( AppController.getBackgroundColor() );
 		JLabel lblTitle = new JLabel( "Preferences", SwingConstants.CENTER );
 		lblTitle.setFont( TITLE_FONT );
+		lblTitle.setForeground( AppController.getTitleColor() );
 		headerPanel.add( lblTitle );
 		
 		// Main content panel
 		JPanel contentPanel = new JPanel();
 		contentPanel.setLayout( new BoxLayout( contentPanel, BoxLayout.Y_AXIS ) );
+		contentPanel.setBackground( AppController.getBackgroundColor() );
 		
 		contentPanel.add( Box.createVerticalStrut( 15 ) );
 		contentPanel.add( createDefaultBehaviorSection() );
@@ -155,6 +166,7 @@ public class Pnl_Preferences extends JPanel
 		
 		// Wrap content in a left-aligned panel
 		JPanel contentWrapper = new JPanel( new BorderLayout() );
+		contentWrapper.setBackground( AppController.getBackgroundColor() );
 		contentWrapper.add( contentPanel, BorderLayout.NORTH );
 		
 		// Scroll pane
@@ -181,6 +193,7 @@ public class Pnl_Preferences extends JPanel
 	{
 		JLabel label = new JLabel( text );
 		label.setFont( SECTION_FONT );
+		label.setForeground( AppController.getSubtitleColor() );
 		return label;
 	}
 	
@@ -194,6 +207,7 @@ public class Pnl_Preferences extends JPanel
 	private JPanel createDefaultBehaviorSection()
 	{
 		JPanel panel = new JPanel( new GridBagLayout() );
+		panel.setBackground( AppController.getBackgroundColor() );
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -234,6 +248,7 @@ public class Pnl_Preferences extends JPanel
 	private JPanel createRequiredFieldsSection()
 	{
 		JPanel panel = new JPanel( new GridBagLayout() );
+		panel.setBackground( AppController.getBackgroundColor() );
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -271,6 +286,7 @@ public class Pnl_Preferences extends JPanel
 	private JPanel createNoteRequiredFieldsPanel()
 	{
 		JPanel panel = new JPanel( new GridBagLayout() );
+		panel.setBackground( AppController.getBackgroundColor() );
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets( 2, 0, 2, 0 );
@@ -317,6 +333,7 @@ public class Pnl_Preferences extends JPanel
 	private JPanel createClientRequiredFieldsPanel()
 	{
 		JPanel panel = new JPanel( new GridBagLayout() );
+		panel.setBackground( AppController.getBackgroundColor() );
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets( 2, 0, 2, 0 );
@@ -342,6 +359,7 @@ public class Pnl_Preferences extends JPanel
 	private JPanel createContactRequiredFieldsPanel()
 	{
 		JPanel panel = new JPanel( new GridBagLayout() );
+		panel.setBackground( AppController.getBackgroundColor() );
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets( 2, 0, 2, 0 );
@@ -364,14 +382,17 @@ public class Pnl_Preferences extends JPanel
 	private JPanel createButtonPanel()
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
+		panel.setBackground( AppController.getBackgroundColor() );
 		panel.setBorder( BorderFactory.createEmptyBorder( 10, 0, 0, 0 ) );
 		
 		// Reset button on the left
 		JPanel leftPanel = new JPanel( new FlowLayout( FlowLayout.LEFT, 0, 0 ) );
+		leftPanel.setBackground( AppController.getBackgroundColor() );
 		leftPanel.add( btnResetToDefaults );
 		
 		// Save and Cancel on the right
 		JPanel rightPanel = new JPanel( new FlowLayout( FlowLayout.RIGHT, 5, 0 ) );
+		rightPanel.setBackground( AppController.getBackgroundColor() );
 		rightPanel.add( btnCancel );
 		rightPanel.add( btnSave );
 		
@@ -527,7 +548,7 @@ public class Pnl_Preferences extends JPanel
 		}
 		catch( TherapyAppException e )
 		{
-			JOptionPane.showMessageDialog( this, "Error saving preferences: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE );
+			AppController.showBasicErrorPopup( e, "Error saving preferences:" );
 		}
 	}
 	
@@ -637,7 +658,7 @@ public class Pnl_Preferences extends JPanel
 			}
 			catch( TherapyAppException e )
 			{
-				JOptionPane.showMessageDialog( this, "Error resetting preferences: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE );
+				AppController.showBasicErrorPopup( e, "Error resetting preferences:" );
 			}
 		}
 	}

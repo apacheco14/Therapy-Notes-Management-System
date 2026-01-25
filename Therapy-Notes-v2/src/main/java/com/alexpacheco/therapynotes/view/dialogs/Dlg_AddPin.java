@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.Frame;
 import java.util.Arrays;
 
@@ -24,6 +23,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.PinManager;
+import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.util.AppLogger;
 
 /**
@@ -67,10 +67,10 @@ public class Dlg_AddPin extends JDialog
 		strengthBar.setBorderPainted( false );
 		
 		lblStrength = new JLabel( "" );
-		lblStrength.setFont( lblStrength.getFont().deriveFont( 11f ) );
+		lblStrength.setFont( AppFonts.getSmallFont() );
 		
 		lblMatch = new JLabel( " " );
-		lblMatch.setFont( lblMatch.getFont().deriveFont( 11f ) );
+		lblMatch.setFont( AppFonts.getSmallFont() );
 		
 		btnSetup = new JButton( "Enable PIN" );
 		btnCancel = new JButton( "Cancel" );
@@ -79,6 +79,7 @@ public class Dlg_AddPin extends JDialog
 	private void layoutComponents()
 	{
 		setLayout( new BorderLayout() );
+		setBackground( AppController.getBackgroundColor() );
 		
 		// Info panel at top
 		JPanel infoPanel = new JPanel( new BorderLayout() );
@@ -94,6 +95,7 @@ public class Dlg_AddPin extends JDialog
 		JPanel contentPanel = new JPanel();
 		contentPanel.setLayout( new BoxLayout( contentPanel, BoxLayout.Y_AXIS ) );
 		contentPanel.setBorder( new EmptyBorder( 20, 30, 10, 30 ) );
+		contentPanel.setBackground( AppController.getBackgroundColor() );
 		
 		// PIN field
 		contentPanel.add( createFieldPanel( "Enter PIN", txtPin ) );
@@ -101,6 +103,7 @@ public class Dlg_AddPin extends JDialog
 		
 		// Strength
 		JPanel strengthPanel = new JPanel( new FlowLayout( FlowLayout.LEFT, 0, 0 ) );
+		strengthPanel.setBackground( AppController.getBackgroundColor() );
 		strengthPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
 		strengthPanel.add( strengthBar );
 		strengthPanel.add( Box.createHorizontalStrut( 10 ) );
@@ -124,6 +127,7 @@ public class Dlg_AddPin extends JDialog
 		// Buttons
 		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.RIGHT, 10, 0 ) );
 		buttonPanel.setBorder( new EmptyBorder( 15, 30, 20, 30 ) );
+		buttonPanel.setBackground( AppController.getBackgroundColor() );
 		buttonPanel.add( btnCancel );
 		buttonPanel.add( btnSetup );
 		
@@ -135,9 +139,10 @@ public class Dlg_AddPin extends JDialog
 		JPanel panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.Y_AXIS ) );
 		panel.setAlignmentX( Component.LEFT_ALIGNMENT );
+		panel.setBackground( AppController.getBackgroundColor() );
 		
 		JLabel lbl = new JLabel( label );
-		lbl.setFont( lbl.getFont().deriveFont( Font.BOLD, 12f ) );
+		lbl.setFont( AppFonts.getLabelBoldFont() );
 		lbl.setAlignmentX( Component.LEFT_ALIGNMENT );
 		
 		field.setAlignmentX( Component.LEFT_ALIGNMENT );
@@ -231,14 +236,14 @@ public class Dlg_AddPin extends JDialog
 		{
 			if( pin.length < 4 )
 			{
-				showError( "PIN must be at least 4 characters." );
+				AppController.showBasicErrorPopup( "PIN must be at least 4 characters." );
 				txtPin.requestFocus();
 				return;
 			}
 			
 			if( !Arrays.equals( pin, confirm ) )
 			{
-				showError( "PINs do not match." );
+				AppController.showBasicErrorPopup( "PINs do not match." );
 				txtConfirmPin.requestFocus();
 				return;
 			}
@@ -259,11 +264,6 @@ public class Dlg_AddPin extends JDialog
 			Arrays.fill( confirm, '\0' );
 			AppController.updateMenu();
 		}
-	}
-	
-	private void showError( String message )
-	{
-		JOptionPane.showMessageDialog( this, message, "Error", JOptionPane.ERROR_MESSAGE );
 	}
 	
 	public boolean isPinSetup()

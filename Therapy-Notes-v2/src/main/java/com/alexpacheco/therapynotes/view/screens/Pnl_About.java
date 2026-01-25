@@ -25,10 +25,12 @@ public class Pnl_About extends JPanel
 		
 		JLabel titleLabel = new JLabel( "Notes Management System" );
 		titleLabel.setFont( AppFonts.getScreenTitleFont() );
+		titleLabel.setForeground( AppController.getTitleColor() );
 		titleLabel.setAlignmentX( Component.CENTER_ALIGNMENT );
 		
-		JLabel versionLabel = new JLabel( "Version 1.0.0" );
+		JLabel versionLabel = new JLabel( "Version 1.0.1" );
 		versionLabel.setFont( AppFonts.getHeaderFont() );
+		versionLabel.setForeground( AppController.getSubtitleColor() );
 		versionLabel.setAlignmentX( Component.CENTER_ALIGNMENT );
 		
 		JLabel emptySpace1 = new JLabel( " " );

@@ -56,13 +56,16 @@ public class Pnl_ViewClientDetails extends JPanel
 		this.parentPanel = mainPanel;
 		
 		setLayout( new BorderLayout() );
+		setBackground( AppController.getBackgroundColor() );
 		
 		JLabel titleLabel = new JLabel( "Client Details", SwingConstants.CENTER );
 		titleLabel.setFont( AppFonts.getScreenTitleFont() );
+		titleLabel.setForeground( AppController.getTitleColor() );
 		titleLabel.setBorder( BorderFactory.createEmptyBorder( 20, 0, 20, 0 ) );
 		
 		// Details panel - 3 columns layout
 		JPanel detailsPanel = new JPanel( new GridBagLayout() );
+		detailsPanel.setBackground( AppController.getBackgroundColor() );
 		detailsPanel.setBorder( BorderFactory.createEmptyBorder( 20, 50, 20, 50 ) );
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -104,6 +107,7 @@ public class Pnl_ViewClientDetails extends JPanel
 		
 		// Column 1: Client Code, First Name, Last Name, DOB
 		JPanel column1 = new JPanel( new GridBagLayout() );
+		column1.setBackground( AppController.getBackgroundColor() );
 		GridBagConstraints col1gbc = new GridBagConstraints();
 		col1gbc.fill = GridBagConstraints.HORIZONTAL;
 		col1gbc.insets = new Insets( 5, 5, 5, 5 );
@@ -151,6 +155,7 @@ public class Pnl_ViewClientDetails extends JPanel
 		
 		// Column 2: Emails
 		JPanel column2 = new JPanel( new GridBagLayout() );
+		column2.setBackground( AppController.getBackgroundColor() );
 		GridBagConstraints col2gbc = new GridBagConstraints();
 		col2gbc.fill = GridBagConstraints.HORIZONTAL;
 		col2gbc.insets = new Insets( 5, 5, 5, 5 );
@@ -188,6 +193,7 @@ public class Pnl_ViewClientDetails extends JPanel
 		
 		// Column 3: Phones
 		JPanel column3 = new JPanel( new GridBagLayout() );
+		column3.setBackground( AppController.getBackgroundColor() );
 		GridBagConstraints col3gbc = new GridBagConstraints();
 		col3gbc.fill = GridBagConstraints.HORIZONTAL;
 		col3gbc.insets = new Insets( 5, 5, 5, 5 );
@@ -254,10 +260,12 @@ public class Pnl_ViewClientDetails extends JPanel
 		JPanel contactsSection = new JPanel( new BorderLayout() );
 		contactsSection.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 10, 50, 10, 50 ),
 				BorderFactory.createTitledBorder( "Associated Contacts" ) ) );
+		contactsSection.setBackground( AppController.getBackgroundColor() );
 		
 		// Contacts display panel with CardLayout
 		contactsCardLayout = new CardLayout();
 		contactsDisplayPanel = new JPanel( contactsCardLayout );
+		contactsDisplayPanel.setBackground( AppController.getBackgroundColor() );
 		
 		// Contacts table
 		contactsTableModel = new ContactsTableModel();
@@ -272,9 +280,10 @@ public class Pnl_ViewClientDetails extends JPanel
 		contactsScrollPane.setPreferredSize( new Dimension( 0, 150 ) );
 		
 		JPanel noContactsPanel = new JPanel( new BorderLayout() );
+		noContactsPanel.setBackground( AppController.getBackgroundColor() );
 		noContactsLabel = new JLabel( "No contacts associated with this client", SwingConstants.CENTER );
-		noContactsLabel.setFont( new Font( "Arial", Font.ITALIC, 14 ) );
-		noContactsLabel.setForeground( Color.GRAY );
+		noContactsLabel.setFont( AppFonts.getTextFieldFont().deriveFont( Font.ITALIC ) );
+		noContactsLabel.setForeground( Color.DARK_GRAY );
 		noContactsPanel.add( noContactsLabel, BorderLayout.CENTER );
 		
 		contactsDisplayPanel.add( contactsScrollPane, "table" );
@@ -286,6 +295,7 @@ public class Pnl_ViewClientDetails extends JPanel
 		JPanel notesSection = new JPanel( new BorderLayout() );
 		notesSection.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 10, 50, 10, 50 ),
 				BorderFactory.createTitledBorder( "Session Notes" ) ) );
+		notesSection.setBackground( AppController.getBackgroundColor() );
 		
 		// Notes display panel with CardLayout
 		notesCardLayout = new CardLayout();
@@ -320,9 +330,10 @@ public class Pnl_ViewClientDetails extends JPanel
 		notesScrollPane.setPreferredSize( new Dimension( 0, 200 ) );
 		
 		JPanel noNotesPanel = new JPanel( new BorderLayout() );
+		noNotesPanel.setBackground( AppController.getBackgroundColor() );
 		JLabel noNotesLabel = new JLabel( "No session notes for this client", SwingConstants.CENTER );
-		noNotesLabel.setFont( new Font( "Arial", Font.ITALIC, 14 ) );
-		noNotesLabel.setForeground( Color.GRAY );
+		noNotesLabel.setFont( AppFonts.getTextFieldFont().deriveFont( Font.ITALIC ) );
+		noNotesLabel.setForeground( Color.DARK_GRAY );
 		noNotesPanel.add( noNotesLabel, BorderLayout.CENTER );
 		
 		notesDisplayPanel.add( notesScrollPane, "table" );
@@ -332,17 +343,20 @@ public class Pnl_ViewClientDetails extends JPanel
 		
 		// Main content panel - use BoxLayout for vertical stacking
 		JPanel sectionsPanel = new JPanel();
+		sectionsPanel.setBackground( AppController.getBackgroundColor() );
 		sectionsPanel.setLayout( new BoxLayout( sectionsPanel, BoxLayout.Y_AXIS ) );
 		sectionsPanel.add( contactsSection );
 		sectionsPanel.add( notesSection );
 		
 		JPanel contentPanel = new JPanel( new BorderLayout() );
+		contentPanel.setBackground( AppController.getBackgroundColor() );
 		contentPanel.add( detailsScrollPane, BorderLayout.NORTH );
 		contentPanel.add( sectionsPanel, BorderLayout.CENTER );
 		
 		// Button panel
 		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER, 10, 10 ) );
 		buttonPanel.setBorder( BorderFactory.createEmptyBorder( 10, 0, 20, 0 ) );
+		buttonPanel.setBackground( AppController.getBackgroundColor() );
 		
 		JButton backButton = new JButton( "Back" );
 		backButton.addActionListener( e -> goBack() );

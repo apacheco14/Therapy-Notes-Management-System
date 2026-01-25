@@ -56,15 +56,18 @@ public abstract class Pnl_SearchClients extends JPanel
 		this.parentPanel = mainPanel;
 		
 		setLayout( new BorderLayout() );
+		setBackground( AppController.getBackgroundColor() );
 		
 		JLabel titleLabel = new JLabel( "Search Clients", SwingConstants.CENTER );
 		titleLabel.setFont( AppFonts.getScreenTitleFont() );
+		titleLabel.setForeground( AppController.getTitleColor() );
 		titleLabel.setBorder( BorderFactory.createEmptyBorder( 20, 0, 20, 0 ) );
 		
 		// Search criteria panel
 		JPanel searchPanel = new JPanel( new GridBagLayout() );
 		searchPanel.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 10, 50, 10, 50 ),
 				BorderFactory.createTitledBorder( "Search Criteria" ) ) );
+		searchPanel.setBackground( AppController.getBackgroundColor() );
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -75,6 +78,7 @@ public abstract class Pnl_SearchClients extends JPanel
 		clientCodeField = new JTextField( 20 );
 		_setupClientCodeField();
 		showInactiveCheckBox = new JCheckBox();
+		showInactiveCheckBox.setBackground( AppController.getBackgroundColor() );
 		
 		// Row 0
 		gbc.gridx = 0;
@@ -128,6 +132,7 @@ public abstract class Pnl_SearchClients extends JPanel
 		gbc.weightx = 0.0;
 		
 		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER, 10, 10 ) );
+		buttonPanel.setBackground( AppController.getBackgroundColor() );
 		JButton clearButton = new JButton( "Clear Fields" );
 		JButton searchButton = new JButton( "Search" );
 		
@@ -142,6 +147,7 @@ public abstract class Pnl_SearchClients extends JPanel
 		resultsCardLayout = new CardLayout();
 		resultsPanel = new JPanel( resultsCardLayout );
 		resultsPanel.setBorder( BorderFactory.createEmptyBorder( 10, 50, 20, 50 ) );
+		resultsPanel.setBackground( AppController.getBackgroundColor() );
 		
 		// Table setup
 		tableModel = new ClientSearchResultsTableModel();
@@ -201,9 +207,10 @@ public abstract class Pnl_SearchClients extends JPanel
 		scrollPane = new JScrollPane( resultsTable );
 		
 		JPanel noResultsPanel = new JPanel( new BorderLayout() );
+		noResultsPanel.setBackground( AppController.getBackgroundColor() );
 		noResultsLabel = new JLabel( "No results found", SwingConstants.CENTER );
-		noResultsLabel.setFont( new Font( "Arial", Font.PLAIN, 16 ) );
-		noResultsLabel.setForeground( Color.GRAY );
+		noResultsLabel.setFont( AppFonts.getHeaderFont().deriveFont( Font.PLAIN ) );
+		noResultsLabel.setForeground( Color.DARK_GRAY );
 		noResultsPanel.add( noResultsLabel, BorderLayout.CENTER );
 		
 		resultsPanel.add( scrollPane, "table" );

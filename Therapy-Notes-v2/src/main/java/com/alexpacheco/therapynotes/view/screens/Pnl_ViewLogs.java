@@ -86,6 +86,7 @@ public class Pnl_ViewLogs extends JPanel
 		// Table setup
 		tableModel = new LogTableModel();
 		logsTable = new JTable( tableModel );
+		logsTable.setFont( AppFonts.getSmallFont() );
 		logsTable.setRowHeight( 25 );
 		logsTable.getTableHeader().setReorderingAllowed( false );
 		logsTable.setAutoCreateRowSorter( true );
@@ -123,17 +124,19 @@ public class Pnl_ViewLogs extends JPanel
 		
 		// No results label
 		noResultsLabel = new JLabel( "No logs found", SwingConstants.CENTER );
-		noResultsLabel.setFont( new Font( "Arial", Font.PLAIN, 16 ) );
-		noResultsLabel.setForeground( Color.GRAY );
+		noResultsLabel.setFont( AppFonts.getHeaderFont().deriveFont( Font.PLAIN ) );
+		noResultsLabel.setForeground( Color.DARK_GRAY );
 	}
 	
 	private void layoutComponents()
 	{
 		setLayout( new BorderLayout() );
+		setBackground( AppController.getBackgroundColor() );
 		
 		// Title
 		JLabel titleLabel = new JLabel( "Application Logs", SwingConstants.CENTER );
 		titleLabel.setFont( AppFonts.getScreenTitleFont() );
+		titleLabel.setForeground( AppController.getTitleColor() );
 		titleLabel.setBorder( BorderFactory.createEmptyBorder( 20, 0, 10, 0 ) );
 		
 		// Filter panel
@@ -141,12 +144,14 @@ public class Pnl_ViewLogs extends JPanel
 		
 		// Header panel (title + filters)
 		JPanel headerPanel = new JPanel( new BorderLayout() );
+		headerPanel.setBackground( AppController.getBackgroundColor() );
 		headerPanel.add( titleLabel, BorderLayout.NORTH );
 		headerPanel.add( filterPanel, BorderLayout.CENTER );
 		
 		// Results panel
 		resultsPanel = new JPanel( new BorderLayout() );
 		resultsPanel.setBorder( BorderFactory.createEmptyBorder( 10, 20, 20, 20 ) );
+		resultsPanel.setBackground( AppController.getBackgroundColor() );
 		resultsPanel.add( tableScrollPane, BorderLayout.CENTER );
 		
 		add( headerPanel, BorderLayout.NORTH );
@@ -156,6 +161,7 @@ public class Pnl_ViewLogs extends JPanel
 	private JPanel createFilterPanel()
 	{
 		JPanel panel = new JPanel( new GridBagLayout() );
+		panel.setBackground( AppController.getBackgroundColor() );
 		panel.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 10, 50, 10, 50 ),
 				BorderFactory.createTitledBorder( "Filter Criteria" ) ) );
 		
@@ -190,6 +196,7 @@ public class Pnl_ViewLogs extends JPanel
 		gbc.anchor = GridBagConstraints.CENTER;
 		
 		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER, 10, 5 ) );
+		buttonPanel.setBackground( AppController.getBackgroundColor() );
 		JButton clearButton = new JButton( "Clear Filters" );
 		JButton searchButton = new JButton( "Search" );
 		
