@@ -185,6 +185,11 @@ public class AppController
 		return clientApi.getAllClients( true );
 	}
 	
+	public static List<Client> getAllActiveClients() throws TherapyAppException
+	{
+		return clientApi.getAllClients( false );
+	}
+	
 	public static List<Contact> getContactsForClient( Integer clientId ) throws TherapyAppException
 	{
 		return contactApi.getAllContactsLinkedToClient( clientId );

@@ -225,7 +225,7 @@ public abstract class Pnl_SearchClients extends JPanel
 	{
 		try
 		{
-			List<Client> clients = AppController.getAllClients();
+			List<Client> clients = AppController.getAllActiveClients();
 			displayResults( clients );
 		}
 		catch( TherapyAppException e )
