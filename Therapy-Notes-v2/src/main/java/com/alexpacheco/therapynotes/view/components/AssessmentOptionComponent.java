@@ -2,12 +2,13 @@ package com.alexpacheco.therapynotes.view.components;
 
 import javax.swing.*;
 
+import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
 import com.alexpacheco.therapynotes.util.JavaUtils;
 
 /**
- * Abstract base class for UI components associated with AssessmentOptions. Provides common behavior
- * for checkboxes and radio buttons that represent assessment options.
+ * Abstract base class for UI components associated with AssessmentOptions. Provides common behavior for checkboxes and radio buttons that
+ * represent assessment options.
  */
 public abstract class AssessmentOptionComponent extends JComponent
 {
@@ -20,16 +21,16 @@ public abstract class AssessmentOptionComponent extends JComponent
 	 * 
 	 * @param assessmentOption The assessment option (must have an ID)
 	 */
-	protected AssessmentOptionComponent(AssessmentOption assessmentOption)
+	protected AssessmentOptionComponent( AssessmentOption assessmentOption )
 	{
-		if (assessmentOption == null)
+		if( assessmentOption == null )
 		{
-			throw new IllegalArgumentException("AssessmentOption cannot be null");
+			throw new IllegalArgumentException( "AssessmentOption cannot be null" );
 		}
 		
-		if (assessmentOption.getId() == null)
+		if( assessmentOption.getId() == null )
 		{
-			throw new IllegalArgumentException("AssessmentOption must have an ID");
+			throw new IllegalArgumentException( "AssessmentOption must have an ID" );
 		}
 		
 		this.assessmentOption = assessmentOption;
@@ -47,21 +48,22 @@ public abstract class AssessmentOptionComponent extends JComponent
 	 */
 	private void setupComponent()
 	{
-		setLayout(new java.awt.BorderLayout());
+		setLayout( new java.awt.BorderLayout() );
 		
 		// Set button text to the option name
-		button.setText(assessmentOption.getName());
+		button.setText( assessmentOption.getName() );
 		
 		// Set tooltip to show description if available
-		if (!JavaUtils.isNullOrEmpty(assessmentOption.getDescription()))
+		if( !JavaUtils.isNullOrEmpty( assessmentOption.getDescription() ) )
 		{
-			button.setToolTipText(assessmentOption.getDescription());
+			button.setToolTipText( assessmentOption.getDescription() );
 		}
 		
 		// Store the assessment option ID in the button's action command
-		button.setActionCommand(String.valueOf(assessmentOption.getId()));
+		button.setActionCommand( String.valueOf( assessmentOption.getId() ) );
 		
-		add(button, java.awt.BorderLayout.CENTER);
+		button.setBackground( AppController.getBackgroundColor() );
+		add( button, java.awt.BorderLayout.CENTER );
 	}
 	
 	/**
@@ -109,9 +111,9 @@ public abstract class AssessmentOptionComponent extends JComponent
 	 * 
 	 * @param selected true to select, false to deselect
 	 */
-	public void setSelected(boolean selected)
+	public void setSelected( boolean selected )
 	{
-		button.setSelected(selected);
+		button.setSelected( selected );
 	}
 	
 	/**
@@ -120,10 +122,10 @@ public abstract class AssessmentOptionComponent extends JComponent
 	 * @param enabled true to enable, false to disable
 	 */
 	@Override
-	public void setEnabled(boolean enabled)
+	public void setEnabled( boolean enabled )
 	{
-		super.setEnabled(enabled);
-		button.setEnabled(enabled);
+		super.setEnabled( enabled );
+		button.setEnabled( enabled );
 	}
 	
 	/**
@@ -131,9 +133,9 @@ public abstract class AssessmentOptionComponent extends JComponent
 	 * 
 	 * @param listener The action listener to add
 	 */
-	public void addActionListener(java.awt.event.ActionListener listener)
+	public void addActionListener( java.awt.event.ActionListener listener )
 	{
-		button.addActionListener(listener);
+		button.addActionListener( listener );
 	}
 	
 	/**
@@ -141,9 +143,9 @@ public abstract class AssessmentOptionComponent extends JComponent
 	 * 
 	 * @param listener The action listener to remove
 	 */
-	public void removeActionListener(java.awt.event.ActionListener listener)
+	public void removeActionListener( java.awt.event.ActionListener listener )
 	{
-		button.removeActionListener(listener);
+		button.removeActionListener( listener );
 	}
 	
 	/**
