@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import com.alexpacheco.therapynotes.controller.AppController;
+import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.util.AppLogger;
 import com.alexpacheco.therapynotes.util.JavaUtils;
 
@@ -48,6 +49,7 @@ public class Cmb_ICD10Diagnosis extends JComboBox<String>
 		
 		setModel( model );
 		setEditable( true );
+		setFont( AppFonts.getTextFieldFont() );
 		
 		editorField = (JTextField) getEditor().getEditorComponent();
 		

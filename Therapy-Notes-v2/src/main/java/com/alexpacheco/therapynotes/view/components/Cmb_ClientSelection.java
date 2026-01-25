@@ -18,6 +18,7 @@ import javax.swing.event.PopupMenuListener;
 
 import com.alexpacheco.therapynotes.controller.AppController;
 import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
+import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.util.JavaUtils;
 
 /**
@@ -53,6 +54,7 @@ public class Cmb_ClientSelection extends JComboBox<String>
 		
 		setModel( model );
 		setEditable( true );
+		setFont( AppFonts.getTextFieldFont() );
 		
 		editorField = (JTextField) getEditor().getEditorComponent();
 		

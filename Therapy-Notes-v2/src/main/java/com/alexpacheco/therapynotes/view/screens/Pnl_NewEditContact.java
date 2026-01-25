@@ -1,16 +1,12 @@
 package com.alexpacheco.therapynotes.view.screens;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -25,7 +21,7 @@ import com.alexpacheco.therapynotes.view.components.Txt_EmailAddress;
 import com.alexpacheco.therapynotes.view.components.Txt_PhoneNumber;
 import com.alexpacheco.therapynotes.view.components.ValidatedTextField;
 
-public class Pnl_NewEditContact extends JPanel
+public class Pnl_NewEditContact extends Pnl_NewEditScreen
 {
 	private static final long serialVersionUID = -8227488932620896098L;
 	private JTextField firstNameField;
@@ -42,19 +38,50 @@ public class Pnl_NewEditContact extends JPanel
 	private JLabel firstNameLabel;
 	private JLabel lastNameLabel;
 	
-	private boolean isEditMode = false;
-	private Integer contactId = null;
-	
 	public Pnl_NewEditContact()
 	{
-		setLayout( new BorderLayout() );
-		
+		super();
+	}
+	
+	@Override
+	public void clearForm()
+	{
+		firstNameField.setText( "" );
+		lastNameField.setText( "" );
+		linkedClientComboBox.setSelectedIndex( -1 );
+		emergencyContactCheckBox.setSelected( false );
+		email1Field.setText( "" );
+		email2Field.setText( "" );
+		email3Field.setText( "" );
+		phone1Field.setText( "" );
+		phone2Field.setText( "" );
+		phone3Field.setText( "" );
+	}
+	
+	@Override
+	public void refreshLabelsText()
+	{
+		firstNameLabel.setText( "First Name:" + ( PreferencesUtil.isContactFirstNameRequired() ? " *" : "" ) );
+		lastNameLabel.setText( "Last Name:" + ( PreferencesUtil.isContactLastNameRequired() ? " *" : "" ) );
+		this.repaint();
+		this.revalidate();
+	}
+	
+	@Override
+	protected void initHeaderPanelComponents()
+	{
 		titleLabel = new JLabel( "New Contact", SwingConstants.CENTER );
 		titleLabel.setFont( AppFonts.getScreenTitleFont() );
+		titleLabel.setForeground( AppController.getTitleColor() );
 		titleLabel.setBorder( BorderFactory.createEmptyBorder( 20, 0, 20, 0 ) );
-		
-		JPanel formPanel = new JPanel( new GridBagLayout() );
-		formPanel.setBorder( BorderFactory.createEmptyBorder( 20, 50, 20, 50 ) );
+		headerPanel.add( titleLabel );
+	}
+	
+	@Override
+	protected void initMainPanelComponents()
+	{
+		mainContentPanel.setLayout( new GridBagLayout() );
+		mainContentPanel.setBorder( BorderFactory.createEmptyBorder( 20, 50, 20, 50 ) );
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets( 5, 5, 5, 5 );
@@ -63,6 +90,7 @@ public class Pnl_NewEditContact extends JPanel
 		lastNameField = new JTextField( 50 );
 		linkedClientComboBox = new Cmb_ClientSelection( false );
 		emergencyContactCheckBox = new JCheckBox();
+		emergencyContactCheckBox.setBackground( AppController.getBackgroundColor() );
 		email1Field = new Txt_EmailAddress();
 		email2Field = new Txt_EmailAddress();
 		email3Field = new Txt_EmailAddress();
@@ -80,19 +108,19 @@ public class Pnl_NewEditContact extends JPanel
 		gbc.weightx = 0.0;
 		
 		gbc.gridy = 0;
-		formPanel.add( firstNameLabel, gbc );
+		mainContentPanel.add( firstNameLabel, gbc );
 		
 		gbc.gridy = 1;
-		formPanel.add( new JLabel( "Associated Client: *" ), gbc );
+		mainContentPanel.add( new JLabel( "Associated Client: *" ), gbc );
 		
 		gbc.gridy = 2;
-		formPanel.add( new JLabel( "Email 1:" ), gbc );
+		mainContentPanel.add( new JLabel( "Email 1:" ), gbc );
 		
 		gbc.gridy = 3;
-		formPanel.add( new JLabel( "Email 2:" ), gbc );
+		mainContentPanel.add( new JLabel( "Email 2:" ), gbc );
 		
 		gbc.gridy = 4;
-		formPanel.add( new JLabel( "Email 3:" ), gbc );
+		mainContentPanel.add( new JLabel( "Email 3:" ), gbc );
 		
 		// Column 1
 		gbc.gridx = 1;
@@ -100,19 +128,19 @@ public class Pnl_NewEditContact extends JPanel
 		gbc.weightx = 1.0;
 		
 		gbc.gridy = 0;
-		formPanel.add( firstNameField, gbc );
+		mainContentPanel.add( firstNameField, gbc );
 		
 		gbc.gridy = 1;
-		formPanel.add( linkedClientComboBox, gbc );
+		mainContentPanel.add( linkedClientComboBox, gbc );
 		
 		gbc.gridy = 2;
-		formPanel.add( email1Field, gbc );
+		mainContentPanel.add( email1Field, gbc );
 		
 		gbc.gridy = 3;
-		formPanel.add( email2Field, gbc );
+		mainContentPanel.add( email2Field, gbc );
 		
 		gbc.gridy = 4;
-		formPanel.add( email3Field, gbc );
+		mainContentPanel.add( email3Field, gbc );
 		
 		// Column 2
 		gbc.gridx = 2;
@@ -120,19 +148,19 @@ public class Pnl_NewEditContact extends JPanel
 		gbc.weightx = 0.0;
 		
 		gbc.gridy = 0;
-		formPanel.add( lastNameLabel, gbc );
+		mainContentPanel.add( lastNameLabel, gbc );
 		
 		gbc.gridy = 1;
-		formPanel.add( new JLabel( "Emergency Contact:" ), gbc );
+		mainContentPanel.add( new JLabel( "Emergency Contact:" ), gbc );
 		
 		gbc.gridy = 2;
-		formPanel.add( new JLabel( "Phone 1:" ), gbc );
+		mainContentPanel.add( new JLabel( "Phone 1:" ), gbc );
 		
 		gbc.gridy = 3;
-		formPanel.add( new JLabel( "Phone 2:" ), gbc );
+		mainContentPanel.add( new JLabel( "Phone 2:" ), gbc );
 		
 		gbc.gridy = 4;
-		formPanel.add( new JLabel( "Phone 3:" ), gbc );
+		mainContentPanel.add( new JLabel( "Phone 3:" ), gbc );
 		
 		// Column 3
 		gbc.gridx = 3;
@@ -140,69 +168,46 @@ public class Pnl_NewEditContact extends JPanel
 		gbc.weightx = 1.0;
 		
 		gbc.gridy = 0;
-		formPanel.add( lastNameField, gbc );
+		lastNameField.setMinimumSize( linkedClientComboBox.getPreferredSize() );
+		mainContentPanel.add( lastNameField, gbc );
 		
 		gbc.gridy = 1;
-		formPanel.add( emergencyContactCheckBox, gbc );
+		mainContentPanel.add( emergencyContactCheckBox, gbc );
 		
 		gbc.gridy = 2;
-		formPanel.add( phone1Field, gbc );
+		mainContentPanel.add( phone1Field, gbc );
 		
 		gbc.gridy = 3;
-		formPanel.add( phone2Field, gbc );
+		mainContentPanel.add( phone2Field, gbc );
 		
 		gbc.gridy = 4;
-		formPanel.add( phone3Field, gbc );
-		
-		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER, 10, 10 ) );
-		buttonPanel.setBorder( BorderFactory.createEmptyBorder( 10, 0, 20, 0 ) );
-		
-		JButton saveButton = new JButton( "Save" );
-		JButton cancelButton = new JButton( "Cancel" );
-		
-		saveButton.addActionListener( e -> saveContact() );
-		cancelButton.addActionListener( e -> cancel() );
-		
-		buttonPanel.add( cancelButton );
-		buttonPanel.add( saveButton );
-		
-		add( titleLabel, BorderLayout.NORTH );
-		add( formPanel, BorderLayout.CENTER );
-		add( buttonPanel, BorderLayout.SOUTH );
-		
-		clearForm();
+		mainContentPanel.add( phone3Field, gbc );
 	}
 	
-	/**
-	 * Set the panel to edit mode and load the contact data
-	 * 
-	 * @param contactId The ID of the contact to edit
-	 */
-	public void setEditMode( Integer contactId )
+	@Override
+	protected void initFooterComponents()
 	{
-		this.isEditMode = true;
-		this.contactId = contactId;
-		this.titleLabel.setText( "Edit Contact" );
 		
-		loadContactData( contactId );
 	}
 	
-	/**
-	 * Set the panel to create mode (default)
-	 */
-	public void setCreateMode()
+	@Override
+	protected void disableUneditableFields()
 	{
-		this.isEditMode = false;
-		this.contactId = null;
-		this.titleLabel.setText( "New Contact" );
-		clearForm();
+		// linkedClientComboBox may be enabled if there is no linked client and should be disabled when the data is loaded if necessary
 	}
 	
-	private void loadContactData( Integer contactId )
+	@Override
+	protected void enableUneditableFields()
+	{
+		linkedClientComboBox.setEnabled( true );
+	}
+	
+	@Override
+	protected void loadEntityData( Integer entityId )
 	{
 		try
 		{
-			Contact contact = AppController.getContactById( contactId );
+			Contact contact = AppController.getContactById( entityId );
 			
 			if( contact != null )
 			{
@@ -247,62 +252,22 @@ public class Pnl_NewEditContact extends JPanel
 		phone3Field.setText( contact.getPhone3() );
 	}
 	
-	private void saveContact()
+	@Override
+	protected void doNewSave( Object entity ) throws TherapyAppException
 	{
-		if( !_isContactDataValid() )
-		{
-			return;
-		}
-		
-		Contact contact = _collectContactData();
-		if( !_isEveryRequiredFieldFilled( contact ) )
-		{
-			return;
-		}
-		
-		try
-		{
-			if( isEditMode )
-			{
-				AppController.updateContact( contact );
-				JOptionPane.showMessageDialog( this, "Contact updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
-			}
-			else
-			{
-				AppController.createContact( contact );
-				JOptionPane.showMessageDialog( this, "Contact saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
-			}
-			
-			clearForm();
-			setCreateMode();
-		}
-		catch( TherapyAppException e )
-		{
-			AppController.showBasicErrorPopup( e, "Error saving contact:" );
-		}
+		AppController.createContact( (Contact) entity );
+		JOptionPane.showMessageDialog( this, "Contact saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
 	}
 	
-	private Contact _collectContactData()
+	@Override
+	protected void doEditSave( Object entity ) throws TherapyAppException
 	{
-		Contact c = new Contact();
-		if( isEditMode )
-		{
-			c.setContactId( contactId );
-		}
-		c.setFirstName( firstNameField.getText().trim() );
-		c.setLastName( lastNameField.getText().trim() );
-		c.setLinkedClientId( linkedClientComboBox.getSelectedClientId() );
-		c.setEmergencyContact( emergencyContactCheckBox.isSelected() );
-		c.setEmail1( email1Field.getText().trim() );
-		c.setEmail2( email2Field.getText().trim() );
-		c.setEmail3( email3Field.getText().trim() );
-		c.setPhone1( phone1Field.getText().trim() );
-		c.setPhone2( phone2Field.getText().trim() );
-		c.setPhone3( phone3Field.getText().trim() );
-		return c;
+		AppController.updateContact( (Contact) entity );
+		JOptionPane.showMessageDialog( this, "Contact updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
 	}
 	
-	private boolean _isContactDataValid()
+	@Override
+	protected boolean isDataValid()
 	{
 		if( !phone1Field.isInputValid() || !phone2Field.isInputValid() || !phone3Field.isInputValid() )
 		{
@@ -319,11 +284,12 @@ public class Pnl_NewEditContact extends JPanel
 		return true;
 	}
 	
-	private boolean _isEveryRequiredFieldFilled( Contact contact )
+	@Override
+	protected boolean isEveryRequiredFieldFilled( Object entity )
 	{
 		try
 		{
-			EntityValidator.validateContact( contact );
+			EntityValidator.validateContact( (Contact) entity );
 		}
 		catch( TherapyAppException e )
 		{
@@ -334,38 +300,43 @@ public class Pnl_NewEditContact extends JPanel
 		return true;
 	}
 	
-	private void cancel()
+	@Override
+	protected Object collectEntityData()
 	{
-		int result = JOptionPane.showConfirmDialog( this, "Are you sure you want to cancel? Any unsaved changes will be lost.",
-				"Cancel Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE );
-		
-		if( result == JOptionPane.YES_OPTION )
+		Contact c = new Contact();
+		if( isEditMode )
 		{
-			clearForm();
-			setCreateMode();
-			AppController.returnHome( true );
+			c.setContactId( entityId );
 		}
+		c.setFirstName( firstNameField.getText().trim() );
+		c.setLastName( lastNameField.getText().trim() );
+		c.setLinkedClientId( linkedClientComboBox.getSelectedClientId() );
+		c.setEmergencyContact( emergencyContactCheckBox.isSelected() );
+		c.setEmail1( email1Field.getText().trim() );
+		c.setEmail2( email2Field.getText().trim() );
+		c.setEmail3( email3Field.getText().trim() );
+		c.setPhone1( phone1Field.getText().trim() );
+		c.setPhone2( phone2Field.getText().trim() );
+		c.setPhone3( phone3Field.getText().trim() );
+		return c;
 	}
 	
-	public void clearForm()
+	@Override
+	protected void showSaveError( TherapyAppException e )
 	{
-		firstNameField.setText( "" );
-		lastNameField.setText( "" );
-		linkedClientComboBox.setSelectedIndex( -1 );
-		emergencyContactCheckBox.setSelected( false );
-		email1Field.setText( "" );
-		email2Field.setText( "" );
-		email3Field.setText( "" );
-		phone1Field.setText( "" );
-		phone2Field.setText( "" );
-		phone3Field.setText( "" );
+		AppController.showBasicErrorPopup( e, "Error saving contact:" );
 	}
 	
-	public void refreshLabelsText()
+	@Override
+	protected void toggleTitleLabel()
 	{
-		firstNameLabel.setText( "First Name:" + ( PreferencesUtil.isContactFirstNameRequired() ? " *" : "" ) );
-		lastNameLabel.setText( "Last Name:" + ( PreferencesUtil.isContactLastNameRequired() ? " *" : "" ) );
-		this.repaint();
-		this.revalidate();
+		if( isEditMode )
+		{
+			titleLabel.setText( "Edit Contact" );
+		}
+		else
+		{
+			titleLabel.setText( "New Contact" );
+		}
 	}
 }
