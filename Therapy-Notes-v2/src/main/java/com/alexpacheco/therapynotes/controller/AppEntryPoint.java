@@ -9,11 +9,14 @@ import com.alexpacheco.therapynotes.install.SetupConfigurationManager;
 import com.alexpacheco.therapynotes.install.SetupWizardDialog;
 import com.alexpacheco.therapynotes.util.AppFonts;
 import com.alexpacheco.therapynotes.util.AppLogger;
+import com.alexpacheco.therapynotes.util.GlobalExceptionHandler;
 
 public class AppEntryPoint
 {
 	public static void main( String[] args )
 	{
+		GlobalExceptionHandler.install();
+		
 		SwingUtilities.invokeLater( () ->
 		{
 			_showSetupIfNeeded();
