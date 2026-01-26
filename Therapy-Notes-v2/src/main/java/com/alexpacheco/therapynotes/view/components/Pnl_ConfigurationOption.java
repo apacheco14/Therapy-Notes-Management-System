@@ -31,6 +31,7 @@ public class Pnl_ConfigurationOption extends JPanel
 	
 	private AssessmentOption option;
 	private ConfigurationOptionListener listener;
+	private JPopupMenu contextMenu;
 	
 	/**
 	 * Listener interface for edit and delete actions on configuration options.
@@ -113,13 +114,35 @@ public class Pnl_ConfigurationOption extends JPanel
 		textArea.setLineWrap( true );
 		textArea.setWrapStyleWord( true );
 		textArea.setBorder( null );
+		textArea.addMouseListener( new MouseAdapter()
+		{
+			@Override
+			public void mousePressed( MouseEvent e )
+			{
+				showPopupIfTriggered( e );
+			}
+			
+			@Override
+			public void mouseReleased( MouseEvent e )
+			{
+				showPopupIfTriggered( e );
+			}
+			
+			private void showPopupIfTriggered( MouseEvent e )
+			{
+				if( e.isPopupTrigger() )
+				{
+					contextMenu.show( textArea, e.getX(), e.getY() );
+				}
+			}
+		} );
 		
 		return textArea;
 	}
 	
 	private void setupContextMenu()
 	{
-		JPopupMenu contextMenu = new JPopupMenu();
+		contextMenu = new JPopupMenu();
 		
 		JMenuItem editItem = new JMenuItem( "Edit Description" );
 		editItem.addActionListener( e ->
