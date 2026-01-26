@@ -11,6 +11,9 @@ on:
         required: true
         default: '1.0.0'
 
+env:
+  SKIP_KEYRING_TESTS: "true"
+
 jobs:
   build-windows:
     runs-on: windows-latest
