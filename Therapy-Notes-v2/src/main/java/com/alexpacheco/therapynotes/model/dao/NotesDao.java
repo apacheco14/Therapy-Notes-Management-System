@@ -60,11 +60,11 @@ public class NotesDao
 				pstmt.setString( 12, note.getEyeContactComment() );
 				pstmt.setString( 13, note.getNextApptComment() );
 				pstmt.setString( 14, DateFormatUtil.toSqliteString( note.getCertifiedDate() ) );
-				pstmt.setInt( 15, getAssessmentOptionId( note.getAppearance() ) );
-				pstmt.setInt( 16, getAssessmentOptionId( note.getSpeech() ) );
-				pstmt.setInt( 17, getAssessmentOptionId( note.getAffect() ) );
-				pstmt.setInt( 18, getAssessmentOptionId( note.getEyeContact() ) );
-				pstmt.setInt( 19, getAssessmentOptionId( note.getNextAppt() ) );
+				setOptionIdParameterValue( pstmt, 15, note.getAppearance() );
+				setOptionIdParameterValue( pstmt, 16, note.getSpeech() );
+				setOptionIdParameterValue( pstmt, 17, note.getAffect() );
+				setOptionIdParameterValue( pstmt, 18, note.getEyeContact() );
+				setOptionIdParameterValue( pstmt, 19, note.getNextAppt() );
 				pstmt.setString( 20, note.getReferralComment() );
 				pstmt.setString( 21, note.getCollateralContactComment() );
 				pstmt.executeUpdate();
@@ -182,11 +182,11 @@ public class NotesDao
 				pstmt.setString( 12, note.getEyeContactComment() );
 				pstmt.setString( 13, note.getNextApptComment() );
 				pstmt.setString( 14, DateFormatUtil.toSqliteString( note.getCertifiedDate() ) );
-				pstmt.setInt( 15, getAssessmentOptionId( note.getAppearance() ) );
-				pstmt.setInt( 16, getAssessmentOptionId( note.getSpeech() ) );
-				pstmt.setInt( 17, getAssessmentOptionId( note.getAffect() ) );
-				pstmt.setInt( 18, getAssessmentOptionId( note.getEyeContact() ) );
-				pstmt.setInt( 19, getAssessmentOptionId( note.getNextAppt() ) );
+				setOptionIdParameterValue( pstmt, 15, note.getAppearance() );
+				setOptionIdParameterValue( pstmt, 16, note.getSpeech() );
+				setOptionIdParameterValue( pstmt, 17, note.getAffect() );
+				setOptionIdParameterValue( pstmt, 18, note.getEyeContact() );
+				setOptionIdParameterValue( pstmt, 19, note.getNextAppt() );
 				pstmt.setString( 20, note.getReferralComment() );
 				pstmt.setString( 21, note.getCollateralContactComment() );
 				pstmt.setInt( 22, note.getNoteId() );
@@ -270,12 +270,13 @@ public class NotesDao
 		}
 	}
 	
-	private Integer getAssessmentOptionId( AssessmentOption option )
+	private void setOptionIdParameterValue( PreparedStatement pstmt, int paramIndex, AssessmentOption option ) throws SQLException
 	{
-		if( option == null )
-			return null;
+		if( option == null || option.getId() == null )
+			pstmt.setNull( paramIndex, Types.INTEGER );
 		else
-			return option.getId();
+			pstmt.setInt( paramIndex, option.getId().intValue() );
+		
 	}
 	
 	public Note getNote( int note_id ) throws SQLException, TherapyAppException
