@@ -14,8 +14,6 @@ import java.util.stream.Collectors;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-
 import com.alexpacheco.therapynotes.controller.enums.ConfigKey;
 import com.alexpacheco.therapynotes.controller.enums.LogLevel;
 import com.alexpacheco.therapynotes.controller.exceptions.TherapyAppException;
@@ -41,7 +39,6 @@ import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentO
 import com.alexpacheco.therapynotes.util.AppLogger;
 import com.alexpacheco.therapynotes.util.JavaUtils;
 import com.alexpacheco.therapynotes.view.MainWindow;
-import com.alexpacheco.therapynotes.view.dialogs.Dlg_PinEntry;
 
 public class AppController
 {
@@ -62,25 +59,6 @@ public class AppController
 	
 	public static void launchMainWindow()
 	{
-		try
-		{
-			UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
-		}
-		catch( Exception e )
-		{
-			AppLogger.error( "Error setting look and feel.", e );
-			AppController.showBasicErrorPopup( "Error setting look and feel." );
-		}
-		
-		if( PinManager.isPinEnabled() )
-		{
-			if( !Dlg_PinEntry.authenticate( null ) )
-			{
-				AppLogger.logShutdown();
-				System.exit( 0 );
-			}
-		}
-		
 		AppLogger.logStartup();
 		window = new MainWindow();
 		window.setVisible( true );

@@ -4,6 +4,9 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 import com.alexpacheco.therapynotes.install.SetupConfigurationManager;
+import com.alexpacheco.therapynotes.security.SecureStorageException;
+import com.alexpacheco.therapynotes.security.SecureStorageFactory;
+import com.alexpacheco.therapynotes.security.SecureStorageProvider;
 import com.alexpacheco.therapynotes.util.AppLogger;
 
 import java.security.NoSuchAlgorithmException;
@@ -16,8 +19,11 @@ import java.util.Base64;
 /**
  * Manages PIN security for application access control. Uses PBKDF2 with SHA-256 for secure password hashing.
  * 
+ * Security credentials are stored in OS-native secure storage: - Windows: Credential Manager (DPAPI encryption) - macOS: Keychain - Linux:
+ * Secret Service
+ * 
  * Security features: - Salted hashing (unique per installation) - High iteration count (310,000 per OWASP 2023 guidelines) - Failed attempt
- * tracking with lockout - Timing-safe comparison
+ * tracking with lockout - Timing-safe comparison - OS-level credential protection
  */
 public class PinManager
 {
@@ -31,23 +37,61 @@ public class PinManager
 	private static final int MAX_FAILED_ATTEMPTS = 5;
 	private static final int LOCKOUT_MINUTES = 15;
 	
-	// Configuration keys
-	private static final String KEY_PIN_ENABLED = "security.pin.enabled";
-	private static final String KEY_PIN_HASH = "security.pin.hash";
-	private static final String KEY_PIN_SALT = "security.pin.salt";
-	private static final String KEY_PIN_HINT = "security.pin.hint";
-	private static final String KEY_FAILED_ATTEMPTS = "security.failed.attempts";
-	private static final String KEY_LOCKOUT_UNTIL = "security.lockout.until";
+	// Secure storage keys
+	private static final String KEY_PIN_HASH = "pin.hash";
+	private static final String KEY_PIN_SALT = "pin.salt";
+	private static final String KEY_PIN_HINT = "pin.hint";
+	private static final String KEY_FAILED_ATTEMPTS = "failed.attempts";
+	private static final String KEY_LOCKOUT_UNTIL = "lockout.until";
+	
+	// Legacy properties keys (for migration)
+	private static final String LEGACY_KEY_PIN_ENABLED = "security.pin.enabled";
+	private static final String LEGACY_KEY_PIN_HASH = "security.pin.hash";
+	private static final String LEGACY_KEY_PIN_SALT = "security.pin.salt";
+	private static final String LEGACY_KEY_PIN_HINT = "security.pin.hint";
+	private static final String LEGACY_KEY_FAILED_ATTEMPTS = "security.failed.attempts";
+	private static final String LEGACY_KEY_LOCKOUT_UNTIL = "security.lockout.until";
 	
 	private static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 	
+	// Cached storage provider
+	private static SecureStorageProvider storageProvider;
+	private static boolean migrationAttempted = false;
+	
 	/**
-	 * Check if PIN protection is enabled.
+	 * Initialize the PIN manager. Must be called at application startup. Performs migration from legacy properties file if needed.
+	 * 
+	 * @throws SecureStorageException if secure storage is unavailable
 	 */
-	public static boolean isPinEnabled()
+	public static void initialize() throws SecureStorageException
 	{
-		String enabled = SetupConfigurationManager.getValue( KEY_PIN_ENABLED, "false" );
-		return "true".equalsIgnoreCase( enabled );
+		storageProvider = SecureStorageFactory.getInstance();
+		
+		if( !migrationAttempted )
+		{
+			migrationAttempted = true;
+			migrateFromLegacyStorage();
+		}
+	}
+	
+	/**
+	 * Check if PIN protection is configured. Note: Unlike the legacy implementation, there is no "enabled" toggle. If a PIN is configured,
+	 * it is always required.
+	 */
+	public static boolean isPinConfigured()
+	{
+		ensureInitialized();
+		try
+		{
+			String hash = storageProvider.retrieve( KEY_PIN_HASH );
+			return hash != null && !hash.isEmpty();
+		}
+		catch( SecureStorageException e )
+		{
+			AppLogger.error( "Failed to check PIN configuration: " + e.getMessage(), e );
+			// Fail secure: if we can't check, assume PIN is required
+			return true;
+		}
 	}
 	
 	/**
@@ -55,10 +99,11 @@ public class PinManager
 	 * 
 	 * @param pin  The PIN to set (will be cleared after hashing)
 	 * @param hint Optional hint for PIN recovery (can be null)
-	 * @throws SecurityException if hashing fails
+	 * @throws SecurityException if hashing or storage fails
 	 */
 	public static void setupPin( char[] pin, String hint )
 	{
+		ensureInitialized();
 		try
 		{
 			// Generate a unique salt for this installation
@@ -70,26 +115,31 @@ public class PinManager
 			// Clear the PIN from memory
 			clearCharArray( pin );
 			
-			// Store as Base64
+			// Store as Base64 in secure storage
 			String saltBase64 = Base64.getEncoder().encodeToString( salt );
 			String hashBase64 = Base64.getEncoder().encodeToString( hash );
 			
-			// Save to configuration
-			SetupConfigurationManager.setValue( KEY_PIN_ENABLED, "true" );
-			SetupConfigurationManager.setValue( KEY_PIN_SALT, saltBase64 );
-			SetupConfigurationManager.setValue( KEY_PIN_HASH, hashBase64 );
+			storageProvider.store( KEY_PIN_SALT, saltBase64 );
+			storageProvider.store( KEY_PIN_HASH, hashBase64 );
 			
 			if( hint != null && !hint.trim().isEmpty() )
 			{
-				SetupConfigurationManager.setValue( KEY_PIN_HINT, hint.trim() );
+				storageProvider.store( KEY_PIN_HINT, hint.trim() );
+			}
+			else
+			{
+				storageProvider.delete( KEY_PIN_HINT );
 			}
 			
 			// Reset any failed attempts
 			resetFailedAttempts();
 			
+			AppLogger.info( "PIN configured successfully" );
+			
 		}
 		catch( Exception e )
 		{
+			clearCharArray( pin );
 			throw new SecurityException( "Failed to set up PIN: " + e.getMessage(), e );
 		}
 	}
@@ -102,6 +152,7 @@ public class PinManager
 	 */
 	public static VerificationResult verifyPin( char[] pin )
 	{
+		ensureInitialized();
 		try
 		{
 			// Check for lockout
@@ -116,8 +167,8 @@ public class PinManager
 			}
 			
 			// Get stored values
-			String saltBase64 = SetupConfigurationManager.getValue( KEY_PIN_SALT );
-			String storedHashBase64 = SetupConfigurationManager.getValue( KEY_PIN_HASH );
+			String saltBase64 = storageProvider.retrieve( KEY_PIN_SALT );
+			String storedHashBase64 = storageProvider.retrieve( KEY_PIN_HASH );
 			
 			if( saltBase64 == null || storedHashBase64 == null )
 			{
@@ -212,16 +263,16 @@ public class PinManager
 		
 		try
 		{
-			SetupConfigurationManager.setValue( KEY_PIN_ENABLED, "false" );
-			SetupConfigurationManager.setValue( KEY_PIN_HASH, "" );
-			SetupConfigurationManager.setValue( KEY_PIN_SALT, "" );
-			SetupConfigurationManager.setValue( KEY_PIN_HINT, "" );
+			storageProvider.delete( KEY_PIN_HASH );
+			storageProvider.delete( KEY_PIN_SALT );
+			storageProvider.delete( KEY_PIN_HINT );
 			resetFailedAttempts();
 			AppLogger.info( "PIN removed" );
 			return true;
 		}
-		catch( Exception e )
+		catch( SecureStorageException e )
 		{
+			AppLogger.error( "Failed to remove PIN: " + e.getMessage(), e );
 			return false;
 		}
 	}
@@ -231,7 +282,17 @@ public class PinManager
 	 */
 	public static String getPinHint()
 	{
-		return SetupConfigurationManager.getValue( KEY_PIN_HINT, "" );
+		ensureInitialized();
+		try
+		{
+			String hint = storageProvider.retrieve( KEY_PIN_HINT );
+			return hint != null ? hint : "";
+		}
+		catch( SecureStorageException e )
+		{
+			AppLogger.error( "Failed to retrieve PIN hint: " + e.getMessage(), e );
+			return "";
+		}
 	}
 	
 	/**
@@ -254,6 +315,224 @@ public class PinManager
 			return 0;
 		}
 		return java.time.Duration.between( LocalDateTime.now(), lockoutUntil ).toMinutes() + 1;
+	}
+	
+	// ========== Migration Logic ==========
+	
+	/**
+	 * Migrate security settings from legacy properties file to secure storage.
+	 */
+	private static void migrateFromLegacyStorage()
+	{
+		try
+		{
+			// Check if there's legacy data to migrate
+			String legacyHash = SetupConfigurationManager.getValue( LEGACY_KEY_PIN_HASH );
+			
+			if( legacyHash == null || legacyHash.isEmpty() )
+			{
+				// No legacy data to migrate
+				return;
+			}
+			
+			// Check if we've already migrated (secure storage has data)
+			if( storageProvider.exists( KEY_PIN_HASH ) )
+			{
+				// Already migrated, just clean up legacy
+				removeLegacySecurityProperties();
+				return;
+			}
+			
+			AppLogger.info( "Migrating security settings from properties file to secure storage..." );
+			
+			// Migrate PIN hash and salt
+			String legacySalt = SetupConfigurationManager.getValue( LEGACY_KEY_PIN_SALT );
+			if( legacyHash != null && !legacyHash.isEmpty() && legacySalt != null && !legacySalt.isEmpty() )
+			{
+				
+				storageProvider.store( KEY_PIN_HASH, legacyHash );
+				storageProvider.store( KEY_PIN_SALT, legacySalt );
+			}
+			
+			// Migrate hint
+			String legacyHint = SetupConfigurationManager.getValue( LEGACY_KEY_PIN_HINT );
+			if( legacyHint != null && !legacyHint.isEmpty() )
+			{
+				storageProvider.store( KEY_PIN_HINT, legacyHint );
+			}
+			
+			// Migrate lockout state
+			String legacyAttempts = SetupConfigurationManager.getValue( LEGACY_KEY_FAILED_ATTEMPTS );
+			if( legacyAttempts != null && !legacyAttempts.isEmpty() )
+			{
+				storageProvider.store( KEY_FAILED_ATTEMPTS, legacyAttempts );
+			}
+			
+			String legacyLockout = SetupConfigurationManager.getValue( LEGACY_KEY_LOCKOUT_UNTIL );
+			if( legacyLockout != null && !legacyLockout.isEmpty() )
+			{
+				storageProvider.store( KEY_LOCKOUT_UNTIL, legacyLockout );
+			}
+			
+			// Remove legacy properties
+			removeLegacySecurityProperties();
+			
+			AppLogger.info( "Security settings migrated successfully to OS secure storage" );
+			
+		}
+		catch( Exception e )
+		{
+			AppLogger.error( "Failed to migrate security settings: " + e.getMessage(), e );
+			// Don't throw - allow app to continue with whatever state we have
+		}
+	}
+	
+	/**
+	 * Remove security-related properties from the legacy properties file.
+	 */
+	private static void removeLegacySecurityProperties()
+	{
+		try
+		{
+			// Set to empty strings (SetupConfigurationManager doesn't have a delete method)
+			SetupConfigurationManager.setValue( LEGACY_KEY_PIN_ENABLED, "" );
+			SetupConfigurationManager.setValue( LEGACY_KEY_PIN_HASH, "" );
+			SetupConfigurationManager.setValue( LEGACY_KEY_PIN_SALT, "" );
+			SetupConfigurationManager.setValue( LEGACY_KEY_PIN_HINT, "" );
+			SetupConfigurationManager.setValue( LEGACY_KEY_FAILED_ATTEMPTS, "" );
+			SetupConfigurationManager.setValue( LEGACY_KEY_LOCKOUT_UNTIL, "" );
+			
+			AppLogger.info( "Removed legacy security properties from configuration file" );
+		}
+		catch( Exception e )
+		{
+			AppLogger.warning( "Failed to clean up legacy security properties: " + e.getMessage() );
+		}
+	}
+	
+	// ========== Private Helper Methods ==========
+	
+	private static void ensureInitialized()
+	{
+		if( storageProvider == null )
+		{
+			throw new IllegalStateException( "PinManager not initialized. Call PinManager.initialize() at application startup." );
+		}
+	}
+	
+	private static byte[] generateSalt()
+	{
+		SecureRandom random = new SecureRandom();
+		byte[] salt = new byte[SALT_LENGTH];
+		random.nextBytes( salt );
+		return salt;
+	}
+	
+	private static byte[] hashPin( char[] pin, byte[] salt ) throws NoSuchAlgorithmException, InvalidKeySpecException
+	{
+		PBEKeySpec spec = new PBEKeySpec( pin, salt, ITERATIONS, KEY_LENGTH );
+		try
+		{
+			SecretKeyFactory factory = SecretKeyFactory.getInstance( ALGORITHM );
+			return factory.generateSecret( spec ).getEncoded();
+		}
+		finally
+		{
+			spec.clearPassword();
+		}
+	}
+	
+	private static boolean constantTimeEquals( byte[] a, byte[] b )
+	{
+		if( a.length != b.length )
+		{
+			return false;
+		}
+		
+		int result = 0;
+		for( int i = 0; i < a.length; i++ )
+		{
+			result |= a[i] ^ b[i];
+		}
+		return result == 0;
+	}
+	
+	private static void clearCharArray( char[] array )
+	{
+		if( array != null )
+		{
+			java.util.Arrays.fill( array, '\0' );
+		}
+	}
+	
+	private static int getFailedAttempts()
+	{
+		try
+		{
+			String attempts = storageProvider.retrieve( KEY_FAILED_ATTEMPTS );
+			return attempts != null ? Integer.parseInt( attempts ) : 0;
+		}
+		catch( Exception e )
+		{
+			return 0;
+		}
+	}
+	
+	private static int incrementFailedAttempts()
+	{
+		int attempts = getFailedAttempts() + 1;
+		try
+		{
+			storageProvider.store( KEY_FAILED_ATTEMPTS, String.valueOf( attempts ) );
+		}
+		catch( SecureStorageException e )
+		{
+			AppLogger.error( "Failed to store failed attempts: " + e.getMessage(), e );
+		}
+		return attempts;
+	}
+	
+	private static void resetFailedAttempts()
+	{
+		try
+		{
+			storageProvider.delete( KEY_FAILED_ATTEMPTS );
+			storageProvider.delete( KEY_LOCKOUT_UNTIL );
+		}
+		catch( SecureStorageException e )
+		{
+			AppLogger.error( "Failed to reset failed attempts: " + e.getMessage(), e );
+		}
+	}
+	
+	private static void setLockout()
+	{
+		LocalDateTime lockoutUntil = LocalDateTime.now().plusMinutes( LOCKOUT_MINUTES );
+		try
+		{
+			storageProvider.store( KEY_LOCKOUT_UNTIL, lockoutUntil.format( DATETIME_FORMAT ) );
+		}
+		catch( SecureStorageException e )
+		{
+			AppLogger.error( "Failed to set lockout: " + e.getMessage(), e );
+		}
+	}
+	
+	private static LocalDateTime getLockoutUntil()
+	{
+		try
+		{
+			String lockoutStr = storageProvider.retrieve( KEY_LOCKOUT_UNTIL );
+			if( lockoutStr == null || lockoutStr.isEmpty() )
+			{
+				return null;
+			}
+			return LocalDateTime.parse( lockoutStr, DATETIME_FORMAT );
+		}
+		catch( Exception e )
+		{
+			return null;
+		}
 	}
 	
 	/**
@@ -334,53 +613,6 @@ public class PinManager
 		return PinStrength.STRONG;
 	}
 	
-	// Private helper methods
-	
-	private static byte[] generateSalt()
-	{
-		SecureRandom random = new SecureRandom();
-		byte[] salt = new byte[SALT_LENGTH];
-		random.nextBytes( salt );
-		return salt;
-	}
-	
-	private static byte[] hashPin( char[] pin, byte[] salt ) throws NoSuchAlgorithmException, InvalidKeySpecException
-	{
-		PBEKeySpec spec = new PBEKeySpec( pin, salt, ITERATIONS, KEY_LENGTH );
-		try
-		{
-			SecretKeyFactory factory = SecretKeyFactory.getInstance( ALGORITHM );
-			return factory.generateSecret( spec ).getEncoded();
-		}
-		finally
-		{
-			spec.clearPassword();
-		}
-	}
-	
-	private static boolean constantTimeEquals( byte[] a, byte[] b )
-	{
-		if( a.length != b.length )
-		{
-			return false;
-		}
-		
-		int result = 0;
-		for( int i = 0; i < a.length; i++ )
-		{
-			result |= a[i] ^ b[i];
-		}
-		return result == 0;
-	}
-	
-	private static void clearCharArray( char[] array )
-	{
-		if( array != null )
-		{
-			java.util.Arrays.fill( array, '\0' );
-		}
-	}
-	
 	private static boolean isCommonPin( String pin )
 	{
 		String[] commonPins = { "0000", "1111", "2222", "3333", "4444", "5555", "6666", "7777", "8888", "9999", "1234", "4321", "1212",
@@ -395,77 +627,6 @@ public class PinManager
 			}
 		}
 		return false;
-	}
-	
-	private static int getFailedAttempts()
-	{
-		String attempts = SetupConfigurationManager.getValue( KEY_FAILED_ATTEMPTS, "0" );
-		try
-		{
-			return Integer.parseInt( attempts );
-		}
-		catch( NumberFormatException e )
-		{
-			return 0;
-		}
-	}
-	
-	private static int incrementFailedAttempts()
-	{
-		int attempts = getFailedAttempts() + 1;
-		try
-		{
-			SetupConfigurationManager.setValue( KEY_FAILED_ATTEMPTS, String.valueOf( attempts ) );
-		}
-		catch( Exception e )
-		{
-			AppLogger.error( e.getMessage(), e );
-		}
-		return attempts;
-	}
-	
-	private static void resetFailedAttempts()
-	{
-		try
-		{
-			SetupConfigurationManager.setValue( KEY_FAILED_ATTEMPTS, "0" );
-			SetupConfigurationManager.setValue( KEY_LOCKOUT_UNTIL, "" );
-		}
-		catch( Exception e )
-		{
-			AppLogger.error( e.getMessage(), e );
-		}
-	}
-	
-	private static void setLockout()
-	{
-		LocalDateTime lockoutUntil = LocalDateTime.now().plusMinutes( LOCKOUT_MINUTES );
-		try
-		{
-			SetupConfigurationManager.setValue( KEY_LOCKOUT_UNTIL, lockoutUntil.format( DATETIME_FORMAT ) );
-		}
-		catch( Exception e )
-		{
-			AppLogger.error( e.getMessage(), e );
-		}
-	}
-	
-	private static LocalDateTime getLockoutUntil()
-	{
-		String lockoutStr = SetupConfigurationManager.getValue( KEY_LOCKOUT_UNTIL, "" );
-		if( lockoutStr == null || lockoutStr.isEmpty() )
-		{
-			return null;
-		}
-		try
-		{
-			return LocalDateTime.parse( lockoutStr, DATETIME_FORMAT );
-		}
-		catch( Exception e )
-		{
-			AppLogger.error( e.getMessage(), e );
-			return null;
-		}
 	}
 	
 	/**

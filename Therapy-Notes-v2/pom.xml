@@ -4,7 +4,7 @@
 	<artifactId>therapynotes</artifactId>
 	<version>${revision}</version>
 	<properties>
-        <revision>1.0.0-SNAPSHOT</revision>  <!-- Default for local builds -->
+		<revision>1.0.0-SNAPSHOT</revision> <!-- Default for local builds -->
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -12,27 +12,27 @@
 	<build>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<plugins>
-            <!-- Code Coverage report generation -->
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.12</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>generate-code-coverage-report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- Disable parallel test execution -->
+			<!-- Code Coverage report generation -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.12</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>generate-code-coverage-report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Disable parallel test execution -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -140,6 +140,13 @@
 			<artifactId>junit-jupiter</artifactId>
 			<version>5.10.2</version>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- OS-Level Secure Storage -->
+		<dependency>
+			<groupId>com.github.javakeyring</groupId>
+			<artifactId>java-keyring</artifactId>
+			<version>1.0.4</version>
 		</dependency>
 	</dependencies>
 </project>

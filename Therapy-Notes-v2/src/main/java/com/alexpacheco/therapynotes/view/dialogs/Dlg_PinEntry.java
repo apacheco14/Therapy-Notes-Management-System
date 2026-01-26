@@ -400,7 +400,7 @@ public class Dlg_PinEntry extends JDialog
 	 */
 	public static boolean authenticate( Frame parent )
 	{
-		if( !PinManager.isPinEnabled() )
+		if( !PinManager.isPinConfigured() )
 		{
 			return true; // No PIN required
 		}

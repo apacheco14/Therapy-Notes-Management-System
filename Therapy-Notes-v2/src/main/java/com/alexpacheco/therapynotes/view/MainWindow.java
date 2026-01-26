@@ -192,9 +192,9 @@ public class MainWindow extends JFrame
 		settingsMenu.add( preferencesItem );
 		settingsMenu.add( configurationItem );
 		settingsMenu.add( addPinItem );
-		addPinItem.setVisible( !PinManager.isPinEnabled() );
+		addPinItem.setVisible( !PinManager.isPinConfigured() );
 		settingsMenu.add( changePinItem );
-		changePinItem.setVisible( PinManager.isPinEnabled() );
+		changePinItem.setVisible( PinManager.isPinConfigured() );
 		
 		JMenu helpMenu = new JMenu( "Help" );
 		JMenuItem aboutItem = new JMenuItem( "About" );
@@ -340,8 +340,8 @@ public class MainWindow extends JFrame
 	
 	public void updateMenu()
 	{
-		addPinItem.setVisible( !PinManager.isPinEnabled() );
-		changePinItem.setVisible( PinManager.isPinEnabled() );
+		addPinItem.setVisible( !PinManager.isPinConfigured() );
+		changePinItem.setVisible( PinManager.isPinConfigured() );
 		
 		settingsMenu.revalidate();
 		settingsMenu.repaint();
