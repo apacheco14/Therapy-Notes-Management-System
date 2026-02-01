@@ -77,6 +77,7 @@ public class Pnl_Configuration extends JPanel implements Pnl_ConfigurationOption
 	
 	// In-memory storage of options (for holding changes until save)
 	private Map<ConfigKey, List<AssessmentOption>> optionsData;
+	private List<AssessmentOption> optionsToDelete;
 	
 	// Track next temporary ID for new options (negative to distinguish from DB IDs)
 	private int nextTempId = -1;
@@ -86,6 +87,7 @@ public class Pnl_Configuration extends JPanel implements Pnl_ConfigurationOption
 		categoryPanels = new HashMap<>();
 		symptomColumnPanels = new ArrayList<>();
 		optionsData = new EnumMap<>( ConfigKey.class );
+		optionsToDelete = new ArrayList<>();
 		
 		initializeUI();
 		loadAllOptions();
@@ -216,8 +218,11 @@ public class Pnl_Configuration extends JPanel implements Pnl_ConfigurationOption
 	/**
 	 * Loads all options from the database into memory and populates the UI.
 	 */
-	private void loadAllOptions()
+	public void loadAllOptions()
 	{
+		optionsData.clear();
+		optionsToDelete.clear();
+		
 		// Load all config keys
 		for( ConfigKey configKey : ConfigKey.values() )
 		{
@@ -606,7 +611,8 @@ public class Pnl_Configuration extends JPanel implements Pnl_ConfigurationOption
 		List<AssessmentOption> options = optionsData.get( configKey );
 		if( options != null )
 		{
-			options.removeIf( opt -> opt.getId() == option.getId() );
+			options.removeIf( opt -> opt.getId().equals( option.getId() ) );
+			optionsToDelete.add( option );
 		}
 		
 		// Refresh appropriate UI
@@ -643,6 +649,8 @@ public class Pnl_Configuration extends JPanel implements Pnl_ConfigurationOption
 		try
 		{
 			List<AssessmentOption> allOptions = collectAllOptions();
+			if( !optionsToDelete.isEmpty() )
+				AppController.deleteOptions( optionsToDelete );
 			AppController.saveOptions( allOptions );
 			JOptionPane.showMessageDialog( this, "Changes saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE );
 			AppController.returnHome( true );
@@ -650,6 +658,7 @@ public class Pnl_Configuration extends JPanel implements Pnl_ConfigurationOption
 		catch( TherapyAppException e )
 		{
 			AppController.showBasicErrorPopup( e, "Error saving changes:" );
+			loadAllOptions(); // reset screen if there is an error
 		}
 	}
 	
@@ -688,8 +697,7 @@ public class Pnl_Configuration extends JPanel implements Pnl_ConfigurationOption
 		
 		if( result == JOptionPane.YES_OPTION )
 		{
-			// TODO implement delete
-			// removeOptionFromMemory( option );
+			removeOptionFromMemory( option );
 		}
 	}
 }

@@ -357,7 +357,17 @@ public class AppController
 	
 	public static void saveOptions( List<AssessmentOption> options ) throws TherapyAppException
 	{
-		assessmentOptionApi.editAssessmentOptions( options );
+		List<AssessmentOption> newOptions = options.stream().filter( opt -> opt.getId() == null || opt.getId() < 0 )
+				.collect( Collectors.toList() );
+		assessmentOptionApi.createAssessmentOptions( newOptions );
+		
+		List<AssessmentOption> existingOptions = options.stream().filter( opt -> opt.getId() > 0 ).collect( Collectors.toList() );
+		assessmentOptionApi.editAssessmentOptions( existingOptions );
+	}
+	
+	public static void deleteOptions( List<AssessmentOption> options ) throws TherapyAppException
+	{
+		assessmentOptionApi.deleteAssessmentOptions( options );
 	}
 	
 	public static int savePrefernces( List<Preference> preferences ) throws TherapyAppException

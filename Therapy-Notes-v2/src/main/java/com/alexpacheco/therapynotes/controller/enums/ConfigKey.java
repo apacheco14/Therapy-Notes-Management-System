@@ -12,7 +12,7 @@ public enum ConfigKey
 	SPEECH( "speech", "Speech" ),
 	NEXT_APPOINTMENT( "nextAppt", "Next Appointment" ),
 	COLLATERAL_CONTACT_TYPES( "collateralContacts", "Collateral Contacts" ),
-	REFERRAL_TYPES( "referralTypes", "Referrals" );
+	REFERRAL_TYPES( "referrals", "Referrals" );
 	
 	private final String key;
 	private final String displayName;

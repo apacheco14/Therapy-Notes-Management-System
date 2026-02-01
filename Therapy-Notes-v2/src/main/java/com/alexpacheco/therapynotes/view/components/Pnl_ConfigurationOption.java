@@ -161,7 +161,6 @@ public class Pnl_ConfigurationOption extends JPanel
 				listener.onDeleteRequested( option );
 			}
 		} );
-		deleteItem.setEnabled( false );
 		
 		contextMenu.add( editItem );
 		contextMenu.add( deleteItem );

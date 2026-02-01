@@ -2,6 +2,7 @@ package com.alexpacheco.therapynotes.model.dao;
 
 import java.util.List;
 
+import com.alexpacheco.therapynotes.controller.exceptions.ResourceConflictException;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionFactory;
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOptionType;
@@ -73,9 +74,10 @@ public class AssessmentOptionsDao
 			{
 				conn.setAutoCommit( true );
 				conn.close();
-				AppLogger.logDatabaseOperation( "INSERT", "assessment_options", true );
 			}
 		}
+		
+		AppLogger.logDatabaseOperation( "INSERT", "assessment_options", true );
 	}
 	
 	/**
@@ -144,9 +146,10 @@ public class AssessmentOptionsDao
 			{
 				conn.setAutoCommit( true );
 				conn.close();
-				AppLogger.logDatabaseOperation( "UPDATE", "assessment_options", true );
 			}
 		}
+		
+		AppLogger.logDatabaseOperation( "UPDATE", "assessment_options", true );
 	}
 	
 	/**
@@ -209,6 +212,7 @@ public class AssessmentOptionsDao
 			{
 				while( rs.next() )
 				{
+					AppLogger.logDatabaseOperation( "SELECT", "assessment_options", true );
 					return AssessmentOptionFactory.createAssessmentOption( rs.getInt( "id" ), rs.getString( "name" ),
 							rs.getString( "description" ), rs.getString( "type" ) );
 				}
@@ -217,5 +221,112 @@ public class AssessmentOptionsDao
 		
 		AppLogger.logDatabaseOperation( "SELECT", "assessment_options", true );
 		return null;
+	}
+	
+	public void deleteOption( AssessmentOption option ) throws SQLException, ResourceConflictException
+	{
+		if( isAssessmentOptionUsed( option ) )
+		{
+			throw new ResourceConflictException(
+					"Assessment Option [" + option.getName() + "] cannot be deleted because it is used in a note." );
+		}
+		else
+		{
+			String sql = "DELETE FROM assessment_options WHERE id = ?";
+			
+			try( Connection conn = DbUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement( sql ) )
+			{
+				pstmt.setInt( 1, option.getId() );
+				
+				int affectedRows = pstmt.executeUpdate();
+				if( affectedRows == 0 )
+				{
+					throw new SQLException( "DELETE failed: Option ID " + option.getId() + " not found." );
+				}
+			}
+			
+			AppLogger.logDatabaseOperation( "DELETE", "assessment_options", true );
+		}
+	}
+	
+	public void deleteOptionsBatch( List<AssessmentOption> options ) throws SQLException, ResourceConflictException
+	{
+		String sql = "DELETE FROM assessment_options WHERE id = ?";
+		
+		Connection conn = null;
+		try
+		{
+			conn = DbUtil.getConnection();
+			conn.setAutoCommit( false ); // Start Transaction
+			
+			try( PreparedStatement pstmt = conn.prepareStatement( sql ) )
+			{
+				for( AssessmentOption option : options )
+				{
+					if( isAssessmentOptionUsed( option ) )
+					{
+						throw new ResourceConflictException(
+								"Assessment Option [" + option.getName() + "] cannot be deleted because it is used in a note." );
+					}
+					else
+					{
+						pstmt.setInt( 1, option.getId() );
+						pstmt.addBatch(); // Add to the local buffer
+					}
+				}
+				
+				pstmt.executeBatch(); // Send all deletes to the DB at once
+				conn.commit(); // Finalize the changes
+			}
+		}
+		catch( SQLException | ResourceConflictException e )
+		{
+			if( conn != null )
+			{
+				conn.rollback(); // Undo everything if one delete fails
+			}
+			AppLogger.logDatabaseOperation( "DELETE", "assessment_options", false );
+			throw e;
+		}
+		finally
+		{
+			if( conn != null )
+			{
+				conn.setAutoCommit( true );
+				conn.close();
+			}
+		}
+		
+		AppLogger.logDatabaseOperation( "DELETE", "assessment_options", true );
+	}
+	
+	private boolean isAssessmentOptionUsed( AssessmentOption option )
+	{
+		String sql = switch( option.getOptionType() )
+		{
+			case AFFECT -> "SELECT 1 FROM notes WHERE affect = ? LIMIT 1";
+			case APPEARANCE -> "SELECT 1 FROM notes WHERE appearance = ? LIMIT 1";
+			case SPEECH -> "SELECT 1 FROM notes WHERE speech = ? LIMIT 1";
+			case EYE_CONTACT -> "SELECT 1 FROM notes WHERE eye_contact = ? LIMIT 1";
+			case NEXT_APPT -> "SELECT 1 FROM notes WHERE next_appt = ? LIMIT 1";
+			case SYMPTOMS -> "SELECT 1 FROM symptoms WHERE symptom_id = ? LIMIT 1";
+			case REFERRALS -> "SELECT 1 FROM referrals WHERE referral_id = ? LIMIT 1";
+			case COLL_CONTACTS -> "SELECT 1 FROM collateral_contacts WHERE collateral_contact_type_id = ? LIMIT 1";
+		};
+		
+		try( Connection conn = DbUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement( sql ) )
+		{
+			pstmt.setInt( 1, option.getId() );
+			
+			try( ResultSet rs = pstmt.executeQuery() )
+			{
+				return rs.next() && rs.getInt( 1 ) > 0;
+			}
+		}
+		catch( SQLException e )
+		{
+			AppLogger.error( e );
+			return true;
+		}
 	}
 }

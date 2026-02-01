@@ -43,6 +43,7 @@ public class MainWindow extends JFrame
 	private Pnl_NewEditNote newEditNotePanel;
 	private Pnl_NewEditClient newEditClientPanel;
 	private Pnl_NewEditContact newEditContactPanel;
+	private Pnl_Configuration configPanel;
 	private Screens currentScreen;
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu settingsMenu = new JMenu( "Settings" );
@@ -90,6 +91,7 @@ public class MainWindow extends JFrame
 		searchClientsEditPanel = new Pnl_SearchClientsEdit( cardLayout, mainPanel, newEditClientPanel );
 		searchContactPanel = new Pnl_SearchContact( cardLayout, mainPanel, newEditContactPanel );
 		preferencesPanel = new Pnl_Preferences();
+		configPanel = new Pnl_Configuration();
 		
 		_addScreenPanel( new Pnl_Home(), Screens.HOME );
 		_addScreenPanel( newEditNotePanel, Screens.NEW_EDIT_NOTE );
@@ -102,7 +104,7 @@ public class MainWindow extends JFrame
 		_addScreenPanel( newEditContactPanel, Screens.NEW_EDIT_CONTACT );
 		_addScreenPanel( searchContactPanel, Screens.SEARCH_CONTACTS );
 		_addScreenPanel( preferencesPanel, Screens.PREFERENCES );
-		_addScreenPanel( new Pnl_Configuration(), Screens.CONFIG );
+		_addScreenPanel( configPanel, Screens.CONFIG );
 		_addScreenPanel( new Pnl_HelpIndex(), Screens.HELP );
 		_addScreenPanel( new Pnl_About(), Screens.ABOUT );
 		_addScreenPanel( new Pnl_ViewLogs(), Screens.VIEW_LOGS );
@@ -313,6 +315,9 @@ public class MainWindow extends JFrame
 			case NEW_EDIT_CONTACT:
 				newEditContactPanel.clearForm();
 				newEditContactPanel.refreshLabelsText();
+				break;
+			case CONFIG:
+				configPanel.loadAllOptions();
 				break;
 			default:
 				break;

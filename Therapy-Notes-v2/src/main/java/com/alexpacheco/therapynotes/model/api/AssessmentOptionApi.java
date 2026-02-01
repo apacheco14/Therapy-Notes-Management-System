@@ -87,4 +87,20 @@ public class AssessmentOptionApi
 			throw new TherapyAppException( "An internal database error occurred.", ErrorCode.DB_ERROR );
 		}
 	}
+
+	public void deleteAssessmentOptions( List<AssessmentOption> options ) throws TherapyAppException
+	{
+		try
+		{
+			if( options.size() == 1 )
+				dao.deleteOption( options.get( 0 ) );
+			else
+				dao.deleteOptionsBatch( options );
+		}
+		catch( SQLException e )
+		{
+			AppLogger.error( e );
+			throw new TherapyAppException( "An internal database error occurred.", ErrorCode.DB_ERROR );
+		}
+	}
 }
