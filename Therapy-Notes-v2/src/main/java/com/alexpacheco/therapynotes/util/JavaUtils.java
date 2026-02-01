@@ -4,43 +4,48 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 
+import javax.swing.ButtonGroup;
+
 import com.alexpacheco.therapynotes.model.entities.assessmentoptions.AssessmentOption;
+import javax.swing.AbstractButton;
+
+import java.util.Collections;
 
 public class JavaUtils
 {
-	public static boolean isNullOrEmpty(String s)
+	public static boolean isNullOrEmpty( String s )
 	{
-		return (s == null || s.isEmpty() || s.isBlank());
+		return ( s == null || s.isEmpty() || s.isBlank() );
 	}
 	
-	public static boolean convertBitToBoolean(int bit)
+	public static boolean convertBitToBoolean( int bit )
 	{
 		return bit == 0 ? false : true;
 	}
 	
-	public static int convertBooleanToBit(boolean bool)
+	public static int convertBooleanToBit( boolean bool )
 	{
 		return bool ? 1 : 0;
 	}
 	
-	public static String getStackTraceAsString(Throwable e)
+	public static String getStackTraceAsString( Throwable e )
 	{
 		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw);
-		e.printStackTrace(pw);
+		PrintWriter pw = new PrintWriter( sw );
+		e.printStackTrace( pw );
 		return sw.toString();
 	}
 	
 	/**
 	 * Sanitizes a string for use in a filename.
 	 */
-	public static String sanitizeFilename(String input)
+	public static String sanitizeFilename( String input )
 	{
-		if (input == null)
+		if( input == null )
 		{
 			return "";
 		}
-		return input.replaceAll("[^a-zA-Z0-9.-]", "_");
+		return input.replaceAll( "[^a-zA-Z0-9.-]", "_" );
 	}
 	
 	/**
@@ -48,9 +53,9 @@ public class JavaUtils
 	 * 
 	 * @param options The list of AssessmentOptions to reorder
 	 */
-	public static void moveOtherToEnd(List<AssessmentOption> options)
+	public static void moveOtherToEnd( List<AssessmentOption> options )
 	{
-		if (options == null || options.size() < 2)
+		if( options == null || options.size() < 2 )
 		{
 			return;
 		}
@@ -58,18 +63,28 @@ public class JavaUtils
 		int insertPos = options.size() - 1;
 		int i = 0;
 		
-		while (i <= insertPos)
+		while( i <= insertPos )
 		{
-			if ("OTHER".equals(options.get(i).getName().toUpperCase()))
+			if( "OTHER".equals( options.get( i ).getName().toUpperCase() ) )
 			{
-				AssessmentOption other = options.remove(i);
-				options.add(other);
+				AssessmentOption other = options.remove( i );
+				options.add( other );
 				insertPos--;
 			}
 			else
 			{
 				i++;
 			}
+		}
+	}
+	
+	public static void removeAllButtonsFromGroup( ButtonGroup buttonGroup )
+	{
+		List<AbstractButton> buttonsToRemove = Collections.list( buttonGroup.getElements() );
+		
+		for( AbstractButton button : buttonsToRemove )
+		{
+			buttonGroup.remove( button );
 		}
 	}
 }

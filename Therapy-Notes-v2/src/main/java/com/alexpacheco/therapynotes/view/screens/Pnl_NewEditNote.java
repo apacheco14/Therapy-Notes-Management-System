@@ -302,6 +302,29 @@ public class Pnl_NewEditNote extends Pnl_NewEditScreen
 		return null;
 	}
 	
+	public void refreshAssessmentOptions()
+	{
+		// Reload the data from database
+		loadSymptomCheckboxes();
+		loadMentalStatusOptions();
+		loadAdministrativeOptions();
+		
+		// Rebuild the UI sections - remove all and re-add
+		mainContentPanel.removeAll();
+		lengthOfLongestButtonGroup = getLengthOfLongestButtonGroup();
+		mainContentPanel.add( createSessionInfoSection() );
+		mainContentPanel.add( createSymptomsSection() );
+		mainContentPanel.add( createNarrativeSection() );
+		mainContentPanel.add( createMentalStatusSection() );
+		mainContentPanel.add( createAdministrativeSection() );
+		
+		// Refresh the labels text (for required field indicators)
+		refreshLabelsText();
+		
+		mainContentPanel.revalidate();
+		mainContentPanel.repaint();
+	}
+	
 	/**
 	 * Clears all form fields for a new note.
 	 */
@@ -530,6 +553,8 @@ public class Pnl_NewEditNote extends Pnl_NewEditScreen
 	 */
 	private void loadMentalStatusOptions()
 	{
+		mentalStatusButtonGroups.clear();
+		mentalStatusRadioButtons.clear();
 		AssessmentOptionType[] mentalStatusTypes = { AssessmentOptionType.APPEARANCE, AssessmentOptionType.SPEECH,
 				AssessmentOptionType.AFFECT, AssessmentOptionType.EYE_CONTACT };
 		
@@ -568,6 +593,7 @@ public class Pnl_NewEditNote extends Pnl_NewEditScreen
 		// Referrals checkboxes
 		try
 		{
+			referralCheckboxes.clear();
 			List<AssessmentOption> referrals = AppController.getAssessmentOptions( AssessmentOptionType.REFERRALS );
 			for( AssessmentOption referral : referrals )
 			{
@@ -582,6 +608,7 @@ public class Pnl_NewEditNote extends Pnl_NewEditScreen
 		// Collateral Contacts checkboxes
 		try
 		{
+			collateralContactCheckboxes.clear();
 			List<AssessmentOption> collateralContacts = AppController.getAssessmentOptions( AssessmentOptionType.COLL_CONTACTS );
 			for( AssessmentOption contact : collateralContacts )
 			{
@@ -596,6 +623,8 @@ public class Pnl_NewEditNote extends Pnl_NewEditScreen
 		// Next Appointment radio buttons
 		try
 		{
+			JavaUtils.removeAllButtonsFromGroup( nextAppointmentButtonGroup );
+			nextAppointmentRadioButtons.clear();
 			List<AssessmentOption> nextApptOptions = AppController.getAssessmentOptions( AssessmentOptionType.NEXT_APPT );
 			for( AssessmentOption option : nextApptOptions )
 			{

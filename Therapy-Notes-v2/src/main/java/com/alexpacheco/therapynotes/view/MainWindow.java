@@ -306,7 +306,7 @@ public class MainWindow extends JFrame
 				break;
 			case NEW_EDIT_NOTE:
 				newEditNotePanel.clearForm();
-				newEditNotePanel.refreshLabelsText();
+				newEditNotePanel.refreshAssessmentOptions();
 				break;
 			case NEW_EDIT_CLIENT:
 				newEditClientPanel.clearForm();
