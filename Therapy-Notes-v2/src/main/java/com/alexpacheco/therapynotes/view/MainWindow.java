@@ -201,6 +201,8 @@ public class MainWindow extends JFrame
 		JMenu helpMenu = new JMenu( "Help" );
 		JMenuItem aboutItem = new JMenuItem( "About" );
 		JMenuItem helpIndexItem = new JMenuItem( "Help Index" );
+		HyperlinkMenuItem releaseNotesItem = new HyperlinkMenuItem( "Release Notes",
+				"https://github.com/apacheco14/Therapy-Notes-Management-System/releases" );
 		HyperlinkMenuItem reportIssueItem = new HyperlinkMenuItem( "Report a Bug",
 				"https://docs.google.com/forms/d/e/1FAIpQLSdXW5jCOQXG69NJPjNk5XZR8733EGtSRZGC7-vey6LHGzoQNA/viewform?usp=dialog" );
 		JMenuItem viewLogsItem = new JMenuItem( "View Logs" );
@@ -244,6 +246,7 @@ public class MainWindow extends JFrame
 		
 		helpMenu.add( aboutItem );
 		helpMenu.add( helpIndexItem );
+		helpMenu.add( releaseNotesItem );
 		helpMenu.add( reportIssueItem );
 		helpMenu.addSeparator();
 		helpMenu.add( viewLogsItem );
