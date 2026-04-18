@@ -309,14 +309,17 @@ public class MainWindow extends JFrame
 				break;
 			case NEW_EDIT_NOTE:
 				newEditNotePanel.clearForm();
+				newEditNotePanel.setCreateMode();
 				newEditNotePanel.refreshAssessmentOptions();
 				break;
 			case NEW_EDIT_CLIENT:
 				newEditClientPanel.clearForm();
+				newEditClientPanel.setCreateMode();
 				newEditClientPanel.refreshLabelsText();
 				break;
 			case NEW_EDIT_CONTACT:
 				newEditContactPanel.clearForm();
+				newEditContactPanel.setCreateMode();
 				newEditContactPanel.refreshLabelsText();
 				break;
 			case CONFIG:
